@@ -48,8 +48,8 @@ contract usingOraclize {
     byte constant proofType_NONE = 0x00;
     byte constant proofType_TLSNotary = 0x10;
     byte constant proofStorage_IPFS = 0x01;
-    uint8 constant networkID_mainNet = 1;
-    uint8 constant networkID_testNet = 2;
+    uint8 constant networkID_mainnet = 1;
+    uint8 constant networkID_testnet = 2;
     uint8 constant networkID_morden = 2;
     uint8 constant networkID_consensys = 161;
     
