@@ -1,6 +1,6 @@
 // <ORACLIZE_API>
 /*
-Copyright (c) 2015 Oraclize srl, Thomas Bertani
+Copyright (c) 2015-2016 Oraclize srl, Thomas Bertani
 
 
 
@@ -48,18 +48,29 @@ contract usingOraclize {
     byte constant proofType_NONE = 0x00;
     byte constant proofType_TLSNotary = 0x10;
     byte constant proofStorage_IPFS = 0x01;
-
+    uint8 constant networkID_mainNet = 1;
+    uint8 constant networkID_testNet = 2;
+    uint8 constant networkID_morden = 2;
+    uint8 constant networkID_consensys = 161;
+    
+    OraclizeAddrResolverI OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
+    
     OraclizeI oraclize;
     modifier oraclizeAPI {
-        OraclizeAddrResolverI OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
         oraclize = OraclizeI(OAR.getAddress());
         _
     }
     modifier coupon(string code){
-        OraclizeAddrResolverI OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
         oraclize = OraclizeI(OAR.getAddress());
         oraclize.useCoupon(code);
         _
+    }
+    function oraclize_setNetwork(uint8 networkID) returns(bool){
+        if (networkID == networkID_mainNet) OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
+        else if (networkID == networkID_testNet) OAR = OraclizeAddrResolverI(0x0ae06d5934fd75d214951eb96633fbd7f9262a7c);
+        else if (networkID == networkID_consensys) OAR = OraclizeAddrResolverI(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf);
+        else return false;
+        return true;
     }
     function oraclize_query(string datasource, string arg) oraclizeAPI internal returns (bytes32 id){
         return oraclize.query.value(oraclize.getPrice(datasource))(0, datasource, arg);
@@ -212,7 +223,5 @@ contract usingOraclize {
     
 
 
-
 }
 // </ORACLIZE_API>
-
