@@ -1,0 +1,172 @@
+/*
+Copyright (c) 2015-2016 Oraclize srl, Thomas Bertani
+*/
+
+contract OraclizeAddrResolverI{
+    function getAddress() returns (address _addr);
+}
+
+
+contract Oraclize {
+    
+    uint reqc = 0;
+    
+    address public cbAddress = 0x26588a9301b0428d95e6fc3a5024fce8bec12d51;
+    
+    event Log1(address sender, bytes32 cid, uint timestamp, string datasource, string arg, uint gaslimit, byte proofType);
+    event Log2(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, uint gaslimit, byte proofType);
+    
+    address owner;
+    
+    function(){
+        msg.sender.send(msg.value);
+    }
+    
+    
+    function Oraclize() {
+        owner = msg.sender;
+    }
+    
+    
+    function addDSource(string dsname, uint multiplier) {
+        if ((msg.sender != owner)&&(msg.sender != cbAddress)) throw;
+        bytes32 dsname_hash = sha3(dsname);
+        dsources[dsources.length++] = dsname_hash;
+        price_multiplier[dsname_hash] = multiplier;
+    }
+    
+
+
+    modifier costs(string datasource, uint gaslimit) {
+        uint price = getPrice(datasource, gaslimit, msg.sender);
+        if (price == 0) addr_already[msg.sender] = true;
+        if (msg.value >= price){
+            address(0xf65b3b60010d57d0bb8478aa6ced15fe720621b4).send(price);
+            uint diff = msg.value - price;
+            if (diff > 0) msg.sender.send(diff);
+            _
+        } else throw;
+    }
+
+    mapping (address => bool) addr_already;
+    mapping (address => byte) addr_proofType;
+    uint baseprice;
+    mapping (bytes32 => uint) price;
+    mapping (bytes32 => uint) price_multiplier;
+    bytes32[] dsources;
+
+    bytes32[] coupons;
+    bytes32 coupon;
+    function createCoupon(string _code){
+        coupons[coupons.length++] = sha3(_code);
+    }
+    function useCoupon(string _coupon){
+        coupon = sha3(_coupon);
+    }
+    
+    function setProofType(byte _proofType){
+        addr_proofType[msg.sender] = _proofType;
+    }
+    
+    function getPrice(string _datasource) public returns (uint _dsprice) {
+        return getPrice(_datasource, msg.sender);
+    }
+    
+    function getPrice(string _datasource, uint _gaslimit) public returns (uint _dsprice) {
+        return getPrice(_datasource, _gaslimit, msg.sender);
+    }
+    
+    function getPrice(string _datasource, address _addr) private returns (uint _dsprice) {
+        return getPrice(_datasource, 200000, _addr);
+    }
+    
+    uint gasprice  = 50000000000;
+    
+    function setGasPrice(uint newgasprice){
+        if ((msg.sender != owner)&&(msg.sender != cbAddress)) throw;
+        gasprice = newgasprice;
+    }
+    
+    function getPrice(string _datasource, uint _gaslimit, address _addr) private returns (uint _dsprice) {
+        if ((_gaslimit <= 200000)&&(addr_already[_addr] == false)) return 0;
+        if (coupon != 0){
+            for (uint i=0; i<coupons.length; i++){
+                if (coupons[i] == coupon) return 0;
+            }
+        }
+        _dsprice = price[sha3(_datasource)];
+        _dsprice += _gaslimit*gasprice;
+        return _dsprice;
+    }
+    
+    
+    
+    function setBasePrice(uint new_baseprice){ //0.001 usd in ether
+        if ((msg.sender != owner)&&(msg.sender != cbAddress)) throw;
+        baseprice = new_baseprice;
+        for (uint i=0; i<dsources.length; i++) price[dsources[i]] = new_baseprice*price_multiplier[dsources[i]];
+    }
+
+    function setBasePrice(uint new_baseprice, bytes proofID){ //0.001 usd in ether
+        if ((msg.sender != owner)&&(msg.sender != cbAddress)) throw;
+        baseprice = new_baseprice;
+        for (uint i=0; i<dsources.length; i++) price[dsources[i]] = new_baseprice*price_multiplier[dsources[i]];
+    }
+    
+    function query(string _datasource, string _arg) returns (bytes32 _id){
+        return query1(0, _datasource, _arg, 200000);
+    }
+    
+    function query1(string _datasource, string _arg) returns (bytes32 _id){
+        return query1(0, _datasource, _arg, 200000);
+    }
+    
+    function query2(string _datasource, string _arg1, string _arg2) returns (bytes32 _id){
+        return query2(0, _datasource, _arg1, _arg2, 200000);
+    }
+    
+    function query(uint _timestamp, string _datasource, string _arg) returns (bytes32 _id){
+        return query1(_timestamp, _datasource, _arg, 200000);
+    }
+    
+    function query1(uint _timestamp, string _datasource, string _arg) returns (bytes32 _id){
+        return query1(_timestamp, _datasource, _arg, 200000);
+    }
+    
+    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) returns (bytes32 _id){
+        return query2(_timestamp, _datasource, _arg1, _arg2, 200000);
+    }
+    
+    function query(uint _timestamp, string _datasource, string _arg, uint _gaslimit) returns (bytes32 _id){
+        return query1(_timestamp, _datasource, _arg, _gaslimit);
+    }
+    
+    function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id){
+	if ((_timestamp > now+3600*24*60)||(_gaslimit > 3141592)) throw;
+        _id = sha3(now+reqc);
+        reqc++;
+        Log1(msg.sender, _id, _timestamp, _datasource, _arg, _gaslimit, addr_proofType[msg.sender]);
+        return _id;
+    }
+    
+    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id){
+	if ((_timestamp > now+3600*24*60)||(_gaslimit > 3141592)) throw;
+        _id = sha3(now+reqc);
+        reqc++;
+        Log2(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _gaslimit, addr_proofType[msg.sender]);
+        return _id;
+    }
+    
+    function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) returns (bytes32 _id){
+        return query(_timestamp, _datasource, _arg, _gaslimit);
+    }
+    
+    function query1_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) returns (bytes32 _id){
+        return query1(_timestamp, _datasource, _arg, _gaslimit);
+    }
+    
+    function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) returns (bytes32 _id){
+        return query2(_timestamp, _datasource, _arg1, _arg2, _gaslimit);
+    }                      
+    
+}                                                                              
