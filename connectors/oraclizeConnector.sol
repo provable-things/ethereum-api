@@ -9,7 +9,7 @@ contract OraclizeAddrResolverI{
 
 contract Oraclize {
     
-    uint reqc = 0;
+    mapping (address => uint) reqc;
     
     address public cbAddress = 0x26588a9301b0428d95e6fc3a5024fce8bec12d51;
     
@@ -55,11 +55,19 @@ contract Oraclize {
     mapping (bytes32 => uint) price_multiplier;
     bytes32[] dsources;
 
-    bytes32[] coupons;
+    mapping (bytes32 => bool) coupons;
     bytes32 coupon;
+    
     function createCoupon(string _code){
-        coupons[coupons.length++] = sha3(_code);
+        if ((msg.sender != owner)&&(msg.sender != cbAddress)) throw;
+        coupons[sha3(_code)] = true;
     }
+    
+    function deleteCoupon(string _code){
+        if ((msg.sender != owner)&&(msg.sender != cbAddress)) throw;
+        coupons[sha3(_code)] = false;
+    }
+    
     function useCoupon(string _coupon){
         coupon = sha3(_coupon);
     }
@@ -89,11 +97,7 @@ contract Oraclize {
     
     function getPrice(string _datasource, uint _gaslimit, address _addr) private returns (uint _dsprice) {
         if ((_gaslimit <= 200000)&&(addr_already[_addr] == false)) return 0;
-        if (coupon != 0){
-            for (uint i=0; i<coupons.length; i++){
-                if (coupons[i] == coupon) return 0;
-            }
-        }
+        if ((coupon != 0)&&(coupons[coupon] == true)) return 0;
         _dsprice = price[sha3(_datasource)];
         _dsprice += _gaslimit*gasprice;
         return _dsprice;
@@ -143,16 +147,16 @@ contract Oraclize {
     
     function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id){
 	if ((_timestamp > now+3600*24*60)||(_gaslimit > 3141592)) throw;
-        _id = sha3(now+reqc);
-        reqc++;
+        _id = sha3(uint(msg.sender)+reqc[msg.sender]);
+        reqc[msg.sender]++;
         Log1(msg.sender, _id, _timestamp, _datasource, _arg, _gaslimit, addr_proofType[msg.sender]);
         return _id;
     }
     
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id){
 	if ((_timestamp > now+3600*24*60)||(_gaslimit > 3141592)) throw;
-        _id = sha3(now+reqc);
-        reqc++;
+        _id = sha3(uint(msg.sender)+reqc[msg.sender]);
+        reqc[msg.sender]++;
         Log2(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _gaslimit, addr_proofType[msg.sender]);
         return _id;
     }
@@ -169,4 +173,4 @@ contract Oraclize {
         return query2(_timestamp, _datasource, _arg1, _arg2, _gaslimit);
     }                      
     
-}                                                                              
+}
