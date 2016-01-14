@@ -43,7 +43,6 @@ contract Oraclize {
 
     modifier costs(string datasource, uint gaslimit) {
         uint price = getPrice(datasource, gaslimit, msg.sender);
-        if (price == 0) addr_already[msg.sender] = true;
         if (msg.value >= price){
             address(0xf65b3b60010d57d0bb8478aa6ced15fe720621b4).send(price);
             uint diff = msg.value - price;
@@ -52,7 +51,6 @@ contract Oraclize {
         } else throw;
     }
 
-    mapping (address => bool) addr_already;
     mapping (address => byte) addr_proofType;
     uint baseprice;
     mapping (bytes32 => uint) price;
@@ -100,7 +98,7 @@ contract Oraclize {
     }
     
     function getPrice(string _datasource, uint _gaslimit, address _addr) private returns (uint _dsprice) {
-        if ((_gaslimit <= 200000)&&(addr_already[_addr] == false)) return 0;
+        if ((_gaslimit <= 200000)&&(reqc[_addr] == 0)) return 0;
         if ((coupon != 0)&&(coupons[coupon] == true)) return 0;
         _dsprice = price[sha3(_datasource, addr_proofType[_addr])];
         _dsprice += _gaslimit*gasprice;
