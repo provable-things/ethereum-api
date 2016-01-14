@@ -13,6 +13,10 @@ contract Oraclize {
     
     address public cbAddress = 0x26588a9301b0428d95e6fc3a5024fce8bec12d51;
     
+    byte constant proofType_NONE = 0x00;
+    byte constant proofType_TLSNotary = 0x10;
+    byte constant proofStorage_IPFS = 0x01;
+    
     event Log1(address sender, bytes32 cid, uint timestamp, string datasource, string arg, uint gaslimit, byte proofType);
     event Log2(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, uint gaslimit, byte proofType);
     
@@ -22,20 +26,20 @@ contract Oraclize {
         msg.sender.send(msg.value);
     }
     
-    
     function Oraclize() {
         owner = msg.sender;
     }
     
-    
     function addDSource(string dsname, uint multiplier) {
+        addDSource(dsname, 0x00, multiplier);
+    }
+
+    function addDSource(string dsname, byte proofType, uint multiplier) {
         if ((msg.sender != owner)&&(msg.sender != cbAddress)) throw;
-        bytes32 dsname_hash = sha3(dsname);
+        bytes32 dsname_hash = sha3(dsname, proofType);
         dsources[dsources.length++] = dsname_hash;
         price_multiplier[dsname_hash] = multiplier;
     }
-    
-
 
     modifier costs(string datasource, uint gaslimit) {
         uint price = getPrice(datasource, gaslimit, msg.sender);
@@ -98,12 +102,10 @@ contract Oraclize {
     function getPrice(string _datasource, uint _gaslimit, address _addr) private returns (uint _dsprice) {
         if ((_gaslimit <= 200000)&&(addr_already[_addr] == false)) return 0;
         if ((coupon != 0)&&(coupons[coupon] == true)) return 0;
-        _dsprice = price[sha3(_datasource)];
+        _dsprice = price[sha3(_datasource, addr_proofType[_addr])];
         _dsprice += _gaslimit*gasprice;
         return _dsprice;
     }
-    
-    
     
     function setBasePrice(uint new_baseprice){ //0.001 usd in ether
         if ((msg.sender != owner)&&(msg.sender != cbAddress)) throw;
@@ -147,7 +149,7 @@ contract Oraclize {
     
     function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id){
 	if ((_timestamp > now+3600*24*60)||(_gaslimit > 3141592)) throw;
-        _id = sha3(uint(msg.sender)+reqc[msg.sender]);
+        _id = sha3(uint(this)+uint(msg.sender)+reqc[msg.sender]);
         reqc[msg.sender]++;
         Log1(msg.sender, _id, _timestamp, _datasource, _arg, _gaslimit, addr_proofType[msg.sender]);
         return _id;
@@ -155,7 +157,7 @@ contract Oraclize {
     
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id){
 	if ((_timestamp > now+3600*24*60)||(_gaslimit > 3141592)) throw;
-        _id = sha3(uint(msg.sender)+reqc[msg.sender]);
+        _id = sha3(uint(this)+uint(msg.sender)+reqc[msg.sender]);
         reqc[msg.sender]++;
         Log2(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _gaslimit, addr_proofType[msg.sender]);
         return _id;
