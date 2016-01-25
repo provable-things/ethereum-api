@@ -73,28 +73,44 @@ contract usingOraclize {
         return true;
     }
     function oraclize_query(string datasource, string arg) oraclizeAPI internal returns (bytes32 id){
-        return oraclize.query.value(oraclize.getPrice(datasource))(0, datasource, arg);
+        uint price = oraclize.getPrice(datasource);
+        if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
+        return oraclize.query.value(price)(0, datasource, arg);
     }
     function oraclize_query(uint timestamp, string datasource, string arg) oraclizeAPI internal returns (bytes32 id){
-        return oraclize.query.value(oraclize.getPrice(datasource))(timestamp, datasource, arg);
+        uint price = oraclize.getPrice(datasource);
+        if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
+        return oraclize.query.value(price)(timestamp, datasource, arg);
     }
     function oraclize_query(uint timestamp, string datasource, string arg, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        return oraclize.query_withGasLimit.value(oraclize.getPrice(datasource, gaslimit))(timestamp, datasource, arg, gaslimit);
+        uint price = oraclize.getPrice(datasource, gaslimit);
+        if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
+        return oraclize.query_withGasLimit.value(price)(timestamp, datasource, arg, gaslimit);
     }
     function oraclize_query(string datasource, string arg, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        return oraclize.query_withGasLimit.value(oraclize.getPrice(datasource, gaslimit))(0, datasource, arg, gaslimit);
+        uint price = oraclize.getPrice(datasource, gaslimit);
+        if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
+        return oraclize.query_withGasLimit.value(price)(0, datasource, arg, gaslimit);
     }
     function oraclize_query(string datasource, string arg1, string arg2) oraclizeAPI internal returns (bytes32 id){
-        return oraclize.query2.value(oraclize.getPrice(datasource))(0, datasource, arg1, arg2);
+        uint price = oraclize.getPrice(datasource);
+        if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
+        return oraclize.query2.value(price)(0, datasource, arg1, arg2);
     }
     function oraclize_query(uint timestamp, string datasource, string arg1, string arg2) oraclizeAPI internal returns (bytes32 id){
-        return oraclize.query2.value(oraclize.getPrice(datasource))(timestamp, datasource, arg1, arg2);
+        uint price = oraclize.getPrice(datasource);
+        if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
+        return oraclize.query2.value(price)(timestamp, datasource, arg1, arg2);
     }
     function oraclize_query(uint timestamp, string datasource, string arg1, string arg2, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        return oraclize.query2_withGasLimit.value(oraclize.getPrice(datasource, gaslimit))(timestamp, datasource, arg1, arg2, gaslimit);
+        uint price = oraclize.getPrice(datasource, gaslimit);
+        if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
+        return oraclize.query2_withGasLimit.value(price)(timestamp, datasource, arg1, arg2, gaslimit);
     }
     function oraclize_query(string datasource, string arg1, string arg2, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        return oraclize.query2_withGasLimit.value(oraclize.getPrice(datasource, gaslimit))(0, datasource, arg1, arg2, gaslimit);
+        uint price = oraclize.getPrice(datasource, gaslimit);
+        if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
+        return oraclize.query2_withGasLimit.value(price)(0, datasource, arg1, arg2, gaslimit);
     }
     function oraclize_cbAddress() oraclizeAPI internal returns (address){
         return oraclize.cbAddress();
