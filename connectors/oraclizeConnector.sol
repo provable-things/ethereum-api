@@ -52,7 +52,7 @@ contract Oraclize {
     }
 
     mapping (address => byte) addr_proofType;
-    uint baseprice;
+    uint public baseprice;
     mapping (bytes32 => uint) price;
     mapping (bytes32 => uint) price_multiplier;
     bytes32[] dsources;
