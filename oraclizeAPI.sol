@@ -65,7 +65,7 @@ contract usingOraclize {
         oraclize.useCoupon(code);
         _
     }
-    function oraclize_setNetwork(uint8 networkID) returns(bool){
+    function oraclize_setNetwork(uint8 networkID) internal returns(bool){
         if (networkID == networkID_mainnet) OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
         else if (networkID == networkID_testnet) OAR = OraclizeAddrResolverI(0x0ae06d5934fd75d214951eb96633fbd7f9262a7c);
         else if (networkID == networkID_consensys) OAR = OraclizeAddrResolverI(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf);
@@ -115,7 +115,7 @@ contract usingOraclize {
     function oraclize_cbAddress() oraclizeAPI internal returns (address){
         return oraclize.cbAddress();
     }
-    function oraclize_setProof(byte proofP) oraclizeAPI {
+    function oraclize_setProof(byte proofP) oraclizeAPI internal {
         return oraclize.setProofType(proofP);
     }
 
