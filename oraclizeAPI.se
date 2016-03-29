@@ -1,0 +1,146 @@
+# <ORACLIZE_API>
+
+#Copyright (c) 2015-2016 Oraclize srl, Thomas Bertani
+
+
+
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+
+
+
+#The above copyright notice and this permission notice shall be included in
+#all copies or substantial portions of the Software.
+
+
+
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+#THE SOFTWARE.
+
+extern OraclizeAddrResolverI: [getAddress:[]:int256]
+
+extern OraclizeI: [cbAddress:[]:int256,query:[uint256,string,string]:bytes32,query2:[uint256,string,string,string]:bytes32,query_withGasLimit:[uint256,string,string,uint256]:bytes32,query2_withGasLimit:[uint256,string,string,string,uint256]:bytes32,getPrice:[string,uint256]:uint256,useCoupon:[string]:_,setProofType:[bytes1]:_]
+
+macro day: 60*60*24
+macro week: 60*60*24*7
+macro month: 60*60*24*30
+
+macro proofType_NONE: 0x0000000000000000000000000000000000000000000000000000000000000000
+macro proofType_TLSNotary: 0x1000000000000000000000000000000000000000000000000000000000000000
+macro proofStorage_IPFS: 0x0100000000000000000000000000000000000000000000000000000000000000
+
+macro networkID_mainnet: 1
+macro networkID_testnet: 2
+macro networkID_morden: 2
+macro networkID_consensys: 161
+macro networkID_auto: 123
+
+data OAR
+
+macro oraclize_setNetwork(networkID_auto):
+    if(~extcodesize(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8)>0):
+        self.OAR = 0x1d11e5eae3112dbd44f99266872ff1d07c77dce8
+    elif(~extcodesize(0x0ae06d5934fd75d214951eb96633fbd7f9262a7c)>0):
+        self.OAR = 0x0ae06d5934fd75d214951eb96633fbd7f9262a7c
+    elif(~extcodesize(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf)>0):
+        self.OAR = 0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf
+
+macro oraclize_setNetwork(networkID_mainnet):
+    self.OAR = 0x1d11e5eae3112dbd44f99266872ff1d07c77dce8
+
+macro oraclize_setNetwork(networkID_testnet):
+    self.OAR = 0x0ae06d5934fd75d214951eb96633fbd7f9262a7c
+
+macro oraclize_setNetwork(networkID_consensys):
+    self.OAR = 0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf
+
+macro oraclize_cbAddress():
+    self.OAR.getAddress().cbAddress()
+
+macro oraclize_setProof($proofP):
+    oraclize = self.OAR.getAddress()
+    oraclize.setProofType($proofP)
+
+macro oraclize_query($datasource, $arg):
+    oraclize = self.OAR.getAddress()
+    price = oraclize.getPrice($datasource,200000)
+    if (price > 10^18 + tx.gasprice*200000):
+        0 # unexpectedly high price
+    else:
+        oraclize.query(0, $datasource, $arg, value=price)
+
+macro oraclize_query($timestamp, $datasource, $arg):
+    oraclize = self.OAR.getAddress()
+    if(len($timestamp)==0 && len($arg)>0):
+        price = oraclize.getPrice($datasource,200000)
+        if (price > 10^18 + tx.gasprice*200000):
+            0 # unexpectedly high price
+        else:
+            oraclize.query($timestamp, $datasource, $arg, value=price)
+    elif(len($timestamp)>0 && len($arg)==0):
+        # $timestamp is datasource
+        # $datasource is arg
+        # $arg is gasLimit
+        price = oraclize.getPrice($timestamp, $arg)
+        if (price > 10^18 + tx.gasprice*$arg):
+            0 # unexpectedly high price
+        else:
+            oraclize.query_withGasLimit(0, $timestamp, $datasource, $arg, value=price)
+    else:
+        # $timestamp is datasource
+        # $datasource is arg
+        # $arg is 2nd arg
+        price = oraclize.getPrice($timestamp,200000)
+        if (price > 10^18 + tx.gasprice*200000):
+            0 # unexpectedly high price
+        else:
+            oraclize.query2(0, $timestamp, $datasource, $arg, value=price)
+
+macro oraclize_query($timestamp, $datasource, $arg, $gasLimit):
+    oraclize = self.OAR.getAddress()
+    if(len($timestamp)==0 && len($gasLimit)==0):
+        price = oraclize.getPrice($datasource, $gasLimit)
+        if (price > 10^18 + tx.gasprice*$gasLimit):
+            0 # unexpectedly high price
+        else:
+            oraclize.query_withGasLimit($timestamp, $datasource, $arg, $gasLimit, value=price)
+    elif(len($timestamp)>0 && len($gasLimit)==0):
+        # $timestamp is datasource
+        # $datasource is arg
+        # $arg is the 2nd arg
+        # $gasLimit is gasLimit
+        price = oraclize.getPrice($timestamp, $gasLimit)
+        if (price > 10^18 + tx.gasprice*$gasLimit):
+            0 # unexpectedly high price
+        else:
+            oraclize.query2_withGasLimit(0, $timestamp, $datasource, $arg, $gasLimit, value=price)
+    elif(len($gasLimit)>0 && len($timestamp)==0):
+        price = oraclize.getPrice($datasource,200000)
+        if (price > 10^18 + tx.gasprice*200000):
+            0 # unexpectedly high price
+        else:
+            # $timestamp is timestamp
+            # $datasource is datasource
+            # $arg is arg
+            # $gasLimit is 2nd arg
+            oraclize.query2($timestamp, $datasource, $arg, $gasLimit, value=price)
+
+
+macro oraclize_query($timestamp, $datasource, $arg1, $arg2, $gasLimit):
+    oraclize = self.OAR.getAddress()
+    price = oraclize.getPrice($datasource, $gasLimit)
+    if (price > 10^18 + tx.gasprice*$gasLimit):
+        0 # unexpectedly high price
+    else:
+        oraclize.query2_withGasLimit($timestamp, $datasource, $arg1, $arg2, $gasLimit, value=price)
+
+# </ORACLIZE_API>
