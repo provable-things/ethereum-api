@@ -48,16 +48,22 @@ contract usingOraclize {
     byte constant proofType_NONE = 0x00;
     byte constant proofType_TLSNotary = 0x10;
     byte constant proofStorage_IPFS = 0x01;
+    uint8 constant networkID_auto = 0;
     uint8 constant networkID_mainnet = 1;
     uint8 constant networkID_testnet = 2;
     uint8 constant networkID_morden = 2;
     uint8 constant networkID_consensys = 161;
-    
-    OraclizeAddrResolverI OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
+
+    OraclizeAddrResolverI OAR;
     
     OraclizeI oraclize;
     modifier oraclizeAPI {
-        oraclize = OraclizeI(OAR.getAddress());
+        address oraclizeAddr = OAR.getAddress();
+        if (oraclizeAddr == 0){
+            oraclize_setNetwork(networkID_auto);
+            oraclizeAddr = OAR.getAddress();
+        }
+        oraclize = OraclizeI(oraclizeAddr);
         _
     }
     modifier coupon(string code){
@@ -65,13 +71,23 @@ contract usingOraclize {
         oraclize.useCoupon(code);
         _
     }
+
     function oraclize_setNetwork(uint8 networkID) internal returns(bool){
-        if (networkID == networkID_mainnet) OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
-        else if (networkID == networkID_testnet) OAR = OraclizeAddrResolverI(0x0ae06d5934fd75d214951eb96633fbd7f9262a7c);
-        else if (networkID == networkID_consensys) OAR = OraclizeAddrResolverI(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf);
-        else return false;
-        return true;
+        if (getCodeSize(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8)>0){
+            OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
+            return true;
+        }
+        if (getCodeSize(0x0ae06d5934fd75d214951eb96633fbd7f9262a7c)>0){
+            OAR = OraclizeAddrResolverI(0x0ae06d5934fd75d214951eb96633fbd7f9262a7c);
+            return true;
+        }
+        if (getCodeSize(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf)>0){
+            OAR = OraclizeAddrResolverI(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf);
+            return true;
+        }
+        return false;
     }
+    
     function oraclize_query(string datasource, string arg) oraclizeAPI internal returns (bytes32 id){
         uint price = oraclize.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
@@ -119,6 +135,11 @@ contract usingOraclize {
         return oraclize.setProofType(proofP);
     }
 
+    function getCodeSize(address _addr) constant internal returns(uint _size) {
+        assembly {
+            _size := extcodesize(_addr)
+        }
+    }
 
 
     function parseAddr(string _a) internal returns (address){
@@ -160,30 +181,30 @@ contract usingOraclize {
 
     function indexOf(string _haystack, string _needle) internal returns (int)
     {
-    	bytes memory h = bytes(_haystack);
-    	bytes memory n = bytes(_needle);
-    	if(h.length < 1 || n.length < 1 || (n.length > h.length)) 
-    		return -1;
-    	else if(h.length > (2**128 -1))
-    		return -1;									
-    	else
-    	{
-    		uint subindex = 0;
-    		for (uint i = 0; i < h.length; i ++)
-    		{
-    			if (h[i] == n[0])
-    			{
-    				subindex = 1;
-    				while(subindex < n.length && (i + subindex) < h.length && h[i + subindex] == n[subindex])
-    				{
-    					subindex++;
-    				}	
-    				if(subindex == n.length)
-    					return int(i);
-    			}
-    		}
-    		return -1;
-    	}	
+        bytes memory h = bytes(_haystack);
+        bytes memory n = bytes(_needle);
+        if(h.length < 1 || n.length < 1 || (n.length > h.length)) 
+            return -1;
+        else if(h.length > (2**128 -1))
+            return -1;                                  
+        else
+        {
+            uint subindex = 0;
+            for (uint i = 0; i < h.length; i ++)
+            {
+                if (h[i] == n[0])
+                {
+                    subindex = 1;
+                    while(subindex < n.length && (i + subindex) < h.length && h[i + subindex] == n[subindex])
+                    {
+                        subindex++;
+                    }   
+                    if(subindex == n.length)
+                        return int(i);
+                }
+            }
+            return -1;
+        }   
     }
 
     function strConcat(string _a, string _b, string _c, string _d, string _e) internal returns (string){
@@ -238,7 +259,6 @@ contract usingOraclize {
         return mint;
     }
     
-
 
 }
 // </ORACLIZE_API>
