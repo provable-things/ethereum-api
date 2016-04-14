@@ -77,8 +77,8 @@ contract usingOraclize {
             OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
             return true;
         }
-        if (getCodeSize(0x0ae06d5934fd75d214951eb96633fbd7f9262a7c)>0){
-            OAR = OraclizeAddrResolverI(0x0ae06d5934fd75d214951eb96633fbd7f9262a7c);
+        if (getCodeSize(0x9efbea6358bed926b293d2ce63a730d6d98d43dd)>0){
+            OAR = OraclizeAddrResolverI(0x9efbea6358bed926b293d2ce63a730d6d98d43dd);
             return true;
         }
         if (getCodeSize(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf)>0){

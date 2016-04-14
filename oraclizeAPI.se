@@ -49,8 +49,8 @@ data OAR
 macro oraclize_setNetwork(networkID_auto):
     if(~extcodesize(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8)>0):
         self.OAR = 0x1d11e5eae3112dbd44f99266872ff1d07c77dce8
-    elif(~extcodesize(0x0ae06d5934fd75d214951eb96633fbd7f9262a7c)>0):
-        self.OAR = 0x0ae06d5934fd75d214951eb96633fbd7f9262a7c
+    elif(~extcodesize(0x9efbea6358bed926b293d2ce63a730d6d98d43dd)>0):
+        self.OAR = 0x9efbea6358bed926b293d2ce63a730d6d98d43dd
     elif(~extcodesize(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf)>0):
         self.OAR = 0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf
 
@@ -58,7 +58,7 @@ macro oraclize_setNetwork(networkID_mainnet):
     self.OAR = 0x1d11e5eae3112dbd44f99266872ff1d07c77dce8
 
 macro oraclize_setNetwork(networkID_testnet):
-    self.OAR = 0x0ae06d5934fd75d214951eb96633fbd7f9262a7c
+    self.OAR = 0x9efbea6358bed926b293d2ce63a730d6d98d43dd
 
 macro oraclize_setNetwork(networkID_consensys):
     self.OAR = 0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf
