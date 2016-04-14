@@ -12,6 +12,10 @@ contract OraclizeAddrResolver {
         owner = msg.sender;
     }
     
+    function changeOwner(address newowner){
+        if (msg.sender != owner) throw;
+        owner = newowner;
+    }
     
     function getAddress() returns (address oaddr){
         return addr;
