@@ -134,7 +134,6 @@ macro oraclize_query($timestamp, $datasource, $arg, $gasLimit):
             # $gasLimit is 2nd arg
             oraclize.query2($timestamp, $datasource, $arg, $gasLimit, value=price)
 
-
 macro oraclize_query($timestamp, $datasource, $arg1, $arg2, $gasLimit):
     oraclize = self.OAR.getAddress()
     price = oraclize.getPrice($datasource, $gasLimit)
@@ -142,5 +141,23 @@ macro oraclize_query($timestamp, $datasource, $arg1, $arg2, $gasLimit):
         0 # unexpectedly high price
     else:
         oraclize.query2_withGasLimit($timestamp, $datasource, $arg1, $arg2, $gasLimit, value=price)
+
+macro strConcat($a, $b, $c, $d, $e):
+    with $z = string(len($a) + len($b) + len($c) + len($d) + len($e)):
+        mcopy($z, $a, len($a))
+        mcopy($z + len($a), $b, len($b))
+        mcopy($z + len($a) + len($b), $c, len($c))
+        mcopy($z + len($a) + len($b) + len($c), $d, len($d))
+        mcopy($z + len($a) + len($b) + len($c) + len($d), $e, len($e))
+        $z
+
+macro strConcat($a, $b, $c, $d):
+    strConcat($a, $b, $c, $d, text(""))
+
+macro strConcat($a, $b, $c):
+    strConcat($a, $b, $c, text(""), text(""))
+
+macro strConcat($a, $b):
+    strConcat($a, $b, text(""), text(""), text(""))
 
 # </ORACLIZE_API>
