@@ -73,8 +73,8 @@ contract usingOraclize {
     }
 
     function oraclize_setNetwork(uint8 networkID) internal returns(bool){
-        if (getCodeSize(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8)>0){
-            OAR = OraclizeAddrResolverI(0x1d11e5eae3112dbd44f99266872ff1d07c77dce8);
+        if (getCodeSize(0x1d3b2638a7cc9f2cb3d298a3da7a90b67e5506ed)>0){
+            OAR = OraclizeAddrResolverI(0x1d3b2638a7cc9f2cb3d298a3da7a90b67e5506ed);
             return true;
         }
         if (getCodeSize(0x9efbea6358bed926b293d2ce63a730d6d98d43dd)>0){
