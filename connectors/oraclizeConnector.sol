@@ -117,7 +117,7 @@ contract Oraclize {
     }
     
     function getPrice(string _datasource, uint _gaslimit, address _addr) private returns (uint _dsprice) {
-        if ((_gaslimit <= 200000)&&(reqc[_addr] == 0)) return 0;
+        if ((_gaslimit <= 200000)&&(reqc[_addr] == 0)&&(tx.origin != cbAddress)) return 0;
         if ((coupon != 0)&&(coupons[coupon] == true)) return 0;
         _dsprice = price[sha3(_datasource, addr_proofType[_addr])];
         uint gasprice_ = addr_gasPrice[_addr];
