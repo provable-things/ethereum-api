@@ -256,6 +256,7 @@ contract usingOraclize {
                 mint += uint(bresult[i]) - 48;
             } else if (bresult[i] == 46) decimals = true;
         }
+        if (_b > 0) mint *= 10**_b;
         return mint;
     }
     
