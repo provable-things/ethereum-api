@@ -12,6 +12,8 @@ contract Oraclize {
     
     address public cbAddress = 0x26588a9301b0428d95e6fc3a5024fce8bec12d51;
     
+    address constant AmIOnTheForkAddress = 0x2bd2326c993dfaef84f696526064ff22eba5b362;
+    
     event Log1(address sender, bytes32 cid, uint timestamp, string datasource, string arg, uint gaslimit, byte proofType, uint gasPrice);
     event Log2(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, uint gaslimit, byte proofType, uint gasPrice);
     
@@ -156,7 +158,7 @@ contract Oraclize {
     
     function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id) {
 	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
-	bool forkFlag = AmIOnTheFork(0xb5a7f4ea27e362c57d41b942392f1a4654868046).forked();
+	bool forkFlag = AmIOnTheFork(AmIOnTheForkAddress).forked();
         _id = sha3(forkFlag, this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         Log1(msg.sender, _id, _timestamp, _datasource, _arg, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
@@ -165,7 +167,7 @@ contract Oraclize {
     
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id) {
 	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
-	bool forkFlag = AmIOnTheFork(0xb5a7f4ea27e362c57d41b942392f1a4654868046).forked();
+	bool forkFlag = AmIOnTheFork(AmIOnTheForkAddress).forked();
         _id = sha3(forkFlag, this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         Log2(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
