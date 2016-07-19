@@ -2,8 +2,8 @@
 Copyright (c) 2015-2016 Oraclize srl, Thomas Bertani
 */
 
-contract OraclizeAddrResolverI {
-    function getAddress() returns (address _addr);
+contract AmIOnTheFork{
+    function forked() constant returns(bool);
 }
 
 
@@ -156,7 +156,8 @@ contract Oraclize {
     
     function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id) {
 	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
-        _id = sha3(uint(this)+uint(msg.sender)+reqc[msg.sender]);
+	bool forkFlag = AmIOnTheFork(0xb5a7f4ea27e362c57d41b942392f1a4654868046).forked();
+        _id = sha3(forkFlag, this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         Log1(msg.sender, _id, _timestamp, _datasource, _arg, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
         return _id;
@@ -164,7 +165,8 @@ contract Oraclize {
     
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) costs(_datasource, _gaslimit) returns (bytes32 _id) {
 	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
-        _id = sha3(uint(this)+uint(msg.sender)+reqc[msg.sender]);
+	bool forkFlag = AmIOnTheFork(0xb5a7f4ea27e362c57d41b942392f1a4654868046).forked();
+        _id = sha3(forkFlag, this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         Log2(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
         return _id;
