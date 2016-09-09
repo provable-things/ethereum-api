@@ -59,12 +59,8 @@ contract usingOraclize {
     
     OraclizeI oraclize;
     modifier oraclizeAPI {
-        address oraclizeAddr = OAR.getAddress();
-        if (oraclizeAddr == 0){
-            oraclize_setNetwork(networkID_auto);
-            oraclizeAddr = OAR.getAddress();
-        }
-        oraclize = OraclizeI(oraclizeAddr);
+        if(address(OAR)==0) oraclize_setNetwork(networkID_auto);
+        oraclize = OraclizeI(OAR.getAddress());
         _
     }
     modifier coupon(string code){
@@ -84,6 +80,10 @@ contract usingOraclize {
         }
         if (getCodeSize(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf)>0){
             OAR = OraclizeAddrResolverI(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf);
+            return true;
+        }
+        if (getCodeSize(0x9a1d6e5c6c8d081ac45c6af98b74a42442afba60)>0){
+            OAR = OraclizeAddrResolverI(0x9a1d6e5c6c8d081ac45c6af98b74a42442afba60);
             return true;
         }
         return false;
