@@ -62,7 +62,7 @@ contract usingOraclize {
         if(address(OAR)==0) oraclize_setNetwork(networkID_auto);
         oraclize = OraclizeI(OAR.getAddress());
         _
-    } //please import oraclizeAPI_0.4.sol when using solidity >= 0.4
+    }//please use oraclizeAPI_0.4.sol when solidity >= 0.4.0
     modifier coupon(string code){
         oraclize = OraclizeI(OAR.getAddress());
         oraclize.useCoupon(code);
