@@ -138,6 +138,9 @@ contract usingOraclize {
     function oraclize_setCustomGasPrice(uint gasPrice) oraclizeAPI internal {
         return oraclize.setCustomGasPrice(gasPrice);
     }    
+    function oraclize_setConfig(bytes config) oraclizeAPI internal {
+        //return oraclize.setConfig(config);
+    }
 
     function getCodeSize(address _addr) constant internal returns(uint _size) {
         assembly {
