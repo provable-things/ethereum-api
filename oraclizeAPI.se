@@ -42,6 +42,7 @@ macro proofStorage_IPFS: 0x01000000000000000000000000000000000000000000000000000
 macro networkID_mainnet: 1
 macro networkID_testnet: 2
 macro networkID_morden: 2
+macro networkID_ropsten: 2
 macro networkID_consensys: 161
 macro networkID_auto: 0
 
@@ -50,8 +51,8 @@ data OAR
 macro oraclize_setNetwork(networkID_auto):
     if(~extcodesize(0x1d3b2638a7cc9f2cb3d298a3da7a90b67e5506ed)>0):
         self.OAR = 0x1d3b2638a7cc9f2cb3d298a3da7a90b67e5506ed
-    elif(~extcodesize(0x9efbea6358bed926b293d2ce63a730d6d98d43dd)>0):
-        self.OAR = 0x9efbea6358bed926b293d2ce63a730d6d98d43dd
+    elif(~extcodesize(0xc03a2615d5efaf5f49f60b7bb6583eaec212fdf1)>0):
+        self.OAR = 0xc03a2615d5efaf5f49f60b7bb6583eaec212fdf1
     elif(~extcodesize(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf)>0):
         self.OAR = 0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf
 
@@ -59,7 +60,7 @@ macro oraclize_setNetwork(networkID_mainnet):
     self.OAR = 0x1d3b2638a7cc9f2cb3d298a3da7a90b67e5506ed
 
 macro oraclize_setNetwork(networkID_testnet):
-    self.OAR = 0x9efbea6358bed926b293d2ce63a730d6d98d43dd
+    self.OAR = 0xc03a2615d5efaf5f49f60b7bb6583eaec212fdf1
 
 macro oraclize_setNetwork(networkID_consensys):
     self.OAR = 0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf
