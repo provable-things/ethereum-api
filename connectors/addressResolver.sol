@@ -1,5 +1,6 @@
 /*
-Copyright (c) 2015-2016 Oraclize srl, Thomas Bertani
+  Copyright (c) 2015-2016 Oraclize SRL
+  Copyright (c) 2016 Oraclize LTD
 */
 
 contract OraclizeAddrResolver {
