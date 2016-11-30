@@ -73,23 +73,15 @@ contract usingOraclize {
     }
 
     function oraclize_setNetwork(uint8 networkID) internal returns(bool){
-        if (getCodeSize(0x1d3b2638a7cc9f2cb3d298a3da7a90b67e5506ed)>0){
+        if (getCodeSize(0x1d3b2638a7cc9f2cb3d298a3da7a90b67e5506ed)>0){ //mainnet
             OAR = OraclizeAddrResolverI(0x1d3b2638a7cc9f2cb3d298a3da7a90b67e5506ed);
             return true;
         }
-        if (getCodeSize(0x9efbea6358bed926b293d2ce63a730d6d98d43dd)>0){
-            OAR = OraclizeAddrResolverI(0x9efbea6358bed926b293d2ce63a730d6d98d43dd);
+        if (getCodeSize(0xc03a2615d5efaf5f49f60b7bb6583eaec212fdf1)>0){ //ropsten testnet
+            OAR = OraclizeAddrResolverI(0xc03a2615d5efaf5f49f60b7bb6583eaec212fdf1);
             return true;
         }
-        if (getCodeSize(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf)>0){
-            OAR = OraclizeAddrResolverI(0x20e12a1f859b3feae5fb2a0a32c18f5a65555bbf);
-            return true;
-        }
-        if (getCodeSize(0x9a1d6e5c6c8d081ac45c6af98b74a42442afba60)>0){
-            OAR = OraclizeAddrResolverI(0x9a1d6e5c6c8d081ac45c6af98b74a42442afba60);
-            return true;
-        }
-        if (getCodeSize(0x51efaf4c8b3c9afbd5ab9f4bbc82784ab6ef8faa)>0){
+        if (getCodeSize(0x51efaf4c8b3c9afbd5ab9f4bbc82784ab6ef8faa)>0){ //browser-solidity
             OAR = OraclizeAddrResolverI(0x51efaf4c8b3c9afbd5ab9f4bbc82784ab6ef8faa);
             return true;
         }
