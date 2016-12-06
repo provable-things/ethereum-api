@@ -40,6 +40,7 @@ contract OraclizeI {
     function getPrice(string _datasource, uint gaslimit) returns (uint _dsprice);
     function useCoupon(string _coupon);
     function setProofType(byte _proofType);
+    function setConfig(bytes32 _config);
     function setCustomGasPrice(uint _gasPrice);
 }
 contract OraclizeAddrResolverI {
@@ -137,8 +138,8 @@ contract usingOraclize {
     function oraclize_setCustomGasPrice(uint gasPrice) oraclizeAPI internal {
         return oraclize.setCustomGasPrice(gasPrice);
     }    
-    function oraclize_setConfig(bytes config) oraclizeAPI internal {
-        //return oraclize.setConfig(config);
+    function oraclize_setConfig(bytes32 config) oraclizeAPI internal {
+        return oraclize.setConfig(config);
     }
 
     function getCodeSize(address _addr) constant internal returns(uint _size) {
