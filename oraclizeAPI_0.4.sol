@@ -92,6 +92,8 @@ contract usingOraclize {
     function __callback(bytes32 myid, string result) {
         __callback(myid, result, new bytes(0));
     }
+    function __callback(bytes32 myid, string result, bytes proof) {
+    }
     
     function oraclize_getPrice(string datasource) oraclizeAPI internal returns (uint){
         return oraclize.getPrice(datasource);
