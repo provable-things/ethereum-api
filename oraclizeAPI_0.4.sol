@@ -63,7 +63,7 @@ contract usingOraclize {
     
     OraclizeI oraclize;
     modifier oraclizeAPI {
-        if(address(OAR)==0) oraclize_setNetwork(networkID_auto);
+        if((address(OAR)==0)||(getCodeSize(address(OAR))==0)) oraclize_setNetwork(networkID_auto);
         oraclize = OraclizeI(OAR.getAddress());
         _;
     }
@@ -80,6 +80,10 @@ contract usingOraclize {
         }
         if (getCodeSize(0xc03A2615D5efaf5F49F60B7BB6583eaec212fdf1)>0){ //ropsten testnet
             OAR = OraclizeAddrResolverI(0xc03A2615D5efaf5F49F60B7BB6583eaec212fdf1);
+            return true;
+        }
+        if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475)>0){ //ethereum-bridge
+            OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
             return true;
         }
         if (getCodeSize(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF)>0){ //ether.camp ide
