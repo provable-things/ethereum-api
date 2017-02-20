@@ -66,7 +66,7 @@ contract usingOraclize {
     OraclizeI oraclize;
     modifier oraclizeAPI {
         if((address(OAR)==0)||(getCodeSize(address(OAR))==0)) oraclize_setNetwork(networkID_auto);
-		oraclize = OraclizeI(OAR.getAddress());
+        oraclize = OraclizeI(OAR.getAddress());
         _;
     }
     modifier coupon(string code){
@@ -84,11 +84,11 @@ contract usingOraclize {
             OAR = OraclizeAddrResolverI(0xc03A2615D5efaf5F49F60B7BB6583eaec212fdf1);
             return true;
         }
-		if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475)>0){ //ethereum-bridge
-			OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
-			return true;
+        if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475)>0){ //ethereum-bridge
+            OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
+            return true;
         }
-		if (getCodeSize(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF)>0){ //ether.camp ide
+        if (getCodeSize(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF)>0){ //ether.camp ide
             OAR = OraclizeAddrResolverI(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF);
             return true;
         }
@@ -283,7 +283,6 @@ contract usingOraclize {
         dynargs[3] = args[3];
         return oraclize_query(datasource, dynargs, gaslimit);
     }
-    
     function oraclize_query(string datasource, string[5] args) oraclizeAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](5);
         dynargs[0] = args[0];
@@ -320,7 +319,7 @@ contract usingOraclize {
         dynargs[4] = args[4];
         return oraclize_query(datasource, dynargs, gaslimit);
     }
-    
+
     function oraclize_cbAddress() oraclizeAPI internal returns (address){
         return oraclize.cbAddress();
     }
