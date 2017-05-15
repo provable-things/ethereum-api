@@ -323,6 +323,172 @@ contract usingOraclize {
         dynargs[4] = args[4];
         return oraclize_query(datasource, dynargs, gaslimit);
     }
+    function oraclize_query(string datasource, bytes[] argN) oraclizeAPI internal returns (bytes32 id){
+        uint price = oraclize.getPrice(datasource);
+        if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
+        bytes memory args = ba2cbor(argN);
+        return oraclize.queryN.value(price)(0, datasource, args);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[] argN) oraclizeAPI internal returns (bytes32 id){
+        uint price = oraclize.getPrice(datasource);
+        if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
+        bytes memory args = ba2cbor(argN);
+        return oraclize.queryN.value(price)(timestamp, datasource, args);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[] argN, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
+        uint price = oraclize.getPrice(datasource, gaslimit);
+        if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
+        bytes memory args = ba2cbor(argN);
+        return oraclize.queryN_withGasLimit.value(price)(timestamp, datasource, args, gaslimit);
+    }
+    function oraclize_query(string datasource, bytes[] argN, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
+        uint price = oraclize.getPrice(datasource, gaslimit);
+        if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
+        bytes memory args = ba2cbor(argN);
+        return oraclize.queryN_withGasLimit.value(price)(0, datasource, args, gaslimit);
+    }
+    function oraclize_query(string datasource, bytes[1] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](1);
+        dynargs[0] = args[0];
+        return oraclize_query(datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[1] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](1);
+        dynargs[0] = args[0];
+        return oraclize_query(timestamp, datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[1] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](1);
+        dynargs[0] = args[0];
+        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+    }
+    function oraclize_query(string datasource, bytes[1] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](1);
+        dynargs[0] = args[0];       
+        return oraclize_query(datasource, dynargs, gaslimit);
+    }
+    
+    function oraclize_query(string datasource, bytes[2] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](2);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        return oraclize_query(datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[2] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](2);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        return oraclize_query(timestamp, datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[2] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](2);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+    }
+    function oraclize_query(string datasource, bytes[2] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](2);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        return oraclize_query(datasource, dynargs, gaslimit);
+    }
+    function oraclize_query(string datasource, bytes[3] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](3);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        return oraclize_query(datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[3] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](3);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        return oraclize_query(timestamp, datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[3] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](3);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+    }
+    function oraclize_query(string datasource, bytes[3] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](3);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        return oraclize_query(datasource, dynargs, gaslimit);
+    }
+    
+    function oraclize_query(string datasource, bytes[4] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](4);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        dynargs[3] = args[3];
+        return oraclize_query(datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[4] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](4);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        dynargs[3] = args[3];
+        return oraclize_query(timestamp, datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[4] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](4);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        dynargs[3] = args[3];
+        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+    }
+    function oraclize_query(string datasource, bytes[4] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](4);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        dynargs[3] = args[3];
+        return oraclize_query(datasource, dynargs, gaslimit);
+    }
+    function oraclize_query(string datasource, bytes[5] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](5);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        dynargs[3] = args[3];
+        dynargs[4] = args[4];
+        return oraclize_query(datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[5] args) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](5);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        dynargs[3] = args[3];
+        dynargs[4] = args[4];
+        return oraclize_query(timestamp, datasource, dynargs);
+    }
+    function oraclize_query(uint timestamp, string datasource, bytes[5] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](5);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        dynargs[3] = args[3];
+        dynargs[4] = args[4];
+        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+    }
+    function oraclize_query(string datasource, bytes[5] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+        bytes[] memory dynargs = new bytes[](5);
+        dynargs[0] = args[0];
+        dynargs[1] = args[1];
+        dynargs[2] = args[2];
+        dynargs[3] = args[3];
+        dynargs[4] = args[4];
+        return oraclize_query(datasource, dynargs, gaslimit);
+    }
 
     function oraclize_cbAddress() oraclizeAPI internal returns (address){
         return oraclize.cbAddress();
@@ -477,8 +643,50 @@ contract usingOraclize {
         }
         return string(bstr);
     }
-
+    
     function stra2cbor(string[] arr) internal returns (bytes) {
+            uint arrlen = arr.length;
+
+            // get correct cbor output length
+            uint outputlen = 0;
+            bytes[] memory elemArray = new bytes[](arrlen);
+            for (uint i = 0; i < arrlen; i++) {
+                elemArray[i] = (bytes(arr[i]));
+                outputlen += elemArray[i].length + (elemArray[i].length - 1)/23 + 3; //+3 accounts for paired identifier types
+            }
+            uint ctr = 0;
+            uint cborlen = arrlen + 0x80;
+            outputlen += byte(cborlen).length;
+            bytes memory res = new bytes(outputlen);
+
+            while (byte(cborlen).length > ctr) {
+                res[ctr] = byte(cborlen)[ctr];
+                ctr++;
+            }
+            for (i = 0; i < arrlen; i++) {
+                res[ctr] = 0x5F;
+                ctr++;
+                for (uint x = 0; x < elemArray[i].length; x++) {
+                    // if there's a bug with larger strings, this may be the culprit
+                    if (x % 23 == 0) {
+                        uint elemcborlen = elemArray[i].length - x >= 24 ? 23 : elemArray[i].length - x;
+                        elemcborlen += 0x40;
+                        uint lctr = ctr;
+                        while (byte(elemcborlen).length > ctr - lctr) {
+                            res[ctr] = byte(elemcborlen)[ctr - lctr];
+                            ctr++;
+                        }
+                    }
+                    res[ctr] = elemArray[i][x];
+                    ctr++;
+                }
+                res[ctr] = 0xFF;
+                ctr++;
+            }
+            return res;
+        }
+
+    function ba2cbor(bytes[] arr) internal returns (bytes) {
             uint arrlen = arr.length;
 
             // get correct cbor output length
