@@ -503,6 +503,10 @@ contract usingOraclize {
     function oraclize_setConfig(bytes32 config) oraclizeAPI internal {
         return oraclize.setConfig(config);
     }
+    
+    function oraclize_randomDS_getSessionPubKeyHash() oraclizeAPI internal returns (bytes32){
+        return oraclize.randomDS_getSessionPubKeyHash();
+    }
 
     function getCodeSize(address _addr) constant internal returns(uint _size) {
         assembly {
