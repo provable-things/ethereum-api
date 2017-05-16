@@ -44,6 +44,7 @@ contract OraclizeI {
     function setProofType(byte _proofType);
     function setConfig(bytes32 _config);
     function setCustomGasPrice(uint _gasPrice);
+    function randomDS_getSessionPubKeyHash() returns(bytes32);
 }
 contract OraclizeAddrResolverI {
     function getAddress() returns (address _addr);
