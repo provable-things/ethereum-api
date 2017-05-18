@@ -115,6 +115,10 @@ contract usingOraclize {
     }
     function __callback(bytes32 myid, string result, bytes proof) {
     }
+    
+    function oraclize_useCoupon(string code) oraclizeAPI internal {
+        oraclize.useCoupon(code);
+    }
 
     function oraclize_getPrice(string datasource) oraclizeAPI internal returns (uint){
         return oraclize.getPrice(datasource);
