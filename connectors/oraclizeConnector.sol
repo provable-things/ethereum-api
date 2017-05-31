@@ -3,7 +3,7 @@ Copyright (c) 2015-2016 Oraclize SRL
 Copyright (c) 2016 Oraclize LTD
 */
 
-pragma solidity ^0.4.6;
+pragma solidity ^0.4.11;
 
 contract AmIOnTheFork{
     function forked() constant returns(bool);
@@ -25,6 +25,9 @@ contract Oraclize {
     event Log1(address sender, bytes32 cid, uint timestamp, string datasource, string arg, uint gaslimit, byte proofType, uint gasPrice);
     event Log2(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, uint gaslimit, byte proofType, uint gasPrice);
     event LogN(address sender, bytes32 cid, uint timestamp, string datasource, bytes args, uint gaslimit, byte proofType, uint gasPrice);
+    event Log1_fnc(address sender, bytes32 cid, uint timestamp, string datasource, string arg, function() external callback, uint gaslimit, byte proofType, uint gasPrice);
+    event Log2_fnc(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, function() external callback, uint gaslimit, byte proofType, uint gasPrice);
+    event LogN_fnc(address sender, bytes32 cid, uint timestamp, string datasource, bytes args, function() external callback, uint gaslimit, byte proofType, uint gasPrice);
 
     address owner;
 
@@ -38,16 +41,20 @@ contract Oraclize {
         cbAddresses[newCbAddress] = addressType;
     }
 
-    function addCbAddress(address newCbAddress, byte addressType) onlyadmin {
+    function addCbAddress(address newCbAddress, byte addressType)
+    onlyadmin {
         bytes memory nil = '';
         addCbAddress(newCbAddress, addressType, nil);
     }
 
-    function removeCbAddress(address newCbAddress) onlyadmin {
+    function removeCbAddress(address newCbAddress)
+    onlyadmin {
         delete cbAddresses[newCbAddress];
     }
 
-    function cbAddress() constant returns (address _cbAddress) {
+    function cbAddress()
+    constant
+    returns (address _cbAddress) {
         if (cbAddresses[tx.origin] != 0)
             _cbAddress = tx.origin;
     }
@@ -83,21 +90,25 @@ contract Oraclize {
 
     uint gasprice = 20000000000;
 
-    function setGasPrice(uint newgasprice) onlyadmin {
+    function setGasPrice(uint newgasprice)
+    onlyadmin {
         gasprice = newgasprice;
     }
 
-    function setBasePrice(uint new_baseprice) onlyadmin { //0.001 usd in ether
+    function setBasePrice(uint new_baseprice)
+    onlyadmin { //0.001 usd in ether
         baseprice = new_baseprice;
         for (uint i=0; i<dsources.length; i++) price[dsources[i]] = new_baseprice*price_multiplier[dsources[i]];
     }
 
-    function setBasePrice(uint new_baseprice, bytes proofID) onlyadmin { //0.001 usd in ether
+    function setBasePrice(uint new_baseprice, bytes proofID)
+    onlyadmin { //0.001 usd in ether
         baseprice = new_baseprice;
         for (uint i=0; i<dsources.length; i++) price[dsources[i]] = new_baseprice*price_multiplier[dsources[i]];
     }
 
-    function withdrawFunds(address _addr) onlyadmin {
+    function withdrawFunds(address _addr)
+    onlyadmin {
         _addr.send(this.balance);
     }
 
@@ -134,19 +145,27 @@ contract Oraclize {
         addr_gasPrice[msg.sender] = _gasPrice;
     }
 
-    function getPrice(string _datasource) public returns (uint _dsprice) {
+    function getPrice(string _datasource)
+    public
+    returns (uint _dsprice) {
         return getPrice(_datasource, msg.sender);
     }
 
-    function getPrice(string _datasource, uint _gaslimit) public returns (uint _dsprice) {
+    function getPrice(string _datasource, uint _gaslimit)
+    public
+    returns (uint _dsprice) {
         return getPrice(_datasource, _gaslimit, msg.sender);
     }
 
-    function getPrice(string _datasource, address _addr) private returns (uint _dsprice) {
+    function getPrice(string _datasource, address _addr)
+    private
+    returns (uint _dsprice) {
         return getPrice(_datasource, 200000, _addr);
     }
 
-    function getPrice(string _datasource, uint _gaslimit, address _addr) private returns (uint _dsprice) {
+    function getPrice(string _datasource, uint _gaslimit, address _addr)
+    private
+    returns (uint _dsprice) {
         uint gasprice_ = addr_gasPrice[_addr];
         if ((_gaslimit <= 200000)&&(reqc[_addr] == 0)&&(gasprice_ <= gasprice)&&(tx.origin != cbAddress())) return 0;
         if (gasprice_ == 0) gasprice_ = gasprice;
@@ -156,49 +175,96 @@ contract Oraclize {
         return _dsprice;
     }
 
-    function getCodeSize(address _addr) constant internal returns(uint _size) {
+    function getCodeSize(address _addr)
+    private
+    constant
+    returns(uint _size) {
     assembly {
         _size := extcodesize(_addr)
         }
     }
 
-    function query(string _datasource, string _arg) payable returns (bytes32 _id) {
+    function query(string _datasource, string _arg)
+    payable
+    returns (bytes32 _id) {
         return query1(0, _datasource, _arg, 200000);
     }
 
-    function query1(string _datasource, string _arg) payable returns (bytes32 _id) {
+    function query1(string _datasource, string _arg)
+    payable
+    returns (bytes32 _id) {
         return query1(0, _datasource, _arg, 200000);
     }
 
-    function query2(string _datasource, string _arg1, string _arg2) payable returns (bytes32 _id) {
+    function query2(string _datasource, string _arg1, string _arg2)
+    payable
+    returns (bytes32 _id) {
         return query2(0, _datasource, _arg1, _arg2, 200000);
     }
 
-    function queryN(string _datasource, bytes _args) payable returns (bytes32 _id) {
+    function queryN(string _datasource, bytes _args)
+    payable
+    returns (bytes32 _id) {
         return queryN(0, _datasource, _args, 200000);
     }
 
-    function query(uint _timestamp, string _datasource, string _arg) payable returns (bytes32 _id) {
+    function query(uint _timestamp, string _datasource, string _arg)
+    payable
+    returns (bytes32 _id) {
         return query1(_timestamp, _datasource, _arg, 200000);
     }
 
-    function query1(uint _timestamp, string _datasource, string _arg) payable returns (bytes32 _id) {
+    function query1(uint _timestamp, string _datasource, string _arg)
+    payable
+    returns (bytes32 _id) {
         return query1(_timestamp, _datasource, _arg, 200000);
     }
 
-    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) payable returns (bytes32 _id) {
+    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2)
+    payable
+    returns (bytes32 _id) {
         return query2(_timestamp, _datasource, _arg1, _arg2, 200000);
     }
 
-    function queryN(uint _timestamp, string _datasource, bytes _args) payable returns (bytes32 _id) {
+    function queryN(uint _timestamp, string _datasource, bytes _args)
+    payable
+    returns (bytes32 _id) {
         return queryN(_timestamp, _datasource, _args, 200000);
     }
 
-    function query(uint _timestamp, string _datasource, string _arg, uint _gaslimit) payable returns (bytes32 _id) {
+    function query(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
+    payable
+    returns (bytes32 _id) {
         return query1(_timestamp, _datasource, _arg, _gaslimit);
     }
 
-    function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit) costs(_datasource, _gaslimit) payable returns (bytes32 _id) {
+    function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
+    payable
+    returns (bytes32 _id) {
+        return query(_timestamp, _datasource, _arg, _gaslimit);
+    }
+
+    function query1_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
+    payable
+    returns (bytes32 _id) {
+        return query1(_timestamp, _datasource, _arg, _gaslimit);
+    }
+
+    function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit)
+    payable
+    returns (bytes32 _id) {
+        return query2(_timestamp, _datasource, _arg1, _arg2, _gaslimit);
+    }
+
+    function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _args, uint _gaslimit)
+    payable
+    returns (bytes32 _id) {
+        return queryN(_timestamp, _datasource, _args, _gaslimit);
+    }
+
+    function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit) costs(_datasource, _gaslimit)
+    payable
+    returns (bytes32 _id) {
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
     	bool forkFlag;
         if (getCodeSize(AmIOnTheForkAddress) > 0)
@@ -210,7 +276,10 @@ contract Oraclize {
         return _id;
     }
 
-    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) costs(_datasource, _gaslimit) payable returns (bytes32 _id) {
+    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit)
+    costs(_datasource, _gaslimit)
+    payable
+    returns (bytes32 _id) {
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
     	bool forkFlag;
         if (getCodeSize(AmIOnTheForkAddress) > 0)
@@ -222,7 +291,9 @@ contract Oraclize {
         return _id;
     }
 
-    function queryN(uint _timestamp, string _datasource, bytes _args, uint _gaslimit) costs(_datasource, _gaslimit) payable returns (bytes32 _id) {
+    function queryN(uint _timestamp, string _datasource, bytes _args, uint _gaslimit) costs(_datasource, _gaslimit)
+    payable
+    returns (bytes32 _id) {
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
     	bool forkFlag;
         if (getCodeSize(AmIOnTheForkAddress) > 0)
@@ -234,19 +305,46 @@ contract Oraclize {
         return _id;
     }
 
-    function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) payable returns (bytes32 _id) {
-        return query(_timestamp, _datasource, _arg, _gaslimit);
+    function query1_fnc(uint _timestamp, string _datasource, string _arg, function() external _fnc, uint _gaslimit)
+    costs(_datasource, _gaslimit)
+    payable
+    returns (bytes32 _id) {
+        if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
+
+        _id = sha3(forkCheck(), this, msg.sender, reqc[msg.sender]);
+        reqc[msg.sender]++;
+        Log1_fnc(msg.sender, _id, _timestamp, _datasource, _arg, _fnc, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
+        return _id;
     }
 
-    function query1_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) payable returns (bytes32 _id) {
-        return query1(_timestamp, _datasource, _arg, _gaslimit);
+    function query2_fnc(uint _timestamp, string _datasource, string _arg1, string _arg2, function() external _fnc, uint _gaslimit)
+    costs(_datasource, _gaslimit)
+    payable
+    returns (bytes32 _id) {
+        if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
+
+        _id = sha3(forkCheck(), this, msg.sender, reqc[msg.sender]);
+        reqc[msg.sender]++;
+        Log2_fnc(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _fnc,  _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
+        return _id;
     }
 
-    function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) payable returns (bytes32 _id) {
-        return query2(_timestamp, _datasource, _arg1, _arg2, _gaslimit);
-    }
+    function queryN_fnc(uint _timestamp, string _datasource, bytes _args, function() external _fnc, uint _gaslimit)
+    costs(_datasource, _gaslimit)
+    payable
+    returns (bytes32 _id) {
+        if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
-    function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _args, uint _gaslimit) payable returns (bytes32 _id) {
-        return queryN(_timestamp, _datasource, _args, _gaslimit);
+        _id = sha3(forkCheck(), this, msg.sender, reqc[msg.sender]);
+        reqc[msg.sender]++;
+        LogN_fnc(msg.sender, _id, _timestamp, _datasource, _args, _fnc, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
+        return _id;
+    }
+    
+    function forkCheck()
+    private
+    returns (bool) {
+        if (getCodeSize(AmIOnTheForkAddress) > 0)
+            return AmIOnTheFork(AmIOnTheForkAddress).forked();
     }
 }
