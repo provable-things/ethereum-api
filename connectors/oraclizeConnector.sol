@@ -27,9 +27,15 @@ contract Oraclize {
         if (msg.sender != owner) throw;
        _;
     }
+    
+    function changeAdmin(address _newAdmin) 
+    onlyadmin {
+        owner = _newAdmin;
+    }
 
     // proof is currently a placeholder for when associated proof for addressType is added
-    function addCbAddress(address newCbAddress, byte addressType, bytes proof) onlyadmin {
+    function addCbAddress(address newCbAddress, byte addressType, bytes proof) 
+    onlyadmin {
         cbAddresses[newCbAddress] = addressType;
     }
 
