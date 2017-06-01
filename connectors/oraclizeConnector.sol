@@ -13,11 +13,6 @@ contract Oraclize {
     mapping (address => uint) reqc;
 
     mapping (address => byte) public cbAddresses;
-    /*
-    0x01 = classic
-    0x02 = ledger nano
-    0x03 = intel sgx
-    */
 
     event Log1(address sender, bytes32 cid, uint timestamp, string datasource, string arg, uint gaslimit, byte proofType, uint gasPrice);
     event Log2(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, uint gaslimit, byte proofType, uint gasPrice);
@@ -29,7 +24,7 @@ contract Oraclize {
     address owner;
 
     modifier onlyadmin {
-        if ((msg.sender != owner)&&(msg.sender != cbAddress())) throw;
+        if (msg.sender != owner) throw;
        _;
     }
 
