@@ -28,6 +28,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+/*
+Oraclize API v1.1.0
+*/
+
 pragma solidity ^0.4.0;//please import oraclizeAPI_pre0.4.sol when solidity < 0.4.0
 
 contract OraclizeI {
@@ -43,7 +47,6 @@ contract OraclizeI {
     function queryN_fnc(uint _timestamp, string _datasource, bytes _argN, function() external _fnc, uint _gaslimit) payable returns (bytes32 _id);
     function getPrice(string _datasource) returns (uint _dsprice);
     function getPrice(string _datasource, uint gaslimit) returns (uint _dsprice);
-    function useCoupon(string _coupon);
     function setProofType(byte _proofType);
     function setConfig(bytes32 _config);
     function setCustomGasPrice(uint _gasPrice);
@@ -74,11 +77,6 @@ contract usingOraclize {
     modifier oraclizeAPI {
         if((address(OAR)==0)||(getCodeSize(address(OAR))==0)) oraclize_setNetwork(networkID_auto);
         oraclize = OraclizeI(OAR.getAddress());
-        _;
-    }
-    modifier coupon(string code){
-        oraclize = OraclizeI(OAR.getAddress());
-        oraclize.useCoupon(code);
         _;
     }
 
@@ -122,10 +120,6 @@ contract usingOraclize {
         __callback(myid, result, new bytes(0));
     }
     function __callback(bytes32 myid, string result, bytes proof) {
-    }
-
-    function oraclize_useCoupon(string code) oraclizeAPI internal {
-        oraclize.useCoupon(code);
     }
 
     function oraclize_getPrice(string datasource) oraclizeAPI internal returns (uint){

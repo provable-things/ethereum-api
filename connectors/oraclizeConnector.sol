@@ -3,12 +3,11 @@ Copyright (c) 2015-2016 Oraclize SRL
 Copyright (c) 2016 Oraclize LTD
 */
 
+/*
+Oraclize Connector v1.1.0
+*/
+
 pragma solidity ^0.4.11;
-
-contract AmIOnTheFork{
-    function forked() constant returns(bool);
-}
-
 
 contract Oraclize {
     mapping (address => uint) reqc;
@@ -19,8 +18,6 @@ contract Oraclize {
     0x02 = ledger nano
     0x03 = intel sgx
     */
-
-    address constant AmIOnTheForkAddress = 0x2BD2326c993DFaeF84f696526064FF22eba5b362;
 
     event Log1(address sender, bytes32 cid, uint timestamp, string datasource, string arg, uint gaslimit, byte proofType, uint gasPrice);
     event Log2(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, uint gaslimit, byte proofType, uint gasPrice);
@@ -67,17 +64,6 @@ contract Oraclize {
         bytes32 dsname_hash = sha3(dsname, proofType);
         dsources[dsources.length++] = dsname_hash;
         price_multiplier[dsname_hash] = multiplier;
-    }
-
-    mapping (bytes32 => bool) coupons;
-    bytes32 coupon;
-
-    function createCoupon(string _code) onlyadmin {
-        coupons[sha3(_code)] = true;
-    }
-
-    function deleteCoupon(string _code) onlyadmin {
-        coupons[sha3(_code)] = false;
     }
 
     function multisetProofType(uint[] _proofType, address[] _addr) onlyadmin {
@@ -133,8 +119,17 @@ contract Oraclize {
     mapping (bytes32 => uint) price;
     mapping (bytes32 => uint) price_multiplier;
     bytes32[] dsources;
-    function useCoupon(string _coupon) {
-        coupon = sha3(_coupon);
+
+    bytes32[] public randomDS_sessionPubKeysHash;
+
+    function randomDS_updateSessionPubKeysHash(bytes32[] _newSessionPubKeysHash) onlyadmin {
+        randomDS_sessionPubKeysHash.length = 0;
+        for (uint i=0; i<_newSessionPubKeysHash.length; i++) randomDS_sessionPubKeysHash.push(_newSessionPubKeysHash[i]);
+    }
+
+    function randomDS_getSessionPubKeyHash() constant returns (bytes32) {
+        uint i = uint(sha3(reqc[msg.sender]))%randomDS_sessionPubKeysHash.length;
+        return randomDS_sessionPubKeysHash[i];
     }
 
     function setProofType(byte _proofType) {
@@ -169,7 +164,6 @@ contract Oraclize {
         uint gasprice_ = addr_gasPrice[_addr];
         if ((_gaslimit <= 200000)&&(reqc[_addr] == 0)&&(gasprice_ <= gasprice)&&(tx.origin != cbAddress())) return 0;
         if (gasprice_ == 0) gasprice_ = gasprice;
-        if ((coupon != 0)&&(coupons[coupon] == true)) return 0;
         _dsprice = price[sha3(_datasource, addr_proofType[_addr])];
         _dsprice += _gaslimit*gasprice_;
         return _dsprice;
@@ -266,11 +260,8 @@ contract Oraclize {
     payable
     returns (bytes32 _id) {
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
-    	bool forkFlag;
-        if (getCodeSize(AmIOnTheForkAddress) > 0)
-            forkFlag = AmIOnTheFork(AmIOnTheForkAddress).forked();
 
-        _id = sha3(forkFlag, this, msg.sender, reqc[msg.sender]);
+        _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         Log1(msg.sender, _id, _timestamp, _datasource, _arg, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
         return _id;
@@ -281,11 +272,8 @@ contract Oraclize {
     payable
     returns (bytes32 _id) {
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
-    	bool forkFlag;
-        if (getCodeSize(AmIOnTheForkAddress) > 0)
-            forkFlag = AmIOnTheFork(AmIOnTheForkAddress).forked();
 
-        _id = sha3(forkFlag, this, msg.sender, reqc[msg.sender]);
+        _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         Log2(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
         return _id;
@@ -295,11 +283,8 @@ contract Oraclize {
     payable
     returns (bytes32 _id) {
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
-    	bool forkFlag;
-        if (getCodeSize(AmIOnTheForkAddress) > 0)
-            forkFlag = AmIOnTheFork(AmIOnTheForkAddress).forked();
 
-        _id = sha3(forkFlag, this, msg.sender, reqc[msg.sender]);
+        _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         LogN(msg.sender, _id, _timestamp, _datasource, _args, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
         return _id;
@@ -311,7 +296,7 @@ contract Oraclize {
     returns (bytes32 _id) {
         if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
-        _id = sha3(forkCheck(), this, msg.sender, reqc[msg.sender]);
+        _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         Log1_fnc(msg.sender, _id, _timestamp, _datasource, _arg, _fnc, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
         return _id;
@@ -323,7 +308,7 @@ contract Oraclize {
     returns (bytes32 _id) {
         if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
-        _id = sha3(forkCheck(), this, msg.sender, reqc[msg.sender]);
+        _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         Log2_fnc(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _fnc,  _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
         return _id;
@@ -335,16 +320,9 @@ contract Oraclize {
     returns (bytes32 _id) {
         if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
-        _id = sha3(forkCheck(), this, msg.sender, reqc[msg.sender]);
+        _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
         LogN_fnc(msg.sender, _id, _timestamp, _datasource, _args, _fnc, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
         return _id;
-    }
-    
-    function forkCheck()
-    private
-    returns (bool) {
-        if (getCodeSize(AmIOnTheForkAddress) > 0)
-            return AmIOnTheFork(AmIOnTheForkAddress).forked();
     }
 }
