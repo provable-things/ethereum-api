@@ -23,4 +23,8 @@ As these figures show, it can save up to 50-60% of a contract's deployment costs
 
 #### Examples  
 
-TODO
+Contract sources and associated computation archive can be found at: https://github.com/oraclize/ethereum-examples/tree/master/solidity/lib-experimental
+
+Direct browser-solidity link to examples: https://dapps.oraclize.it/browser-solidity/#version=soljson-v0.4.11+commit.68ef5810.js&optimize=false&gist=ad3d1f6007942b727f5909b55e6445d2
+
+NOTE: if the `OffchainConcat.sol` contract returns an empty string as the result, ensure the multihash can be retrieved from IPFS, and if not, you must run your own IPFS daemon, serving the archive.

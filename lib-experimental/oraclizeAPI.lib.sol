@@ -1,4 +1,4 @@
-// <ORACLIZE_LIBRARY>
+// <ORACLIZE_API_LIB>
 /*
 Copyright (c) 2015-2016 Oraclize SRL
 Copyright (c) 2016 Oraclize LTD
@@ -491,4 +491,4 @@ library oraclizeLib {
         return string(output);
     }
 }
-// </ORACLIZE_LIBRARY>
+// </ORACLIZE_API_LIB>
