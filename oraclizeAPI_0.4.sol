@@ -762,8 +762,8 @@ contract usingOraclize {
         if ((_nbytes == 0)||(_nbytes > 32)) throw;
         bytes memory nbytes = new bytes(1);
         nbytes[0] = byte(_nbytes);
-        bytes memory unonce;
-        bytes memory sessionKeyHash;
+        bytes memory unonce = new bytes(32);
+        bytes memory sessionKeyHash = new bytes(32);
         bytes32 sessionKeyHash_bytes32 = oraclize_randomDS_getSessionPubKeyHash();
         assembly {
             mstore(unonce, 0x20)
