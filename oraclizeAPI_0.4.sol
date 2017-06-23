@@ -1,7 +1,7 @@
 // <ORACLIZE_API>
 /*
 Copyright (c) 2015-2016 Oraclize SRL
-Copyright (c) 2016 Oraclize LTD
+Copyright (c) 2016-2017 Oraclize LTD
 
 
 

@@ -7,9 +7,8 @@ Copyright (c) 2016-2017 Oraclize LTD
 Oraclize Connector v1.1.1
 */
 
-//TODO set high nested basePrice cost ~ 100 multiplier for backward compatibility
-// with already deployed contracts
-// FIXME to large to deploy, uses about 4.7M gas, but deployment requires a 100k buffer
+// 'compressed' alternative, where all modifiers have been changed to FUNCTIONS
+// which is cheaper for deployment, potentially cheaper execution
 import "github.com/Arachnid/solidity-stringutils/strings.sol";
 
 pragma solidity ^0.4.11;
@@ -35,40 +34,42 @@ contract Oraclize {
     address owner;
     address paymentFlagger;
 
-    modifier onlyadmin {
+    function {
         if (msg.sender != owner) throw;
-       _;
     }
 
-    modifier onlyPaymentFlagger {
-        if (msg.sender != paymentFlagger) throw;
-        _;
+    function onlyPaymentFlagger {
     }
 
     function changeAdmin(address _newAdmin)
-    onlyadmin {
+    {
+        onlyadmin();
         owner = _newAdmin;
     }
 
     function changePaymentFlagger(address _newFlagger)
-    onlyadmin {
+    {
+        onlyadmin();
         paymentFlagger = _newFlagger;
     }
 
     // proof is currently a placeholder for when associated proof for addressType is added
     function addCbAddress(address newCbAddress, byte addressType, bytes proof)
-    onlyadmin {
+    {
+        onlyadmin();
         cbAddresses[newCbAddress] = addressType;
     }
 
     function addCbAddress(address newCbAddress, byte addressType)
-    onlyadmin {
+    {
+        onlyadmin();
         bytes memory nil = '';
         addCbAddress(newCbAddress, addressType, nil);
     }
 
     function removeCbAddress(address newCbAddress)
-    onlyadmin {
+    {
+        onlyadmin();
         delete cbAddresses[newCbAddress];
     }
 
@@ -83,7 +84,8 @@ contract Oraclize {
         addDSource(dsname, 0x00, multiplier);
     }
 
-    function addDSource(string dsname, byte proofType, uint multiplier) onlyadmin {
+    function addDSource(string dsname, byte proofType, uint multiplier) {
+        onlyadmin();
         bytes32 dsname_hash = sha3(dsname, proofType);
         dsources[dsources.length++] = dsname_hash;
         price_multiplier[dsname_hash] = multiplier;
@@ -91,7 +93,8 @@ contract Oraclize {
 
     // Utilized by bridge
     function multiAddDSource(bytes32[] dsHash, uint256[] multiplier)
-    onlyadmin {
+    {
+        onlyadmin();
         // dsHash -> sha3(DATASOURCE_NAME, PROOF_TYPE);
         for (uint i=0; i<dsHash.length; i++) {
             dsources[dsources.length++] = dsHash[i];
@@ -100,45 +103,53 @@ contract Oraclize {
     }
 
     function multisetProofType(uint[] _proofType, address[] _addr)
-    onlyadmin {
+    {
+        onlyadmin();
         for (uint i=0; i<_addr.length; i++) addr_proofType[_addr[i]] = byte(_proofType[i]);
     }
 
-    function multisetCustomGasPrice(uint[] _gasPrice, address[] _addr) onlyadmin {
+    function multisetCustomGasPrice(uint[] _gasPrice, address[] _addr) {
+        onlyadmin();
         for (uint i=0; i<_addr.length; i++) addr_gasPrice[_addr[i]] = _gasPrice[i];
     }
 
     uint gasprice = 20000000000;
 
     function setGasPrice(uint newgasprice)
-    onlyadmin {
+    {
+        onlyadmin();
         gasprice = newgasprice;
     }
 
     function setBasePrice(uint new_baseprice)
-    onlyadmin { //0.001 usd in ether
+    { //0.001 usd in ether
+        onlyadmin();
         baseprice = new_baseprice;
         for (uint i=0; i<dsources.length; i++) price[dsources[i]] = new_baseprice*price_multiplier[dsources[i]];
     }
 
     function setBasePrice(uint new_baseprice, bytes proofID)
-    onlyadmin { //0.001 usd in ether
+    { //0.001 usd in ether
+        onlyadmin();
         baseprice = new_baseprice;
         for (uint i=0; i<dsources.length; i++) price[dsources[i]] = new_baseprice*price_multiplier[dsources[i]];
     }
 
     function setOffchainPayment(address _addr, bool _flag)
-    onlyPaymentFlagger {
+    {
+      if (msg.sender != paymentFlagger) throw;
       offchainPayment[_addr] = _flag;
       Emit_OffchainPaymentFlag(_addr, _addr, _flag, _flag);
     }
 
     function withdrawFunds(address _addr)
-    onlyadmin {
+    {
+        onlyadmin();
         _addr.send(this.balance);
     }
 
-    function() onlyadmin {}
+    // unnecessary?
+    //function() {}
 
     function Oraclize() {
         owner = msg.sender;
@@ -175,7 +186,7 @@ contract Oraclize {
 
     bytes32[] public randomDS_sessionPubKeysHash;
 
-    function randomDS_updateSessionPubKeysHash(bytes32[] _newSessionPubKeysHash) onlyadmin {
+    function randomDS_updateSessionPubKeysHash(bytes32[] _newSessionPubKeysHash) {
         randomDS_sessionPubKeysHash.length = 0;
         for (uint i=0; i<_newSessionPubKeysHash.length; i++) randomDS_sessionPubKeysHash.push(_newSessionPubKeysHash[i]);
     }
@@ -267,7 +278,8 @@ contract Oraclize {
     string[] public nestedSubDS;
 
     function addNestedSubDS(string _ds)
-    onlyadmin {
+    {
+        onlyadmin();
         string[] memory nestedMem = nestedSubDS;
 
         if (getNestedIndex(_ds, nestedMem) != 0) throw;
@@ -276,7 +288,8 @@ contract Oraclize {
     }
 
     function removeNestedSubDS(string _ds)
-    onlyadmin {
+    {
+        onlyadmin();
         string[] memory nestedMem = nestedSubDS;
         uint i = getNestedIndex(_ds, nestedMem) - 1;
 
