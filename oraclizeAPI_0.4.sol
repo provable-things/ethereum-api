@@ -69,7 +69,7 @@ contract usingOraclize {
 
     OraclizeI oraclize;
     modifier oraclizeAPI {
-        if((address(OAR)==0)||(getCodeSize(address(OAR))==0)) oraclize_setNetwork(networkID_auto);
+        if((address(OAR)==0)||(getCodeSize(address(OAR))==0)) oraclize_setNetwork();
         oraclize = OraclizeI(OAR.getAddress());
         _;
     }
@@ -79,7 +79,7 @@ contract usingOraclize {
         _;
     }
 
-    function oraclize_setNetwork(uint8 networkID) internal returns(bool){
+    function oraclize_setNetwork() internal returns(bool){
         if (getCodeSize(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed)>0){ //mainnet
             OAR = OraclizeAddrResolverI(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed);
             oraclize_setNetworkName("eth_mainnet");
@@ -119,6 +119,9 @@ contract usingOraclize {
         __callback(myid, result, new bytes(0));
     }
     function __callback(bytes32 myid, string result, bytes proof) {
+        myid;
+        result;
+        proof;
     }
     
     function oraclize_useCoupon(string code) oraclizeAPI internal {
@@ -823,7 +826,7 @@ contract usingOraclize {
         copyBytes(proof, 3+1, 64, appkey1_pubkey, 0);
         
         bytes memory tosign2 = new bytes(1+65+32);
-        tosign2[0] = 1; //role
+        tosign2[0] = 0x01; //role
         copyBytes(proof, sig2offset-65, 65, tosign2, 1);
         bytes memory CODEHASH = hex"fd94fa71bc0ba10d39d464d0d8f465efeef0a2764e3887fcc9df41ded20f505c";
         copyBytes(CODEHASH, 0, 32, tosign2, 1+65);
@@ -860,7 +863,7 @@ contract usingOraclize {
     function matchBytes32Prefix(bytes32 content, bytes prefix) internal returns (bool){
         bool match_ = true;
         
-        for (var i=0; i<prefix.length; i++){
+        for (uint256 i=0; i<prefix.length; i++){
             if (content[i] != prefix[i]) match_ = false;
         }
         
