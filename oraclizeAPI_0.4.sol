@@ -759,7 +759,7 @@ contract usingOraclize {
     }
 
     function oraclize_newRandomDSQuery(uint _delay, uint _nbytes, uint _customGasLimit) internal returns (bytes32){
-        require((_nbytes == 0)||(_nbytes > 32));
+        assert((_nbytes != 0) && (_nbytes < 32)); // Constrain values of _nbytes
         bytes memory nbytes = new bytes(1);
         nbytes[0] = byte(_nbytes);
         bytes memory unonce = new bytes(32);
@@ -849,10 +849,10 @@ contract usingOraclize {
 
     modifier oraclize_randomDS_proofVerify(bytes32 _queryId, string _result, bytes _proof) {
         // Step 1: the prefix has to match 'LP\x01' (Ledger Proof version 1)
-        require((_proof[0] != "L")||(_proof[1] != "P")||(_proof[2] != 1));
+        require((_proof[0] == "L")||(_proof[1] == "P")||(_proof[2] == 1));
 
         bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
-        require(proofVerified == false);
+        require(proofVerified != false);
 
         _;
     }
@@ -922,7 +922,7 @@ contract usingOraclize {
         uint minLength = length + toOffset;
 
         // Check to make sure buffer is not too small
-        require(to.length < minLength);
+        require(to.length > minLength);
 
         // NOTE: the offset 32 is added to skip the `size` field of both bytes variables
         uint i = 32 + fromOffset;
