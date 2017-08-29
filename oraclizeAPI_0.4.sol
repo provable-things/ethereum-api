@@ -69,7 +69,7 @@ contract usingOraclize {
 
     OraclizeI oraclize;
     modifier oraclizeAPI {
-        if((address(OAR)==0)||(getCodeSize(address(OAR))==0)) oraclize_setNetwork(networkID_auto);
+        if ((address(OAR)==0)||(getCodeSize(address(OAR))==0)) oraclize_setNetwork(networkID_auto);
         oraclize = OraclizeI(OAR.getAddress());
         _;
     }
@@ -570,9 +570,9 @@ contract usingOraclize {
     function indexOf(string _haystack, string _needle) internal returns (int) {
         bytes memory h = bytes(_haystack);
         bytes memory n = bytes(_needle);
-        if(h.length < 1 || n.length < 1 || (n.length > h.length))
+        if (h.length < 1 || n.length < 1 || (n.length > h.length))
             return -1;
-        else if(h.length > (2**128 -1))
+        else if (h.length > (2**128 -1))
             return -1;
         else
         {
@@ -586,7 +586,7 @@ contract usingOraclize {
                     {
                         subindex++;
                     }
-                    if(subindex == n.length)
+                    if (subindex == n.length)
                         return int(i);
                 }
             }
@@ -852,7 +852,7 @@ contract usingOraclize {
         require((_proof[0] == "L")||(_proof[1] == "P")||(_proof[2] == 1));
 
         bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
-        require(proofVerified != false);
+        require(proofVerified);
 
         _;
     }
