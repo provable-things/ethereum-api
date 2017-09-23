@@ -857,6 +857,16 @@ contract usingOraclize {
         _;
     }
     
+    function oraclize_randomDS_proofVerify__returnCode(bytes32 _queryId, string _result, bytes _proof) internal returns (uint8){
+        // Step 1: the prefix has to match 'LP\x01' (Ledger Proof version 1)
+        if ((_proof[0] != "L")||(_proof[1] != "P")||(_proof[2] != 1)) return 1;
+        
+        bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
+        if (proofVerified == false) return 2;
+        
+        return 0;
+    }
+    
     function matchBytes32Prefix(bytes32 content, bytes prefix) internal returns (bool){
         bool match_ = true;
         
