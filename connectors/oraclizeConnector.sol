@@ -7,16 +7,9 @@ Copyright (c) 2016-2017 Oraclize LTD
 Oraclize Connector v1.1.1
 */
 
-//TODO set high nested basePrice cost ~ 100 multiplier for backward compatibility
-// with already deployed contracts
-// FIXME to large to deploy, uses about 4.7M gas, but deployment requires a 100k buffer
-import "github.com/Arachnid/solidity-stringutils/strings.sol";
-
 pragma solidity ^0.4.11;
 
 contract Oraclize {
-    using strings for *;
-
     mapping (address => uint) reqc;
 
     mapping (address => byte) public cbAddresses;
@@ -153,19 +146,6 @@ contract Oraclize {
         } else throw;
     }
 
-    function costsNested(string datasource, string query, uint gaslimit) {
-        uint price;
-        if(sha3(datasource) == sha3("nested"))
-          price = getNestedPrice(query, gaslimit);
-        else
-          price = getPrice(datasource, gaslimit, msg.sender);
-
-        if (msg.value >= price){
-            uint diff = msg.value - price;
-            if (diff > 0) msg.sender.send(diff);
-        } else throw;
-    }
-
     mapping (address => byte) addr_proofType;
     mapping (address => uint) addr_gasPrice;
     uint public baseprice;
@@ -215,6 +195,7 @@ contract Oraclize {
     private
     returns (uint _dsprice) {
         uint gasprice_ = addr_gasPrice[_addr];
+        // FIXME reorder to take advantage of lazy evaluation
         if (
                 (
                     (_gaslimit <= 200000)&&
@@ -231,101 +212,12 @@ contract Oraclize {
         return _dsprice;
     }
 
-    /*function getNestedPrice(string _query)
-    private
-    returns (uint) {
-        return getNestedPrice(_query, 200000, msg.sender);
-    }i
-
-    function getNestedPrice(string _query, uint _gaslimit)
-    private
-    returns (uint) {
-        return getNestedPrice(_query, _gaslimit, msg.sender);
-    }*/
-
-    function getNestedPrice(string _query, uint _gaslimit)
-    public
-    returns (uint _dsprice) {
-        address _addr = msg.sender;
-        uint gasprice_ = addr_gasPrice[_addr];
-        if (
-                (
-                    (_gaslimit <= 200000)&&
-                    (reqc[_addr] == 0)&&
-                    (gasprice_ <= gasprice)&&
-                    (tx.origin != cbAddress())
-                )||
-                    (offchainPayment[_addr])
-            ) return 0;
-        //if (offchainPayment[_addr]) return 0;
-        if (gasprice_ == 0) gasprice_ = gasprice;
-        _dsprice = nestedPriceCalc(_query, _addr);
-        _dsprice += _gaslimit*gasprice_;
-        return _dsprice;
-    }
-
-    string[] public nestedSubDS;
-
-    function addNestedSubDS(string _ds)
-    onlyadmin {
-        string[] memory nestedMem = nestedSubDS;
-
-        if (getNestedIndex(_ds, nestedMem) != 0) throw;
-
-        nestedSubDS.push(_ds);
-    }
-
-    function removeNestedSubDS(string _ds)
-    onlyadmin {
-        string[] memory nestedMem = nestedSubDS;
-        uint i = getNestedIndex(_ds, nestedMem) - 1;
-
-        nestedMem[i] = nestedMem[nestedMem.length - 1];
-        delete nestedMem[nestedMem.length - 1];
-        //nestedMem.length--;
-        nestedSubDS = nestedMem;
-        nestedSubDS.length--;
-    }
-
-    // returns 0 if occurrence not found, index incremented by 1
-    function getNestedIndex(string _ds, string[] _nestedSubDS)
-    private
-    returns (uint) {
-        bytes32 needle = sha3(_ds);
-        for (uint i = 0; i < _nestedSubDS.length; i++) {
-            if (sha3(_nestedSubDS[i]) == needle)
-                return (i + 1);
-        }
-    }
-
-    function nestedPriceCalc(string _query, address _addr)
-    private
-    returns (uint) {
-        uint costs = 0;
-        var s = _query.toSlice();
-        string[] memory nestedMem = nestedSubDS;
-
-        for (uint i = 0; i < nestedMem.length; i++) {
-            var ts = s.copy();
-            var ds = "[".toSlice().concat(nestedMem[i].toSlice().concat("]".toSlice()).toSlice()).toSlice();
-            //var ds = ods.toSlice();
-            while(true) {
-                ts.find(ds);
-                if(!ts.startsWith(ds)) break;
-                //if(ts.len() == 0) break; // the above is cheaper
-                ts.beyond(ds);
-                costs += price[sha3(nestedMem[i], addr_proofType[_addr])];
-            }
-        }
-        return costs;
-    }
-
     function getCodeSize(address _addr)
     private
     constant
     returns(uint _size) {
-    assembly {
-        _size := extcodesize(_addr)
+        assembly {
+            _size := extcodesize(_addr)
         }
     }
 
@@ -410,7 +302,7 @@ contract Oraclize {
     function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
     payable
     returns (bytes32 _id) {
-        costsNested(_datasource, _arg, _gaslimit);
+        costs(_datasource, _arg, _gaslimit);
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
 
         _id = sha3(this, msg.sender, reqc[msg.sender]);

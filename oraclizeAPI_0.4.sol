@@ -40,7 +40,6 @@ contract OraclizeI {
     function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) payable returns (bytes32 _id);
     function getPrice(string _datasource) returns (uint _dsprice);
     function getPrice(string _datasource, uint _gaslimit) returns (uint _dsprice);
-    function getNestedPrice(string _query, uint _gaslimit) returns (uint _dsprice);
     function useCoupon(string _coupon);
     function setProofType(byte _proofType);
     function setConfig(bytes32 _config);
@@ -70,8 +69,12 @@ contract usingOraclize {
 
     OraclizeI oraclize;
     modifier oraclizeAPI {
-        if((address(OAR)==0)||(getCodeSize(address(OAR))==0)) oraclize_setNetwork(networkID_auto);
-        oraclize = OraclizeI(OAR.getAddress());
+        if(address(OAR) == 0 || getCodeSize(address(OAR)) == 0)
+            oraclize_setNetwork(networkID_auto);
+
+        if(address(oraclize) != OAR.getAddress())
+            oraclize = OraclizeI(OAR.getAddress());
+
         _;
     }
     modifier coupon(string code){
@@ -141,31 +144,23 @@ contract usingOraclize {
         return oraclize.getPrice(datasource, gaslimit);
     }
 
-    function oraclize_getPrice(string datasource, string arg) oraclizeAPI internal returns (uint){
-        return sha3(datasource) == sha3("nested") ? oraclize.getNestedPrice(arg, 200000) : oraclize.getPrice(datasource);
-    }
-
-    function oraclize_getPrice(string datasource, string arg, uint gaslimit) oraclizeAPI internal returns (uint){
-        return sha3(datasource) == sha3("nested") ? oraclize.getNestedPrice(arg, gaslimit) : oraclize.getPrice(datasource, gaslimit);
-    }
-
     function oraclize_query(string datasource, string arg) oraclizeAPI internal returns (bytes32 id){
-        uint price = sha3(datasource) == sha3("nested") ? oraclize.getNestedPrice(arg, 200000) : oraclize.getPrice(datasource, 200000);
+        uint price = oraclize.getPrice(datasource, 200000);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
         return oraclize.query.value(price)(0, datasource, arg);
     }
     function oraclize_query(uint timestamp, string datasource, string arg) oraclizeAPI internal returns (bytes32 id){
-        uint price = sha3(datasource) == sha3("nested") ? oraclize.getNestedPrice(arg, 200000) : oraclize.getPrice(datasource, 200000);
+        uint price = oraclize.getPrice(datasource, 200000);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
         return oraclize.query.value(price)(timestamp, datasource, arg);
     }
     function oraclize_query(uint timestamp, string datasource, string arg, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = sha3(datasource) == sha3("nested") ? oraclize.getNestedPrice(arg, gaslimit) : oraclize.getPrice(datasource, gaslimit);
+        uint price = oraclize.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
         return oraclize.query_withGasLimit.value(price)(timestamp, datasource, arg, gaslimit);
     }
     function oraclize_query(string datasource, string arg, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = sha3(datasource) == sha3("nested") ? oraclize.getNestedPrice(arg, gaslimit) : oraclize.getPrice(datasource, gaslimit);
+        uint price = oraclize.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
         return oraclize.query_withGasLimit.value(price)(0, datasource, arg, gaslimit);
     }
