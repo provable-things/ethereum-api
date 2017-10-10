@@ -19,18 +19,19 @@ contract Oraclize {
 
     mapping (address => bool) public offchainPayment;
 
-    event Log1(address sender, bytes32 cid, uint timestamp, string datasource, string arg, uint gaslimit, byte proofType, uint gasPrice);
-    event Log2(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, uint gaslimit, byte proofType, uint gasPrice);
-    event LogN(address sender, bytes32 cid, uint timestamp, string datasource, bytes args, uint gaslimit, byte proofType, uint gasPrice);
-    event Log1_fnc(address sender, bytes32 cid, uint timestamp, string datasource, string arg, function() external callback, uint gaslimit, byte proofType, uint gasPrice);
-    event Log2_fnc(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, function() external callback, uint gaslimit, byte proofType, uint gasPrice);
-    event LogN_fnc(address sender, bytes32 cid, uint timestamp, string datasource, bytes args, function() external callback, uint gaslimit, byte proofType, uint gasPrice);
+    event Log1(address sender, bytes32 cid, uint timestamp, string datasource, string arg, uint gaslimit, byte proofType, uint gasPrice, uint queryCost);
+    event Log2(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, uint gaslimit, byte proofType, uint gasPrice, uint queryCost);
+    event LogN(address sender, bytes32 cid, uint timestamp, string datasource, bytes args, uint gaslimit, byte proofType, uint gasPrice, uint queryCost);
+    event Log1_fnc(address sender, bytes32 cid, uint timestamp, string datasource, string arg, function() external callback, uint gaslimit, byte proofType, uint gasPrice, uint queryCost);
+    event Log2_fnc(address sender, bytes32 cid, uint timestamp, string datasource, string arg1, string arg2, function() external callback, uint gaslimit, byte proofType, uint gasPrice, uint queryCost);
+    event LogN_fnc(address sender, bytes32 cid, uint timestamp, string datasource, bytes args, function() external callback, uint gaslimit, byte proofType, uint gasPrice, uint queryCost);
 
     event Emit_OffchainPaymentFlag(address indexed idx_sender, address sender, bool indexed idx_flag, bool flag);
 
     address owner;
     address paymentFlagger;
 
+    // FIXME invalid fallback function + needless
     function {
         if (msg.sender != owner) throw;
     }
@@ -152,12 +153,17 @@ contract Oraclize {
         owner = msg.sender;
     }
 
-    function costs(string datasource, uint gaslimit) {
-        uint price = getPrice(datasource, gaslimit, msg.sender);
+    function costs(string datasource, uint gaslimit) returns (uint price) {
+        price = getPrice(datasource, gaslimit, msg.sender);
 
         if (msg.value >= price){
             uint diff = msg.value - price;
-            if (diff > 0) msg.sender.send(diff);
+            if (diff > 0) {
+                // added for correct query cost to be returned
+                if(!msg.sender.send(diff)) {
+                    throw;
+                }
+            }
         } else throw;
     }
 
@@ -170,6 +176,7 @@ contract Oraclize {
 
     bytes32[] public randomDS_sessionPubKeysHash;
 
+    // FIXME add admin checks here
     function randomDS_updateSessionPubKeysHash(bytes32[] _newSessionPubKeysHash) {
         randomDS_sessionPubKeysHash.length = 0;
         for (uint i=0; i<_newSessionPubKeysHash.length; i++) randomDS_sessionPubKeysHash.push(_newSessionPubKeysHash[i]);
@@ -316,72 +323,72 @@ contract Oraclize {
     function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
     payable
     returns (bytes32 _id) {
-        costs(_datasource, _arg, _gaslimit);
+        uint queryCost = costs(_datasource, _gaslimit);
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
 
         _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
-        Log1(msg.sender, _id, _timestamp, _datasource, _arg, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
+        Log1(msg.sender, _id, _timestamp, _datasource, _arg, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender], queryCost);
         return _id;
     }
 
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit)
     payable
     returns (bytes32 _id) {
-        costs(_datasource, _gaslimit);
+        uint queryCost = costs(_datasource, _gaslimit);
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
 
         _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
-        Log2(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
+        Log2(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender], queryCost);
         return _id;
     }
 
     function queryN(uint _timestamp, string _datasource, bytes _args, uint _gaslimit)
     payable
     returns (bytes32 _id) {
-        costs(_datasource, _gaslimit);
+        uint queryCost = costs(_datasource, _gaslimit);
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
 
         _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
-        LogN(msg.sender, _id, _timestamp, _datasource, _args, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
+        LogN(msg.sender, _id, _timestamp, _datasource, _args, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender], queryCost);
         return _id;
     }
 
     function query1_fnc(uint _timestamp, string _datasource, string _arg, function() external _fnc, uint _gaslimit)
     payable
     returns (bytes32 _id) {
-        costs(_datasource, _gaslimit);
+        uint queryCost = costs(_datasource, _gaslimit);
         if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
         _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
-        Log1_fnc(msg.sender, _id, _timestamp, _datasource, _arg, _fnc, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
+        Log1_fnc(msg.sender, _id, _timestamp, _datasource, _arg, _fnc, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender], queryCost);
         return _id;
     }
 
     function query2_fnc(uint _timestamp, string _datasource, string _arg1, string _arg2, function() external _fnc, uint _gaslimit)
     payable
     returns (bytes32 _id) {
-        costs(_datasource, _gaslimit);
+        uint queryCost = costs(_datasource, _gaslimit);
         if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
         _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
-        Log2_fnc(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _fnc,  _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
+        Log2_fnc(msg.sender, _id, _timestamp, _datasource, _arg1, _arg2, _fnc,  _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender], queryCost);
         return _id;
     }
 
     function queryN_fnc(uint _timestamp, string _datasource, bytes _args, function() external _fnc, uint _gaslimit)
     payable
     returns (bytes32 _id) {
-        costs(_datasource, _gaslimit);
+        uint queryCost = costs(_datasource, _gaslimit);
         if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
         _id = sha3(this, msg.sender, reqc[msg.sender]);
         reqc[msg.sender]++;
-        LogN_fnc(msg.sender, _id, _timestamp, _datasource, _args, _fnc, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender]);
+        LogN_fnc(msg.sender, _id, _timestamp, _datasource, _args, _fnc, _gaslimit, addr_proofType[msg.sender], addr_gasPrice[msg.sender], queryCost);
         return _id;
     }
 }
