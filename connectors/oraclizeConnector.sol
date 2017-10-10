@@ -302,7 +302,7 @@ contract Oraclize {
     function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
     payable
     returns (bytes32 _id) {
-        costs(_datasource, _arg, _gaslimit);
+        costs(_datasource, _gaslimit);
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
 
         _id = sha3(this, msg.sender, reqc[msg.sender]);
