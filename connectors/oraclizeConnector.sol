@@ -195,17 +195,17 @@ contract Oraclize {
     private
     returns (uint _dsprice) {
         uint gasprice_ = addr_gasPrice[_addr];
-        // FIXME reorder to take advantage of lazy evaluation
+
         if (
-                (
-                    (_gaslimit <= 200000)&&
-                    (reqc[_addr] == 0)&&
-                    (gasprice_ <= gasprice)&&
-                    (tx.origin != cbAddress())
-                )||
-                    (offchainPayment[_addr])
-            ) return 0;
-        //if (offchainPayment[_addr]) return 0;
+                (offchainPayment[_addr])
+            ||(
+                (_gaslimit <= 200000)&&
+                (reqc[_addr] == 0)&&
+                (gasprice_ <= gasprice)&&
+                (tx.origin != cbAddress())
+            )
+        ) return 0;
+
         if (gasprice_ == 0) gasprice_ = gasprice;
         _dsprice = price[sha3(_datasource, addr_proofType[_addr])];
         _dsprice += _gaslimit*gasprice_;
