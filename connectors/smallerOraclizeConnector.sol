@@ -31,12 +31,8 @@ contract Oraclize {
     address owner;
     address paymentFlagger;
 
-    // FIXME invalid fallback function + needless
-    function {
+    function onlyadmin() {
         if (msg.sender != owner) throw;
-    }
-
-    function onlyPaymentFlagger {
     }
 
     function changeAdmin(address _newAdmin)
@@ -176,8 +172,8 @@ contract Oraclize {
 
     bytes32[] public randomDS_sessionPubKeysHash;
 
-    // FIXME add admin checks here
     function randomDS_updateSessionPubKeysHash(bytes32[] _newSessionPubKeysHash) {
+        onlyadmin();
         randomDS_sessionPubKeysHash.length = 0;
         for (uint i=0; i<_newSessionPubKeysHash.length; i++) randomDS_sessionPubKeysHash.push(_newSessionPubKeysHash[i]);
     }
