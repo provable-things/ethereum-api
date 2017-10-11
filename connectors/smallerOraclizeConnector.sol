@@ -4,7 +4,7 @@ Copyright (c) 2016-2017 Oraclize LTD
 */
 
 /*
-Oraclize Connector v1.1.1
+Oraclize Connector v1.2.0
 */
 
 // 'compressed' alternative, where all modifiers have been changed to FUNCTIONS
@@ -31,37 +31,38 @@ contract Oraclize {
     address owner;
     address paymentFlagger;
 
-    function onlyadmin() {
-        if (msg.sender != owner) throw;
-    }
-
     function changeAdmin(address _newAdmin)
+    external
     {
         onlyadmin();
         owner = _newAdmin;
     }
 
     function changePaymentFlagger(address _newFlagger)
+    external
     {
         onlyadmin();
         paymentFlagger = _newFlagger;
     }
 
+    function addCbAddress(address newCbAddress, byte addressType)
+    external
+    {
+        onlyadmin();
+        //bytes memory nil = '';
+        addCbAddress(newCbAddress, addressType, hex'');
+    }
+
     // proof is currently a placeholder for when associated proof for addressType is added
     function addCbAddress(address newCbAddress, byte addressType, bytes proof)
+    public
     {
         onlyadmin();
         cbAddresses[newCbAddress] = addressType;
     }
 
-    function addCbAddress(address newCbAddress, byte addressType)
-    {
-        onlyadmin();
-        bytes memory nil = '';
-        addCbAddress(newCbAddress, addressType, nil);
-    }
-
     function removeCbAddress(address newCbAddress)
+    external
     {
         onlyadmin();
         delete cbAddresses[newCbAddress];
@@ -69,16 +70,21 @@ contract Oraclize {
 
     function cbAddress()
     constant
-    returns (address _cbAddress) {
+    returns (address _cbAddress)
+    {
         if (cbAddresses[tx.origin] != 0)
             _cbAddress = tx.origin;
     }
 
-    function addDSource(string dsname, uint multiplier) {
+    function addDSource(string dsname, uint multiplier)
+    external
+    {
         addDSource(dsname, 0x00, multiplier);
     }
 
-    function addDSource(string dsname, byte proofType, uint multiplier) {
+    function addDSource(string dsname, byte proofType, uint multiplier)
+    public
+    {
         onlyadmin();
         bytes32 dsname_hash = sha3(dsname, proofType);
         dsources[dsources.length++] = dsname_hash;
@@ -87,6 +93,7 @@ contract Oraclize {
 
     // Utilized by bridge
     function multiAddDSource(bytes32[] dsHash, uint256[] multiplier)
+    external
     {
         onlyadmin();
         // dsHash -> sha3(DATASOURCE_NAME, PROOF_TYPE);
@@ -97,12 +104,15 @@ contract Oraclize {
     }
 
     function multisetProofType(uint[] _proofType, address[] _addr)
+    external
     {
         onlyadmin();
         for (uint i=0; i<_addr.length; i++) addr_proofType[_addr[i]] = byte(_proofType[i]);
     }
 
-    function multisetCustomGasPrice(uint[] _gasPrice, address[] _addr) {
+    function multisetCustomGasPrice(uint[] _gasPrice, address[] _addr)
+    external
+    {
         onlyadmin();
         for (uint i=0; i<_addr.length; i++) addr_gasPrice[_addr[i]] = _gasPrice[i];
     }
@@ -110,12 +120,14 @@ contract Oraclize {
     uint gasprice = 20000000000;
 
     function setGasPrice(uint newgasprice)
+    external
     {
         onlyadmin();
         gasprice = newgasprice;
     }
 
     function setBasePrice(uint new_baseprice)
+    external
     { //0.001 usd in ether
         onlyadmin();
         baseprice = new_baseprice;
@@ -123,6 +135,7 @@ contract Oraclize {
     }
 
     function setBasePrice(uint new_baseprice, bytes proofID)
+    external
     { //0.001 usd in ether
         onlyadmin();
         baseprice = new_baseprice;
@@ -130,6 +143,7 @@ contract Oraclize {
     }
 
     function setOffchainPayment(address _addr, bool _flag)
+    external
     {
       if (msg.sender != paymentFlagger) throw;
       offchainPayment[_addr] = _flag;
@@ -137,6 +151,7 @@ contract Oraclize {
     }
 
     function withdrawFunds(address _addr)
+    external
     {
         onlyadmin();
         _addr.send(this.balance);
@@ -149,7 +164,16 @@ contract Oraclize {
         owner = msg.sender;
     }
 
-    function costs(string datasource, uint gaslimit) returns (uint price) {
+    // Pesudo-modifiers
+
+    function onlyadmin()
+    private {
+        if (msg.sender != owner) throw;
+    }
+
+    function costs(string datasource, uint gaslimit)
+    private
+    returns (uint price) {
         price = getPrice(datasource, gaslimit, msg.sender);
 
         if (msg.value >= price){
@@ -172,46 +196,59 @@ contract Oraclize {
 
     bytes32[] public randomDS_sessionPubKeysHash;
 
-    function randomDS_updateSessionPubKeysHash(bytes32[] _newSessionPubKeysHash) {
+    function randomDS_updateSessionPubKeysHash(bytes32[] _newSessionPubKeysHash)
+    external
+    {
         onlyadmin();
         randomDS_sessionPubKeysHash.length = 0;
         for (uint i=0; i<_newSessionPubKeysHash.length; i++) randomDS_sessionPubKeysHash.push(_newSessionPubKeysHash[i]);
     }
 
-    function randomDS_getSessionPubKeyHash() constant returns (bytes32) {
+    function randomDS_getSessionPubKeyHash()
+    external
+    constant
+    returns (bytes32) {
         uint i = uint(sha3(reqc[msg.sender]))%randomDS_sessionPubKeysHash.length;
         return randomDS_sessionPubKeysHash[i];
     }
 
-    function setProofType(byte _proofType) {
+    function setProofType(byte _proofType)
+    external
+    {
         addr_proofType[msg.sender] = _proofType;
     }
 
-    function setCustomGasPrice(uint _gasPrice) {
+    function setCustomGasPrice(uint _gasPrice)
+    external
+    {
         addr_gasPrice[msg.sender] = _gasPrice;
     }
 
     function getPrice(string _datasource)
     public
-    returns (uint _dsprice) {
+    returns (uint _dsprice)
+    {
         return getPrice(_datasource, msg.sender);
     }
 
     function getPrice(string _datasource, uint _gaslimit)
     public
-    returns (uint _dsprice) {
+    returns (uint _dsprice)
+    {
         return getPrice(_datasource, _gaslimit, msg.sender);
     }
 
     function getPrice(string _datasource, address _addr)
     private
-    returns (uint _dsprice) {
+    returns (uint _dsprice)
+    {
         return getPrice(_datasource, 200000, _addr);
     }
 
     function getPrice(string _datasource, uint _gaslimit, address _addr)
     private
-    returns (uint _dsprice) {
+    returns (uint _dsprice)
+    {
         uint gasprice_ = addr_gasPrice[_addr];
         if (
                 (offchainPayment[_addr])
@@ -232,7 +269,8 @@ contract Oraclize {
     function getCodeSize(address _addr)
     private
     constant
-    returns(uint _size) {
+    returns(uint _size)
+    {
         assembly {
             _size := extcodesize(_addr)
         }
@@ -240,85 +278,114 @@ contract Oraclize {
 
     function query(string _datasource, string _arg)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return query1(0, _datasource, _arg, 200000);
     }
 
     function query1(string _datasource, string _arg)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return query1(0, _datasource, _arg, 200000);
     }
 
     function query2(string _datasource, string _arg1, string _arg2)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return query2(0, _datasource, _arg1, _arg2, 200000);
     }
 
     function queryN(string _datasource, bytes _args)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return queryN(0, _datasource, _args, 200000);
     }
 
     function query(uint _timestamp, string _datasource, string _arg)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return query1(_timestamp, _datasource, _arg, 200000);
     }
 
     function query1(uint _timestamp, string _datasource, string _arg)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return query1(_timestamp, _datasource, _arg, 200000);
     }
 
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return query2(_timestamp, _datasource, _arg1, _arg2, 200000);
     }
 
     function queryN(uint _timestamp, string _datasource, bytes _args)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return queryN(_timestamp, _datasource, _args, 200000);
     }
 
+/*  Needless?
     function query(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return query1(_timestamp, _datasource, _arg, _gaslimit);
     }
-
+*/
     function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
-        return query(_timestamp, _datasource, _arg, _gaslimit);
+    external
+    returns (bytes32 _id)
+    {
+        return query1(_timestamp, _datasource, _arg, _gaslimit);
     }
 
     function query1_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return query1(_timestamp, _datasource, _arg, _gaslimit);
     }
 
     function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return query2(_timestamp, _datasource, _arg1, _arg2, _gaslimit);
     }
 
     function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _args, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    external
+    returns (bytes32 _id)
+    {
         return queryN(_timestamp, _datasource, _args, _gaslimit);
     }
 
     function query1(uint _timestamp, string _datasource, string _arg, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    public
+    returns (bytes32 _id)
+    {
         uint queryCost = costs(_datasource, _gaslimit);
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
 
@@ -330,7 +397,9 @@ contract Oraclize {
 
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    public
+    returns (bytes32 _id)
+    {
         uint queryCost = costs(_datasource, _gaslimit);
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
 
@@ -342,7 +411,9 @@ contract Oraclize {
 
     function queryN(uint _timestamp, string _datasource, bytes _args, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    public
+    returns (bytes32 _id)
+    {
         uint queryCost = costs(_datasource, _gaslimit);
     	if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)) throw;
 
@@ -354,7 +425,9 @@ contract Oraclize {
 
     function query1_fnc(uint _timestamp, string _datasource, string _arg, function() external _fnc, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    public
+    returns (bytes32 _id)
+    {
         uint queryCost = costs(_datasource, _gaslimit);
         if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
@@ -366,7 +439,9 @@ contract Oraclize {
 
     function query2_fnc(uint _timestamp, string _datasource, string _arg1, string _arg2, function() external _fnc, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    public
+    returns (bytes32 _id)
+    {
         uint queryCost = costs(_datasource, _gaslimit);
         if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
@@ -378,7 +453,9 @@ contract Oraclize {
 
     function queryN_fnc(uint _timestamp, string _datasource, bytes _args, function() external _fnc, uint _gaslimit)
     payable
-    returns (bytes32 _id) {
+    public
+    returns (bytes32 _id)
+    {
         uint queryCost = costs(_datasource, _gaslimit);
         if ((_timestamp > now+3600*24*60)||(_gaslimit > block.gaslimit)||address(_fnc) != msg.sender) throw;
 
