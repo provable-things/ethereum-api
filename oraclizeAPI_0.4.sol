@@ -47,7 +47,7 @@ contract OraclizeI {
     function randomDS_getSessionPubKeyHash() public returns(bytes32);
 }
 contract OraclizeAddrResolverI {
-    function getAddress() returns (address _addr);
+    function getAddress() public returns (address _addr);
 }
 contract usingOraclize {
     uint constant day = 60*60*24;
