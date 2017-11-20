@@ -126,7 +126,9 @@ contract usingOraclize {
     function __callback(bytes32 myid, string result) public {
         __callback(myid, result, new bytes(0));
     }
-    function __callback(bytes32 myid, string result, bytes proof) public;
+    function __callback(bytes32 myid, string result, bytes proof) public {
+      myid; result; proof; // Silence compiler warnings
+    }
 
     function oraclize_useCoupon(string code) oraclizeAPI internal {
         oraclize.useCoupon(code);
