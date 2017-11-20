@@ -827,7 +827,7 @@ contract usingOraclize {
         copyBytes(proof, 3+1, 64, appkey1_pubkey, 0);
 
         bytes memory tosign2 = new bytes(1+65+32);
-        tosign2[0] = 1; //role
+        tosign2[0] = byte(1); //role
         copyBytes(proof, sig2offset-65, 65, tosign2, 1);
         bytes memory CODEHASH = hex"fd94fa71bc0ba10d39d464d0d8f465efeef0a2764e3887fcc9df41ded20f505c";
         copyBytes(CODEHASH, 0, 32, tosign2, 1+65);
