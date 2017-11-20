@@ -777,7 +777,7 @@ contract usingOraclize {
         }
         bytes[3] memory args = [unonce, nbytes, sessionKeyHash];
         bytes32 queryId = oraclize_query(_delay, "random", args, _customGasLimit);
-        oraclize_randomDS_setCommitment(queryId, sha3(bytes8(_delay), args[1], sha256(args[0]), args[2]));
+        oraclize_randomDS_setCommitment(queryId, keccak256(bytes8(_delay), args[1], sha256(args[0]), args[2]));
         return queryId;
     }
 
@@ -809,10 +809,10 @@ contract usingOraclize {
 
 
         (sigok, signer) = safer_ecrecover(tosignh, 27, sigr, sigs);
-        if (address(sha3(pubkey)) == signer) return true;
+        if (address(keccak256(pubkey)) == signer) return true;
         else {
             (sigok, signer) = safer_ecrecover(tosignh, 28, sigr, sigs);
-            return (address(sha3(pubkey)) == signer);
+            return (address(keccak256(pubkey)) == signer);
         }
     }
 
@@ -889,7 +889,7 @@ contract usingOraclize {
         uint ledgerProofLength = 3+65+(uint(proof[3+65+1])+2)+32;
         bytes memory keyhash = new bytes(32);
         copyBytes(proof, ledgerProofLength, 32, keyhash, 0);
-        checkok = (sha3(keyhash) == sha3(sha256(context_name, queryId)));
+        checkok = (keccak256(keyhash) == keccak256(sha256(context_name, queryId)));
         if (checkok == false) return false;
 
         bytes memory sig1 = new bytes(uint(proof[ledgerProofLength+(32+8+1+32)+1])+2);
@@ -901,7 +901,7 @@ contract usingOraclize {
         if (checkok == false) return false;
 
 
-        // Step 4: commitment match verification, sha3(delay, nbytes, unonce, sessionKeyHash) == commitment in storage.
+        // Step 4: commitment match verification, keccak256(delay, nbytes, unonce, sessionKeyHash) == commitment in storage.
         // This is to verify that the computed args match with the ones specified in the query.
         bytes memory commitmentSlice1 = new bytes(8+1+32);
         copyBytes(proof, ledgerProofLength+32, 8+1+32, commitmentSlice1, 0);
@@ -911,7 +911,7 @@ contract usingOraclize {
         copyBytes(proof, sig2offset-64, 64, sessionPubkey, 0);
 
         bytes32 sessionPubkeyHash = sha256(sessionPubkey);
-        if (oraclize_randomDS_args[queryId] == sha3(commitmentSlice1, sessionPubkeyHash)){ //unonce, nbytes and sessionKeyHash match
+        if (oraclize_randomDS_args[queryId] == keccak256(commitmentSlice1, sessionPubkeyHash)){ //unonce, nbytes and sessionKeyHash match
             delete oraclize_randomDS_args[queryId];
         } else return false;
 
