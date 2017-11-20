@@ -70,7 +70,7 @@ contract usingOraclize {
     OraclizeI oraclize;
     modifier oraclizeAPI {
         if((address(OAR)==0)||(getCodeSize(address(OAR))==0))
-            oraclize_setNetwork(networkID_auto);
+            oraclize_setNetwork();
 
         if(address(oraclize) != OAR.getAddress())
             oraclize = OraclizeI(OAR.getAddress());
@@ -122,8 +122,7 @@ contract usingOraclize {
     function __callback(bytes32 myid, string result) public {
         __callback(myid, result, new bytes(0));
     }
-    function __callback(bytes32 myid, string result, bytes proof) public {
-    }
+    function __callback(bytes32 myid, string result, bytes proof) public;
 
     function oraclize_useCoupon(string code) oraclizeAPI internal {
         oraclize.useCoupon(code);
