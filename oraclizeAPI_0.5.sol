@@ -28,7 +28,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-pragma solidity ^0.4.18; //please import oraclizeAPI_pre0.4.sol when solidity < 0.4.0
+// This api is currently targeted at 0.4.18, please import oraclizeAPI_pre0.4.sol or oraclizeAPI_0.4 where necessary
+pragma solidity ^0.4.18;
 
 contract OraclizeI {
     address public cbAddress;
