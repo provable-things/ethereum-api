@@ -41,9 +41,7 @@ contract OraclizeI {
     function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
     function getPrice(string _datasource) public returns (uint _dsprice);
     function getPrice(string _datasource, uint gaslimit) public returns (uint _dsprice);
-    function useCoupon(string _coupon) public; // no longer present in connector
     function setProofType(byte _proofType) external;
-    function setConfig(bytes32 _config) public; // no longer present in connector
     function setCustomGasPrice(uint _gasPrice) external;
     function randomDS_getSessionPubKeyHash() external constant returns(bytes32);
 }
