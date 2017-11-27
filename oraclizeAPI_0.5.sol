@@ -78,7 +78,6 @@ contract usingOraclize {
     }
     modifier coupon(string code){
         oraclize = OraclizeI(OAR.getAddress());
-        oraclize.useCoupon(code);
         _;
     }
 
@@ -128,10 +127,6 @@ contract usingOraclize {
     function __callback(bytes32 myid, string result, bytes proof) public {
       return;
       myid; result; proof; // Silence compiler warnings
-    }
-
-    function oraclize_useCoupon(string code) oraclizeAPI internal {
-        oraclize.useCoupon(code);
     }
 
     function oraclize_getPrice(string datasource) oraclizeAPI internal returns (uint){
@@ -523,9 +518,6 @@ contract usingOraclize {
     }
     function oraclize_setCustomGasPrice(uint gasPrice) oraclizeAPI internal {
         return oraclize.setCustomGasPrice(gasPrice);
-    }
-    function oraclize_setConfig(bytes32 config) oraclizeAPI internal {
-        return oraclize.setConfig(config);
     }
 
     function oraclize_randomDS_getSessionPubKeyHash() oraclizeAPI internal returns (bytes32){
