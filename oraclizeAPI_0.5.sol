@@ -853,7 +853,7 @@ contract usingOraclize {
         require((_proof[0] == "L") && (_proof[1] == "P") && (_proof[2] == 1));
 
         bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
-        assert(proofVerified);
+        require(proofVerified);
 
         _;
     }
