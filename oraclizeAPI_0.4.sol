@@ -871,10 +871,13 @@ contract usingOraclize {
         return 0;
     }
 
-    function matchBytes32Prefix(bytes32 content, bytes prefix) internal returns (bool){
+    function matchBytes32Prefix(bytes32 content, bytes prefix, bytes proof) internal returns (bool){
         bool match_ = true;
+        
+        bytes memory nbytes = new bytes(1);
+        copyBytes(proof, 3+65+(uint(proof[3+65+1])+2)+32 + 32 + 8,1, nbytes, 0);
 
-        for (var i=0; i<prefix.length; i++){
+        for (var i=0; i< uint(nbytes[0]); i++) {
             if (content[i] != prefix[i]) match_ = false;
         }
 
@@ -882,24 +885,18 @@ contract usingOraclize {
     }
 
     function oraclize_randomDS_proofVerify__main(bytes proof, bytes32 queryId, bytes result, string context_name) internal returns (bool){
-        bool checkok;
-
 
         // Step 2: the unique keyhash has to match with the sha256 of (context name + queryId)
         uint ledgerProofLength = 3+65+(uint(proof[3+65+1])+2)+32;
         bytes memory keyhash = new bytes(32);
         copyBytes(proof, ledgerProofLength, 32, keyhash, 0);
-        checkok = (sha3(keyhash) == sha3(sha256(context_name, queryId)));
-        if (checkok == false) return false;
+        if (!(sha3(keyhash) == sha3(sha256(context_name, queryId)))) return false;
 
         bytes memory sig1 = new bytes(uint(proof[ledgerProofLength+(32+8+1+32)+1])+2);
         copyBytes(proof, ledgerProofLength+(32+8+1+32), sig1.length, sig1, 0);
 
-
         // Step 3: we assume sig1 is valid (it will be verified during step 5) and we verify if 'result' is the prefix of sha256(sig1)
-        checkok = matchBytes32Prefix(sha256(sig1), result);
-        if (checkok == false) return false;
-
+        if (!matchBytes32Prefix(sha256(sig1), result, proof)) return false;
 
         // Step 4: commitment match verification, sha3(delay, nbytes, unonce, sessionKeyHash) == commitment in storage.
         // This is to verify that the computed args match with the ones specified in the query.
@@ -919,8 +916,7 @@ contract usingOraclize {
         // Step 5: validity verification for sig1 (keyhash and args signed with the sessionKey)
         bytes memory tosign1 = new bytes(32+8+1+32);
         copyBytes(proof, ledgerProofLength, 32+8+1+32, tosign1, 0);
-        checkok = verifySig(sha256(tosign1), sig1, sessionPubkey);
-        if (checkok == false) return false;
+        if (!verifySig(sha256(tosign1), sig1, sessionPubkey)) return false;
 
         // verify if sessionPubkeyHash was verified already, if not.. let's do it!
         if (oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash] == false){
@@ -1027,4 +1023,4 @@ contract usingOraclize {
     }
 
 }
-// </ORACLIZE_API>
+// <ORACLIZE_API>
