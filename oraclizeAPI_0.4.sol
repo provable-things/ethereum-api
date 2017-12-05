@@ -1020,4 +1020,4 @@ contract usingOraclize {
     }
 
 }
-// <ORACLIZE_API>
+// </ORACLIZE_API>
