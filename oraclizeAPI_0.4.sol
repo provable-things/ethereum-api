@@ -874,7 +874,7 @@ contract usingOraclize {
     function matchBytes32Prefix(bytes32 content, bytes prefix, uint n_random_bytes) internal returns (bool){
         bool match_ = true;
         
-        for (var i=0; i< n_random,_bytes; i++) {
+        for (var i=0; i< n_random_bytes; i++) {
             if (content[i] != prefix[i]) match_ = false;
         }
 
@@ -893,7 +893,7 @@ contract usingOraclize {
         copyBytes(proof, ledgerProofLength+(32+8+1+32), sig1.length, sig1, 0);
 
         // Step 3: we assume sig1 is valid (it will be verified during step 5) and we verify if 'result' is the prefix of sha256(sig1)
-        if (!matchBytes32Prefix(sha256(sig1), result, uint(proof[ledgerProofLength+32+8])) return false;
+        if (!matchBytes32Prefix(sha256(sig1), result, uint(proof[ledgerProofLength+32+8]))) return false;
 
         // Step 4: commitment match verification, sha3(delay, nbytes, unonce, sessionKeyHash) == commitment in storage.
         // This is to verify that the computed args match with the ones specified in the query.
