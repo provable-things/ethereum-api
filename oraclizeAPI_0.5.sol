@@ -868,13 +868,11 @@ contract usingOraclize {
         return 0;
     }
 
-    function matchBytes32Prefix(bytes32 content, bytes prefix, bytes proof) internal pure returns (bool){
+    function matchBytes32Prefix(bytes32 content, bytes prefix, uint n_random_bytes) internal pure returns (bool){
         bool match_ = true;
         
-        bytes memory nbytes = new bytes(1);
-        copyBytes(proof, 3+65+(uint(proof[3+65+1])+2)+32 + 32 + 8,1, nbytes, 0);
 
-        for (uint256 i=0; i< uint(nbytes[0]); i++) {
+        for (uint256 i=0; i< n_random_bytes; i++) {
             if (content[i] != prefix[i]) match_ = false;
         }
 
@@ -893,7 +891,7 @@ contract usingOraclize {
         copyBytes(proof, ledgerProofLength+(32+8+1+32), sig1.length, sig1, 0);
 
         // Step 3: we assume sig1 is valid (it will be verified during step 5) and we verify if 'result' is the prefix of sha256(sig1)
-        if (!matchBytes32Prefix(sha256(sig1), result, proof)) return false;
+        if (!matchBytes32Prefix(sha256(sig1), result, uint(proof[ledgerProofLength+32+8]))) return false;
 
         // Step 4: commitment match verification, keccak256(delay, nbytes, unonce, sessionKeyHash) == commitment in storage.
         // This is to verify that the computed args match with the ones specified in the query.
