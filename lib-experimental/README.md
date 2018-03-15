@@ -2,11 +2,9 @@
 
 A library version of the oraclize API, allowing for much lower deployment gas costs of contracts leveraging Oraclize.
 
-#### NOTICE
-
-Only use these libraries if you know what you are doing. They are considered experimental and not recommended for production use without a thorough audit.
-
 #### Comparison
+
+(N.B. this is data from the previous version, but should still be applicable)
 
 Comparison of `KrakenPriceTicker.sol` deployment cost differences:
 

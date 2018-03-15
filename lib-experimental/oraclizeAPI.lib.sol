@@ -28,67 +28,90 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.19; //pragma experimental "v0.5.0";
 
 contract OraclizeI {
     address public cbAddress;
-    function query(uint _timestamp, string _datasource, string _arg) payable returns (bytes32 _id);
-    function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) payable returns (bytes32 _id);
-    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) payable returns (bytes32 _id);
-    function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) payable returns (bytes32 _id);
-    function queryN(uint _timestamp, string _datasource, bytes _argN) payable returns (bytes32 _id);
-    function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) payable returns (bytes32 _id);
-    function getPrice(string _datasource) returns (uint _dsprice);
-    function getPrice(string _datasource, uint gaslimit) returns (uint _dsprice);
-    function setProofType(byte _proofType);
-    function setConfig(bytes32 _config);
-    function setCustomGasPrice(uint _gasPrice);
+    function query(uint _timestamp, string _datasource, string _arg) external payable returns (bytes32 _id);
+    function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
+    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) public payable returns (bytes32 _id);
+    function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
+    function queryN(uint _timestamp, string _datasource, bytes _argN) public payable returns (bytes32 _id);
+    function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
+    function getPrice(string _datasource) public view returns (uint _dsprice);
+    function getPrice(string _datasource, uint gaslimit) public view returns (uint _dsprice);
+    function setProofType(byte _proofType) external;
+    function setCustomGasPrice(uint _gasPrice) external;
+    function randomDS_getSessionPubKeyHash() external view returns(bytes32);
 }
 contract OraclizeAddrResolverI {
-    function getAddress() returns (address _addr);
+    function getAddress() public view returns (address _addr);
 }
 library oraclizeLib {
-    //byte constant internal proofType_NONE = 0x00;
+
     function proofType_NONE()
-    constant
+    public
+    pure
     returns (byte) {
         return 0x00;
     }
-    //byte constant internal proofType_TLSNotary = 0x10;
+
     function proofType_TLSNotary()
-    constant
+    public
+    pure
     returns (byte) {
         return 0x10;
     }
-    //byte constant internal proofStorage_IPFS = 0x01;
+
+    function proofType_Android()
+    public
+    pure
+    returns (byte) {
+        return 0x20;
+    }
+
+    function proofType_Ledger()
+    public
+    pure
+    returns (byte) {
+        return 0x30;
+    }
+
+    function proofType_Native()
+    public
+    pure
+    returns (byte) {
+        return 0xF0;
+    }
+
     function proofStorage_IPFS()
-    constant
+    public
+    pure
     returns (byte) {
         return 0x01;
     }
 
-    // *******TRUFFLE + BRIDGE*********
-    //OraclizeAddrResolverI constant public OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
+    //OraclizeAddrResolverI constant public OAR = oraclize_setNetwork();
 
-    // *****REALNET DEPLOYMENT******
-    OraclizeAddrResolverI constant public OAR = oraclize_setNetwork(); // constant means dont store and re-eval on each call
-
-    function getOAR()
-    constant
+    function OAR()
+    public
+    view
     returns (OraclizeAddrResolverI) {
-        return OAR;
+        return oraclize_setNetwork();
     }
 
-    OraclizeI constant public oraclize = OraclizeI(OAR.getAddress());
+    //OraclizeI constant public oraclize = OraclizeI(OAR.getAddress());
 
-    function getCON()
-    constant
+    function oraclize()
+    public
+    view
     returns (OraclizeI) {
-        return oraclize;
+        return OraclizeI(OAR().getAddress());
     }
 
     function oraclize_setNetwork()
     public
+    view
     returns(OraclizeAddrResolverI){
         if (getCodeSize(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed)>0){ //mainnet
             return OraclizeAddrResolverI(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed);
@@ -115,14 +138,16 @@ library oraclizeLib {
 
     function oraclize_getPrice(string datasource)
     public
+    view
     returns (uint){
-        return oraclize.getPrice(datasource);
+        return oraclize().getPrice(datasource);
     }
 
     function oraclize_getPrice(string datasource, uint gaslimit)
     public
+    view
     returns (uint){
-        return oraclize.getPrice(datasource, gaslimit);
+        return oraclize().getPrice(datasource, gaslimit);
     }
 
     function oraclize_query(string datasource, string arg)
@@ -134,9 +159,10 @@ library oraclizeLib {
     function oraclize_query(uint timestamp, string datasource, string arg)
     public
     returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+        OraclizeI oracle = oraclize();
+        uint price = oracle.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
-        return oraclize.query.value(price)(timestamp, datasource, arg);
+        return oracle.query.value(price)(timestamp, datasource, arg);
     }
 
     function oraclize_query(string datasource, string arg, uint gaslimit)
@@ -148,9 +174,10 @@ library oraclizeLib {
     function oraclize_query(uint timestamp, string datasource, string arg, uint gaslimit)
     public
     returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+        OraclizeI oracle = oraclize();
+        uint price = oracle.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
-        return oraclize.query_withGasLimit.value(price)(timestamp, datasource, arg, gaslimit);
+        return oracle.query_withGasLimit.value(price)(timestamp, datasource, arg, gaslimit);
     }
 
     function oraclize_query(string datasource, string arg1, string arg2)
@@ -162,9 +189,10 @@ library oraclizeLib {
     function oraclize_query(uint timestamp, string datasource, string arg1, string arg2)
     public
     returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+        OraclizeI oracle = oraclize();
+        uint price = oracle.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
-        return oraclize.query2.value(price)(timestamp, datasource, arg1, arg2);
+        return oracle.query2.value(price)(timestamp, datasource, arg1, arg2);
     }
 
     function oraclize_query(string datasource, string arg1, string arg2, uint gaslimit)
@@ -176,73 +204,80 @@ library oraclizeLib {
     function oraclize_query(uint timestamp, string datasource, string arg1, string arg2, uint gaslimit)
     public
     returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+        OraclizeI oracle = oraclize();
+        uint price = oracle.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
-        return oraclize.query2_withGasLimit.value(price)(timestamp, datasource, arg1, arg2, gaslimit);
+        return oracle.query2_withGasLimit.value(price)(timestamp, datasource, arg1, arg2, gaslimit);
     }
 
+    // internalize w/o experimental
     function oraclize_query(string datasource, string[] argN)
     internal
     returns (bytes32 id){
         return oraclize_query(0, datasource, argN);
     }
 
+    // internalize w/o experimental
     function oraclize_query(uint timestamp, string datasource, string[] argN)
     internal
     returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+        OraclizeI oracle = oraclize();
+        uint price = oracle.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
         bytes memory args = stra2cbor(argN);
-        return oraclize.queryN.value(price)(timestamp, datasource, args);
+        return oracle.queryN.value(price)(timestamp, datasource, args);
     }
 
+    // internalize w/o experimental
     function oraclize_query(string datasource, string[] argN, uint gaslimit)
     internal
     returns (bytes32 id){
         return oraclize_query(0, datasource, argN, gaslimit);
     }
 
+    // internalize w/o experimental
     function oraclize_query(uint timestamp, string datasource, string[] argN, uint gaslimit)
     internal
     returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+        OraclizeI oracle = oraclize();
+        uint price = oracle.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
         bytes memory args = stra2cbor(argN);
-        return oraclize.queryN_withGasLimit.value(price)(timestamp, datasource, args, gaslimit);
+        return oracle.queryN_withGasLimit.value(price)(timestamp, datasource, args, gaslimit);
     }
 
     function oraclize_cbAddress()
     public
-    constant
+    view
     returns (address){
-        return oraclize.cbAddress();
+        return oraclize().cbAddress();
     }
 
     function oraclize_setProof(byte proofP)
     public {
-        return oraclize.setProofType(proofP);
+        return oraclize().setProofType(proofP);
     }
 
     function oraclize_setCustomGasPrice(uint gasPrice)
     public {
-        return oraclize.setCustomGasPrice(gasPrice);
+        return oraclize().setCustomGasPrice(gasPrice);
     }
 
-    function oraclize_setConfig(bytes32 config)
-    public {
-        return oraclize.setConfig(config);
-    }
-
+    // setting to internal doesn't cause major increase in deployment and saves gas
+    // per use, for this tiny function
     function getCodeSize(address _addr)
     public
+    view
     returns(uint _size) {
         assembly {
             _size := extcodesize(_addr)
         }
     }
 
+    // expects 0x prefix
     function parseAddr(string _a)
     public
+    pure
     returns (address){
         bytes memory tmp = bytes(_a);
         uint160 iaddr = 0;
@@ -265,6 +300,7 @@ library oraclizeLib {
 
     function strCompare(string _a, string _b)
     public
+    pure
     returns (int) {
         bytes memory a = bytes(_a);
         bytes memory b = bytes(_b);
@@ -285,6 +321,7 @@ library oraclizeLib {
 
     function indexOf(string _haystack, string _needle)
     public
+    pure
     returns (int) {
         bytes memory h = bytes(_haystack);
         bytes memory n = bytes(_needle);
@@ -314,6 +351,7 @@ library oraclizeLib {
 
     function strConcat(string _a, string _b, string _c, string _d, string _e)
     internal
+    pure
     returns (string) {
         bytes memory _ba = bytes(_a);
         bytes memory _bb = bytes(_b);
@@ -333,18 +371,21 @@ library oraclizeLib {
 
     function strConcat(string _a, string _b, string _c, string _d)
     internal
+    pure
     returns (string) {
         return strConcat(_a, _b, _c, _d, "");
     }
 
     function strConcat(string _a, string _b, string _c)
     internal
+    pure
     returns (string) {
         return strConcat(_a, _b, _c, "", "");
     }
 
     function strConcat(string _a, string _b)
     internal
+    pure
     returns (string) {
         return strConcat(_a, _b, "", "", "");
     }
@@ -352,7 +393,7 @@ library oraclizeLib {
     // parseInt
     function parseInt(string _a)
     public
-    constant
+    pure
     returns (uint) {
         return parseInt(_a, 0);
     }
@@ -360,7 +401,7 @@ library oraclizeLib {
     // parseInt(parseFloat*10^_b)
     function parseInt(string _a, uint _b)
     public
-    constant
+    pure
     returns (uint) {
         bytes memory bresult = bytes(_a);
         uint mint = 0;
@@ -381,6 +422,7 @@ library oraclizeLib {
 
     function uint2str(uint i)
     internal
+    pure
     returns (string){
         if (i == 0) return "0";
         uint j = i;
@@ -400,6 +442,7 @@ library oraclizeLib {
 
     function stra2cbor(string[] arr)
     internal
+    pure
     returns (bytes) {
         uint arrlen = arr.length;
 
