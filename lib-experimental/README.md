@@ -2,6 +2,14 @@
 
 A library version of the oraclize API, allowing for much lower deployment gas costs of contracts leveraging Oraclize.
 
+#### Notes
+
+Following data is applicable to a previous iteration of the library but should still produce similar results.
+
+For the contract examples, they will not work with Javascript VM in browser-solidity due to some incompatibility of the VM with libraries. It will work fine with ganache, privatenets, testnets, mainnet.
+
+In the future, we will look to provide an already deployed library, which you may link your contracts to.
+
 #### Comparison
 
 (N.B. this is data from the previous version, but should still be applicable)
@@ -23,6 +31,6 @@ As these figures show, it can save up to 50-60% of a contract's deployment costs
 
 Contract sources and associated computation archive can be found at: https://github.com/oraclize/ethereum-examples/tree/master/solidity/lib-experimental
 
-Direct browser-solidity link to examples: https://dapps.oraclize.it/browser-solidity/#version=soljson-v0.4.11+commit.68ef5810.js&optimize=false&gist=ad3d1f6007942b727f5909b55e6445d2
+Direct browser-solidity link to examples: https://dapps.oraclize.it/browser-solidity/#version=soljson-v0.4.19+commit.c4cbbb05.js&optimize=false&gist=ad3d1f6007942b727f5909b55e6445d2
 
-NOTE: if the `OffchainConcat.sol` contract returns an empty string as the result, ensure the multihash can be retrieved from IPFS, and if not, you must run your own IPFS daemon, serving the archive.
+NOTE: if the `OffchainConcat.sol` contract returns an empty string as the result, ensure the multihash can be retrieved from IPFS, and if not, you must run your own IPFS daemon, serving the archive, or upload using Infura.
