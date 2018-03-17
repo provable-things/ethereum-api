@@ -2,6 +2,8 @@
 
 A library version of the oraclize API, allowing for much lower deployment gas costs of contracts leveraging Oraclize.
 
+Some features might be missing, like the helpers for the [randomDS](http://docs.oraclize.it/#data-sources-random), so if you need to use those please refer to the standard [oraclizeAPI](https://github.com/oraclize/ethereum-api) instead.
+
 #### Notes
 
 Following data is applicable to a previous iteration of the library but should still produce similar results.
