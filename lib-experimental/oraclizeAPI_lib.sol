@@ -28,7 +28,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-pragma solidity ^0.4.19; //pragma experimental "v0.5.0";
+pragma solidity 0.4.19; //pragma experimental "v0.5.0";
 
 contract OraclizeI {
     address public cbAddress;
