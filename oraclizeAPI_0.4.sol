@@ -28,7 +28,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-pragma solidity ^0.4.0;//please import oraclizeAPI_pre0.4.sol when solidity < 0.4.0
+pragma solidity >=0.4.1;//please import oraclizeAPI_pre0.4.sol when solidity < 0.4.x
 
 contract OraclizeI {
     address public cbAddress;
@@ -85,7 +85,7 @@ library Buffer {
         uint capacity;
     }
 
-    function init(buffer memory buf, uint capacity) internal pure {
+    function init(buffer memory buf, uint capacity) internal constant {
         if(capacity % 32 != 0) capacity += 32 - (capacity % 32);
         // Allocate space for the buffer data
         buf.capacity = capacity;
@@ -96,13 +96,13 @@ library Buffer {
         }
     }
 
-    function resize(buffer memory buf, uint capacity) private pure {
+    function resize(buffer memory buf, uint capacity) private constant {
         bytes memory oldbuf = buf.buf;
         init(buf, capacity);
         append(buf, oldbuf);
     }
 
-    function max(uint a, uint b) private pure returns(uint) {
+    function max(uint a, uint b) private constant returns(uint) {
         if(a > b) {
             return a;
         }
@@ -116,7 +116,7 @@ library Buffer {
      * @param data The data to append.
      * @return The original buffer.
      */
-    function append(buffer memory buf, bytes data) internal pure returns(buffer memory) {
+    function append(buffer memory buf, bytes data) internal constant returns(buffer memory) {
         if(data.length + buf.buf.length > buf.capacity) {
             resize(buf, max(buf.capacity, data.length) * 2);
         }
@@ -163,7 +163,7 @@ library Buffer {
      * @param data The data to append.
      * @return The original buffer.
      */
-    function append(buffer memory buf, uint8 data) internal pure {
+    function append(buffer memory buf, uint8 data) internal constant {
         if(buf.buf.length + 1 > buf.capacity) {
             resize(buf, buf.capacity * 2);
         }
@@ -188,7 +188,7 @@ library Buffer {
      * @param data The data to append.
      * @return The original buffer.
      */
-    function appendInt(buffer memory buf, uint data, uint len) internal pure returns(buffer memory) {
+    function appendInt(buffer memory buf, uint data, uint len) internal constant returns(buffer memory) {
         if(len + buf.buf.length > buf.capacity) {
             resize(buf, max(buf.capacity, len) * 2);
         }
@@ -220,33 +220,37 @@ library CBOR {
     uint8 private constant MAJOR_TYPE_MAP = 5;
     uint8 private constant MAJOR_TYPE_CONTENT_FREE = 7;
 
-    function encodeType(Buffer.buffer memory buf, uint8 major, uint value) private pure {
+    function shl8(uint8 x, uint8 y) private constant returns (uint8) {
+        return x * (2 ** y);
+    }
+
+    function encodeType(Buffer.buffer memory buf, uint8 major, uint value) private constant {
         if(value <= 23) {
-            buf.append(uint8((major << 5) | value));
+            buf.append(uint8(shl8(major, 5) | value));
         } else if(value <= 0xFF) {
-            buf.append(uint8((major << 5) | 24));
+            buf.append(uint8(shl8(major, 5) | 24));
             buf.appendInt(value, 1);
         } else if(value <= 0xFFFF) {
-            buf.append(uint8((major << 5) | 25));
+            buf.append(uint8(shl8(major, 5) | 25));
             buf.appendInt(value, 2);
         } else if(value <= 0xFFFFFFFF) {
-            buf.append(uint8((major << 5) | 26));
+            buf.append(uint8(shl8(major, 5) | 26));
             buf.appendInt(value, 4);
         } else if(value <= 0xFFFFFFFFFFFFFFFF) {
-            buf.append(uint8((major << 5) | 27));
+            buf.append(uint8(shl8(major, 5) | 27));
             buf.appendInt(value, 8);
         }
     }
 
-    function encodeIndefiniteLengthType(Buffer.buffer memory buf, uint8 major) private pure {
-        buf.append(uint8((major << 5) | 31));
+    function encodeIndefiniteLengthType(Buffer.buffer memory buf, uint8 major) private constant {
+        buf.append(uint8(shl8(major, 5) | 31));
     }
 
-    function encodeUInt(Buffer.buffer memory buf, uint value) internal pure {
+    function encodeUInt(Buffer.buffer memory buf, uint value) internal constant {
         encodeType(buf, MAJOR_TYPE_INT, value);
     }
 
-    function encodeInt(Buffer.buffer memory buf, int value) internal pure {
+    function encodeInt(Buffer.buffer memory buf, int value) internal constant {
         if(value >= 0) {
             encodeType(buf, MAJOR_TYPE_INT, uint(value));
         } else {
@@ -254,25 +258,25 @@ library CBOR {
         }
     }
 
-    function encodeBytes(Buffer.buffer memory buf, bytes value) internal pure {
+    function encodeBytes(Buffer.buffer memory buf, bytes value) internal constant {
         encodeType(buf, MAJOR_TYPE_BYTES, value.length);
         buf.append(value);
     }
 
-    function encodeString(Buffer.buffer memory buf, string value) internal pure {
+    function encodeString(Buffer.buffer memory buf, string value) internal constant {
         encodeType(buf, MAJOR_TYPE_STRING, bytes(value).length);
         buf.append(bytes(value));
     }
 
-    function startArray(Buffer.buffer memory buf) internal pure {
+    function startArray(Buffer.buffer memory buf) internal constant {
         encodeIndefiniteLengthType(buf, MAJOR_TYPE_ARRAY);
     }
 
-    function startMap(Buffer.buffer memory buf) internal pure {
+    function startMap(Buffer.buffer memory buf) internal constant {
         encodeIndefiniteLengthType(buf, MAJOR_TYPE_MAP);
     }
 
-    function endSequence(Buffer.buffer memory buf) internal pure {
+    function endSequence(Buffer.buffer memory buf) internal constant {
         encodeIndefiniteLengthType(buf, MAJOR_TYPE_CONTENT_FREE);
     }
 }
@@ -901,7 +905,7 @@ contract usingOraclize {
     }
 
     using CBOR for Buffer.buffer;
-    function stra2cbor(string[] arr) internal returns (bytes) {
+    function stra2cbor(string[] arr) internal constant returns (bytes) {
         Buffer.buffer memory buf;
         Buffer.init(buf, 1024);
         buf.startArray();
@@ -912,7 +916,7 @@ contract usingOraclize {
         return buf.buf;
     }
 
-    function ba2cbor(bytes[] arr) internal pure returns (bytes) {
+    function ba2cbor(bytes[] arr) internal constant returns (bytes) {
         Buffer.buffer memory buf;
         Buffer.init(buf, 1024);
         buf.startArray();
