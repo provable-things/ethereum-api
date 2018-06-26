@@ -85,13 +85,15 @@ library Buffer {
         uint capacity;
     }
 
-    function init(buffer memory buf, uint capacity) internal constant {
+    function init(buffer memory buf, uint _capacity) internal constant {
+        uint capacity = _capacity;
         if(capacity % 32 != 0) capacity += 32 - (capacity % 32);
         // Allocate space for the buffer data
         buf.capacity = capacity;
         assembly {
             let ptr := mload(0x40)
             mstore(buf, ptr)
+            mstore(ptr, 0)
             mstore(0x40, add(ptr, capacity))
         }
     }
@@ -110,7 +112,7 @@ library Buffer {
     }
 
     /**
-     * @dev Appends a byte array to the end of the buffer. Reverts if doing so
+     * @dev Appends a byte array to the end of the buffer. Resizes if doing so
      *      would exceed the capacity of the buffer.
      * @param buf The buffer to append to.
      * @param data The data to append.
@@ -157,7 +159,7 @@ library Buffer {
     }
 
     /**
-     * @dev Appends a byte to the end of the buffer. Reverts if doing so would
+     * @dev Appends a byte to the end of the buffer. Resizes if doing so would
      * exceed the capacity of the buffer.
      * @param buf The buffer to append to.
      * @param data The data to append.
@@ -182,7 +184,7 @@ library Buffer {
     }
 
     /**
-     * @dev Appends a byte to the end of the buffer. Reverts if doing so would
+     * @dev Appends a byte to the end of the buffer. Resizes if doing so would
      * exceed the capacity of the buffer.
      * @param buf The buffer to append to.
      * @param data The data to append.
@@ -906,7 +908,7 @@ contract usingOraclize {
 
     using CBOR for Buffer.buffer;
     function stra2cbor(string[] arr) internal constant returns (bytes) {
-        smartCleanMemory();
+        safeMemoryCleaner();
         Buffer.buffer memory buf;
         Buffer.init(buf, 1024);
         buf.startArray();
@@ -918,7 +920,7 @@ contract usingOraclize {
     }
 
     function ba2cbor(bytes[] arr) internal constant returns (bytes) {
-        smartCleanMemory();
+        safeMemoryCleaner();
         Buffer.buffer memory buf;
         Buffer.init(buf, 1024);
         buf.startArray();
@@ -947,7 +949,6 @@ contract usingOraclize {
         bytes memory unonce = new bytes(32);
         bytes memory sessionKeyHash = new bytes(32);
         bytes32 sessionKeyHash_bytes32 = oraclize_randomDS_getSessionPubKeyHash();
-        smartCleanMemory();
         assembly {
             mstore(unonce, 0x20)
             // the following variables can be relaxed
@@ -1227,33 +1228,10 @@ contract usingOraclize {
         return safer_ecrecover(hash, v, r, s);
     }
 
-    // memory cleaning helpers for compatibility mode
-    function cleanMemory(uint _slots) internal {
+    function safeMemoryCleaner() internal constant {
         assembly {
-            let ptr := mload(0x40)
-            for { let i := 0 } lt(i, _slots) { i := add(i, 1) } {
-                mstore(add(ptr, mul(i, 0x20)), 0)
-            }
-        }
-    }
-
-    // automagically cleans up any polluting calldata
-    // or generally memory above free-mem pointer
-    // obviously comes at additional expense, dependent on extent of pollution
-    // dependent on June 20, 2018 EVM gas costs for memory ops
-    function smartCleanMemory() internal {
-    assembly {
-        let ptr := mload(0x40)
-        let i := 0
-        let rem_gas
-        let used_gas
-        loop:
-            rem_gas := gas
-            mstore(add(ptr, mul(i, 0x20)), 0)
-            used_gas := sub(rem_gas, gas)
-            i := add(i, 1)
-            jumpi(loop, eq(used_gas, 30))
-
+            let fmem := mload(0x40)
+            codecopy(fmem, codesize, sub(msize, fmem))
         }
     }
 }
