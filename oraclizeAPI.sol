@@ -1,1 +1,1 @@
-oraclizeAPI_0.4.sol
+oraclizeAPI_0.5.sol
