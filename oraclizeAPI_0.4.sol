@@ -28,7 +28,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-pragma solidity >=0.4.1 <=0.4.20;// Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
+pragma solidity >=0.4.1;// Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
 
 contract OraclizeI {
     address public cbAddress;
@@ -85,13 +85,15 @@ library Buffer {
         uint capacity;
     }
 
-    function init(buffer memory buf, uint capacity) internal constant {
+    function init(buffer memory buf, uint _capacity) internal constant {
+        uint capacity = _capacity;
         if(capacity % 32 != 0) capacity += 32 - (capacity % 32);
         // Allocate space for the buffer data
         buf.capacity = capacity;
         assembly {
             let ptr := mload(0x40)
             mstore(buf, ptr)
+            mstore(ptr, 0)
             mstore(0x40, add(ptr, capacity))
         }
     }
@@ -110,7 +112,7 @@ library Buffer {
     }
 
     /**
-     * @dev Appends a byte array to the end of the buffer. Reverts if doing so
+     * @dev Appends a byte array to the end of the buffer. Resizes if doing so
      *      would exceed the capacity of the buffer.
      * @param buf The buffer to append to.
      * @param data The data to append.
@@ -157,7 +159,7 @@ library Buffer {
     }
 
     /**
-     * @dev Appends a byte to the end of the buffer. Reverts if doing so would
+     * @dev Appends a byte to the end of the buffer. Resizes if doing so would
      * exceed the capacity of the buffer.
      * @param buf The buffer to append to.
      * @param data The data to append.
@@ -182,7 +184,7 @@ library Buffer {
     }
 
     /**
-     * @dev Appends a byte to the end of the buffer. Reverts if doing so would
+     * @dev Appends a byte to the end of the buffer. Resizes if doing so would
      * exceed the capacity of the buffer.
      * @param buf The buffer to append to.
      * @param data The data to append.
@@ -906,6 +908,7 @@ contract usingOraclize {
 
     using CBOR for Buffer.buffer;
     function stra2cbor(string[] arr) internal constant returns (bytes) {
+        safeMemoryCleaner();
         Buffer.buffer memory buf;
         Buffer.init(buf, 1024);
         buf.startArray();
@@ -917,6 +920,7 @@ contract usingOraclize {
     }
 
     function ba2cbor(bytes[] arr) internal constant returns (bytes) {
+        safeMemoryCleaner();
         Buffer.buffer memory buf;
         Buffer.init(buf, 1024);
         buf.startArray();
@@ -1224,5 +1228,11 @@ contract usingOraclize {
         return safer_ecrecover(hash, v, r, s);
     }
 
+    function safeMemoryCleaner() internal constant {
+        assembly {
+            let fmem := mload(0x40)
+            codecopy(fmem, codesize, sub(msize, fmem))
+        }
+    }
 }
 // </ORACLIZE_API>
