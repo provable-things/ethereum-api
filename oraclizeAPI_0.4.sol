@@ -293,8 +293,8 @@ contract usingOraclize {
     uint constant month = 60*60*24*30;
     byte constant proofType_NONE = 0x00;
     byte constant proofType_TLSNotary = 0x10;
-    byte constant proofType_Android = 0x20;
     byte constant proofType_Ledger = 0x30;
+    byte constant proofType_Android = 0x40;
     byte constant proofType_Native = 0xF0;
     byte constant proofStorage_IPFS = 0x01;
     uint8 constant networkID_auto = 0;
