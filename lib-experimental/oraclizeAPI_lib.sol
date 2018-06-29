@@ -299,7 +299,7 @@ library oraclizeLib {
     public
     pure
     returns (byte) {
-        return 0x20;
+        return 0x40;
     }
 
     function proofType_Ledger()
