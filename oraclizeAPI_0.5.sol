@@ -922,14 +922,14 @@ contract usingOraclize {
         uint mint = 0;
         bool decimals = false;
         for (uint i = 0; i < bresult.length; i++) {
-            if ((bresult[i] >= 48) && (bresult[i] <= 57)) {
+            if ((uint(uint8(bresult[i])) >= 48) && (uint(uint8(bresult[i])) <= 57)) {
                 if (decimals) {
                    if (_b == 0) break;
                     else _b--;
                 }
                 mint *= 10;
-                mint += uint(bresult[i]) - 48;
-            } else if (bresult[i] == 46) decimals = true;
+                mint += uint(uint8(bresult[i])) - 48;
+            } else if (uint(uint8(bresult[i])) == 46) decimals = true;
         }
         if (_b > 0) mint *= 10 ** _b;
         return mint;
