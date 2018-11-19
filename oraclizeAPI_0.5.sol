@@ -823,8 +823,8 @@ contract usingOraclize {
         uint160 b2;
         for (uint i = 2; i < 2 + 2 * 20; i += 2) {
             iaddr *= 256;
-            b1 = uint160(tmp[i]);
-            b2 = uint160(tmp[i + 1]);
+            b1 = uint160(uint8(tmp[i]));
+            b2 = uint160(uint8(tmp[i + 1]));
             if ((b1 >= 97)&&(b1 <= 102)) b1 -= 87;
             else if ((b1 >= 65) && (b1 <= 70)) b1 -= 55;
             else if ((b1 >= 48) &&( b1 <= 57)) b1 -= 48;
