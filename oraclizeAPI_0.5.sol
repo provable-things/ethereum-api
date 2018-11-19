@@ -991,7 +991,7 @@ contract usingOraclize {
         // Convert from seconds to ledger timer ticks
         _delay *= 10;
         bytes memory nbytes = new bytes(1);
-        nbytes[0] = byte(_nbytes);
+        nbytes[0] = byte(uint8(_nbytes));
         bytes memory unonce = new bytes(32);
         bytes memory sessionKeyHash = new bytes(32);
         bytes32 sessionKeyHash_bytes32 = oraclize_randomDS_getSessionPubKeyHash();
@@ -1049,11 +1049,11 @@ contract usingOraclize {
         bytes32 sigs;
 
         bytes memory sigr_ = new bytes(32);
-        uint offset = 4 + (uint(dersig[3]) - 0x20);
+        uint offset = 4 + (uint(uint8(dersig[3])) - 0x20);
         sigr_ = copyBytes(dersig, offset, 32, sigr_, 0);
         bytes memory sigs_ = new bytes(32);
         offset += 32 + 2;
-        sigs_ = copyBytes(dersig, offset + (uint(dersig[offset - 1]) - 0x20), 32, sigs_, 0);
+        sigs_ = copyBytes(dersig, offset + (uint(uint8(dersig[offset - 1])) - 0x20), 32, sigs_, 0);
 
         assembly {
             sigr := mload(add(sigr_, 32))
@@ -1062,10 +1062,10 @@ contract usingOraclize {
 
 
         (sigok, signer) = safer_ecrecover(tosignh, 27, sigr, sigs);
-        if (address(keccak256(pubkey)) == signer) return true;
+        if (address(bytes20(keccak256(pubkey))) == signer) return true;
         else {
             (sigok, signer) = safer_ecrecover(tosignh, 28, sigr, sigs);
-            return (address(keccak256(pubkey)) == signer);
+            return (address(bytes20(keccak256(pubkey))) == signer);
         }
     }
 
@@ -1073,14 +1073,14 @@ contract usingOraclize {
         bool sigok;
 
         // Step 6: verify the attestation signature, APPKEY1 must sign the sessionKey from the correct ledger app (CODEHASH)
-        bytes memory sig2 = new bytes(uint(proof[sig2offset + 1]) + 2);
+        bytes memory sig2 = new bytes(uint(uint8(proof[sig2offset + 1]) + 2));
         copyBytes(proof, sig2offset, sig2.length, sig2, 0);
 
         bytes memory appkey1_pubkey = new bytes(64);
         copyBytes(proof, 3 + 1, 64, appkey1_pubkey, 0);
 
         bytes memory tosign2 = new bytes(1 + 65 + 32);
-        tosign2[0] = byte(1); //role 
+        tosign2[0] = byte(uint8(1)); //role 
         copyBytes(proof, sig2offset - 65, 65, tosign2, 1);
         bytes memory CODEHASH = hex"fd94fa71bc0ba10d39d464d0d8f465efeef0a2764e3887fcc9df41ded20f505c";
         copyBytes(CODEHASH, 0, 32, tosign2, 1 + 65);
@@ -1095,7 +1095,7 @@ contract usingOraclize {
         tosign3[0] = 0xFE;
         copyBytes(proof, 3, 65, tosign3, 1);
 
-        bytes memory sig3 = new bytes(uint(proof[3 + 65 + 1]) + 2);
+        bytes memory sig3 = new bytes(uint(uint8(proof[3 + 65 + 1])) + 2);
         copyBytes(proof, 3 + 65, sig3.length, sig3, 0);
 
         sigok = verifySig(sha256(tosign3), sig3, LEDGERKEY);
@@ -1105,7 +1105,7 @@ contract usingOraclize {
 
     modifier oraclize_randomDS_proofVerify(bytes32 _queryId, string memory _result, bytes memory _proof) {
         // Step 1: the prefix has to match 'LP\x01' (Ledger Proof version 1)
-        require((_proof[0] == "L") && (_proof[1] == "P") && (_proof[2] == 1));
+        require((_proof[0] == "L") && (_proof[1] == "P") && (uint8(_proof[2]) == 1));
 
         bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
         require(proofVerified);
@@ -1115,7 +1115,7 @@ contract usingOraclize {
 
     function oraclize_randomDS_proofVerify__returnCode(bytes32 _queryId, string memory _result, bytes memory _proof) internal returns (uint8) {
         // Step 1: the prefix has to match 'LP\x01' (Ledger Proof version 1)
-        if ((_proof[0] != "L")||(_proof[1] != "P")||(_proof[2] != 1)) return 1;
+        if ((_proof[0] != "L")||(_proof[1] != "P")||(uint8(_proof[2]) != 1)) return 1;
 
         bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
         if (proofVerified == false) return 2;
@@ -1138,16 +1138,16 @@ contract usingOraclize {
     function oraclize_randomDS_proofVerify__main(bytes memory proof, bytes32 queryId, bytes memory result, string memory context_name) internal returns (bool) {
 
         // Step 2: the unique keyhash has to match with the sha256 of (context name + queryId)
-        uint ledgerProofLength = 3 + 65 + (uint(proof[3 + 65 + 1]) + 2) + 32;
+        uint ledgerProofLength = 3 + 65 + (uint(uint8(proof[3 + 65 + 1])) + 2) + 32;
         bytes memory keyhash = new bytes(32);
         copyBytes(proof, ledgerProofLength, 32, keyhash, 0);
         if (!(keccak256(keyhash) == keccak256(abi.encodePacked(sha256(abi.encodePacked(context_name, queryId)))))) return false; // TODO: Check this still behaves the same w/ double abi encodes!
 
-        bytes memory sig1 = new bytes(uint(proof[ledgerProofLength + (32 + 8 + 1 + 32) + 1]) + 2);
+        bytes memory sig1 = new bytes(uint(uint8(proof[ledgerProofLength + (32 + 8 + 1 + 32) + 1])) + 2);
         copyBytes(proof, ledgerProofLength + (32 + 8 + 1 + 32), sig1.length, sig1, 0);
 
         // Step 3: we assume sig1 is valid (it will be verified during step 5) and we verify if 'result' is the prefix of sha256(sig1)
-        if (!matchBytes32Prefix(sha256(sig1), result, uint(proof[ledgerProofLength + 32 + 8]))) return false;
+        if (!matchBytes32Prefix(sha256(sig1), result, uint(uint8(proof[ledgerProofLength + 32 + 8])))) return false;
 
         // Step 4: commitment match verification, keccak256(delay, nbytes, unonce, sessionKeyHash) == commitment in storage.
         // This is to verify that the computed args match with the ones specified in the query.
