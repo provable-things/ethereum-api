@@ -946,7 +946,7 @@ contract usingOraclize {
         bytes memory bstr = new bytes(len);
         uint k = len - 1;
         while (i != 0) {
-            bstr[k--] = byte(48 + i % 10);
+            bstr[k--] = byte(uint8(48 + i % 10));
             i /= 10;
         }
         return string(bstr);
