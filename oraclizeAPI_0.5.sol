@@ -913,7 +913,7 @@ contract usingOraclize {
 
     // parseInt
     function parseInt(string memory _a) internal pure returns (uint) {
-        return parseInt(_a, 1);
+        return parseInt(_a, 0);
     }
 
     // parseInt(parseFloat*10^_b)
