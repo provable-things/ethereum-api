@@ -1138,11 +1138,11 @@ contract usingOraclize {
             sigs := mload(add(sigs_, 32))
         }
         (sigok, signer) = safer_ecrecover(tosignh, 27, sigr, sigs);
-        if (address(bytes20(keccak256(pubkey))) == signer) {
+        if (address(uint160(uint256(keccak256(pubkey)))) == signer) {
             return true;
         } else {
             (sigok, signer) = safer_ecrecover(tosignh, 28, sigr, sigs);
-            return (address(bytes20(keccak256(pubkey))) == signer);
+            return (address(uint160(uint256(keccak256(pubkey)))) == signer);
         }
     }
 
