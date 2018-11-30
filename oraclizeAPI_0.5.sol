@@ -292,11 +292,6 @@ contract usingOraclize {
     mapping(bytes32 => bytes32) oraclize_randomDS_args;
     mapping(bytes32 => bool) oraclize_randomDS_sessionKeysHashVerified;
 
-    modifier coupon(string memory _code) {
-        oraclize = OraclizeI(OAR.getAddress());
-        _;
-    }
-
     modifier oraclizeAPI {
         if ((address(OAR) == address(0)) || (getCodeSize(address(OAR)) == 0)) {
             oraclize_setNetwork(networkID_auto);
