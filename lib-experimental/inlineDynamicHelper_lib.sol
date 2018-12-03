@@ -1,4 +1,4 @@
-pragma solidity ^0.4.6;
+pragma solidity ^0.4.6 < 0.5;
 
 /*
     Helper for declaring inline dynamic string arrays
