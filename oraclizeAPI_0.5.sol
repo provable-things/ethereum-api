@@ -987,7 +987,8 @@ contract usingOraclize {
                 mint *= 10;
                 mint += uint(uint8(bresult[i])) - 48;
             } else if (uint(uint8(bresult[i])) == 46) {
-                 decimals = true;
+                require(!decimals, 'More than one decimal encountered in string!');
+                decimals = true;
             } else {
                 revert("Non-numeral character encountered in string!");
             }
