@@ -26,6 +26,11 @@ THE SOFTWARE.
 */
 pragma solidity >= 0.5.0; // Incompatible compiler version - please select a compiler within the stated pragma range, or use a different version of the oraclizeAPI!
 
+// Dummy contract only used to emit to end-user they are using wrong solc
+contract solcChecker {
+/* INCOMPATIBLE SOLC: import the following instead: "github.com/oraclize/ethereum-api/oraclizeAPI_0.4.sol" */ function f(bytes calldata x) external;
+}
+
 contract OraclizeI {
 
     address public cbAddress;
