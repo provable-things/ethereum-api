@@ -1,0 +1,14 @@
+{
+  "name": "oraclize-eth-api",
+  "version": "0.5.0",
+  "description": "Thanks to this [Ethereum API helpers](https://github.com/oraclize/ethereum-api) using Oraclize in your Solidity/Serpent code is very easy.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oraclize/ethereum-api.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oraclize/ethereum-api/issues"
+  },
+  "homepage": "http://www.oraclize.it"
+}
