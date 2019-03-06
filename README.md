@@ -8,13 +8,15 @@ In Solidity it is as simple as inheriting the __`usingOraclize`__ contract that 
 
 This will provide your contract with functions like __`oraclize_query(...)`__, which make it trivial for you to leverage our oracle technology straight away.
 
-If you're using the __[Remix IDE](remix.ethereum.org)__ it's even easier still - simply import __Oraclize__ into your contract like so:
+If you're using the __[Remix IDE](http://remix.ethereum.org)__ it's even easier still - simply import __Oraclize__ into your contract like so:
 
 ```solidity
 
 import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
 
 ```
+
+To learn more about the Oraclize technology, please refer to our __[documentation here](https://docs.oraclize.it)__.
 
 &nbsp;
 
@@ -26,7 +28,7 @@ import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
 
 For working examples of how to integrate the __Oraclize__ API into your own smart-contracts, head on over to the __[Oraclize Examples](https://github.com/oraclize/ethereum-examples)__ repository. Here you'll find various examples that use __Oraclize__ to feed smart-contracts with data from a variety of external sources.
 
-There are even __[some examples here](https://github.com/oraclize/ethereum-examples/tree/master/solidity/truffle-examples/url-requests)__ showing you how you can use __Oraclize__ in a local Truffle development environment!
+There are even __[some examples here](https://github.com/oraclize/ethereum-examples/tree/master/solidity/truffle-examples)__ showing you how you can use __Oraclize__ in a local Truffle development environment!
 
 &nbsp;
 
@@ -43,6 +45,8 @@ __❍__ We have a __[Twitter](https://twitter.com/oraclizeit)__
 __❍__ And a __[Gitter](https://gitter.im/oraclize/ethereum-api)__
 
 __❍__ Or a __[Website](https://oraclize.it)__
+
+__❍__ Alongside a __[Youtube](https://www.youtube.com/channel/UCjVjCheDbMel-x-JYeGazcQ)__
 
 __❍__ Plus a __[Github](https://github.com/oraclize)__
 
