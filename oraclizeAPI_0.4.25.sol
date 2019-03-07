@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 // This api is currently targeted at 0.4.22 to 0.4.25 (stable builds), please import oraclizeAPI_pre0.4.sol or oraclizeAPI_0.4 where necessary
 
-pragma solidity >= 0.4.22 < 0.5;// Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
+pragma solidity >= 0.4.22 < 0.5; // Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
 
 contract OraclizeI {
     address public cbAddress;
@@ -324,8 +324,8 @@ contract usingOraclize {
     }
 
     function oraclize_setNetwork(uint8 networkID) internal returns(bool){
-      return oraclize_setNetwork();
-      networkID; // silence the warning and remain backwards compatible
+        return oraclize_setNetwork();
+        networkID; // silence the warning and remain backwards compatible
     }
     function oraclize_setNetwork() internal returns(bool){
         if (getCodeSize(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed)>0){ //mainnet
@@ -1391,83 +1391,93 @@ contract usingOraclize {
         }
     }
 
-    function parseAddr(string _a)
+    function parseAddr(string memory _a)
         internal
         pure
-        returns (address)
+        returns (address _parsedAddress)
     {
         bytes memory tmp = bytes(_a);
         uint160 iaddr = 0;
         uint160 b1;
         uint160 b2;
-        for (uint i=2; i<2+2 * 20; i+=2){
+        for (uint256 i = 2; i < 2 + 2 * 20; i += 2) {
             iaddr *= 256;
-            b1 = uint160(tmp[i]);
-            b2 = uint160(tmp[i+1]);
-            if ((b1 >= 97)&&(b1 <= 102)) b1 -= 87;
-            else if ((b1 >= 65)&&(b1 <= 70)) b1 -= 55;
-            else if ((b1 >= 48)&&(b1 <= 57)) b1 -= 48;
-            if ((b2 >= 97)&&(b2 <= 102)) b2 -= 87;
-            else if ((b2 >= 65)&&(b2 <= 70)) b2 -= 55;
-            else if ((b2 >= 48)&&(b2 <= 57)) b2 -= 48;
-            iaddr += (b1 * 16+b2);
+            b1 = uint160(uint8(tmp[i]));
+            b2 = uint160(uint8(tmp[i + 1]));
+            if ((b1 >= 97) && (b1 <= 102)) {
+                b1 -= 87;
+            } else if ((b1 >= 65) && (b1 <= 70)) {
+                b1 -= 55;
+            } else if ((b1 >= 48) && (b1 <= 57)) {
+                b1 -= 48;
+            }
+            if ((b2 >= 97) && (b2 <= 102)) {
+                b2 -= 87;
+            } else if ((b2 >= 65) && (b2 <= 70)) {
+                b2 -= 55;
+            } else if ((b2 >= 48) && (b2 <= 57)) {
+                b2 -= 48;
+            }
+            iaddr += (b1 * 16 + b2);
         }
         return address(iaddr);
     }
 
     function strCompare(
-        string _a,
-        string _b
+        string memory _a,
+        string memory _b
     )
         internal
         pure
-        returns (int)
+        returns (int _returnCode)
     {
         bytes memory a = bytes(_a);
         bytes memory b = bytes(_b);
-        uint minLength = a.length;
-        if (b.length < minLength) minLength = b.length;
-        for (uint i = 0; i < minLength; i ++)
-            if (a[i] < b[i])
+        uint256 minLength = a.length;
+        if (b.length < minLength) {
+            minLength = b.length;
+        }
+        for (uint256 i = 0; i < minLength; i ++) {
+            if (a[i] < b[i]) {
                 return -1;
-            else if (a[i] > b[i])
+            } else if (a[i] > b[i]) {
                 return 1;
-        if (a.length < b.length)
+            }
+        }
+        if (a.length < b.length) {
             return -1;
-        else if (a.length > b.length)
+        } else if (a.length > b.length) {
             return 1;
-        else
+        } else {
             return 0;
+        }
     }
 
     function indexOf(
-        string _haystack,
-        string _needle
+        string memory _haystack,
+        string memory _needle
     )
         internal
         pure
-        returns (int)
+        returns (int _returnCode)
     {
         bytes memory h = bytes(_haystack);
         bytes memory n = bytes(_needle);
-        if(h.length < 1 || n.length < 1 || (n.length > h.length))
+        if (h.length < 1 || n.length < 1 || (n.length > h.length)) {
             return -1;
-        else if(h.length > (2**128 -1))
+        } else if (h.length > (2 ** 128 - 1)) {
             return -1;
-        else
-        {
-            uint subindex = 0;
-            for (uint i = 0; i < h.length; i ++)
-            {
-                if (h[i] == n[0])
-                {
+        } else {
+            uint256 subindex = 0;
+            for (uint256 i = 0; i < h.length; i++) {
+                if (h[i] == n[0]) {
                     subindex = 1;
-                    while(subindex < n.length && (i + subindex) < h.length && h[i + subindex] == n[subindex])
-                    {
+                    while(subindex < n.length && (i + subindex) < h.length && h[i + subindex] == n[subindex]) {
                         subindex++;
                     }
-                    if(subindex == n.length)
+                    if (subindex == n.length) {
                         return int(i);
+                    }
                 }
             }
             return -1;
@@ -1475,116 +1485,144 @@ contract usingOraclize {
     }
 
     function strConcat(
-        string _a,
-        string _b,
-        string _c,
-        string _d,
-        string _e
+        string memory _a,
+        string memory _b
     )
         internal
         pure
-        returns (string)
+        returns (string memory _concatenatedString)
+    {
+        return strConcat(_a, _b, "", "", "");
+    }
+
+    function strConcat(
+        string memory _a,
+        string memory _b,
+        string memory _c
+    )
+        internal
+        pure
+        returns (string memory _concatenatedString)
+    {
+        return strConcat(_a, _b, _c, "", "");
+    }
+
+    function strConcat(
+        string memory _a,
+        string memory _b,
+        string memory _c,
+        string memory _d
+    )
+        internal
+        pure
+        returns (string memory _concatenatedString)
+    {
+        return strConcat(_a, _b, _c, _d, "");
+    }
+
+    function strConcat(
+        string memory _a,
+        string memory _b,
+        string memory _c,
+        string memory _d,
+        string memory _e
+    )
+        internal
+        pure
+        returns (string memory _concatenatedString)
     {
         bytes memory _ba = bytes(_a);
         bytes memory _bb = bytes(_b);
         bytes memory _bc = bytes(_c);
         bytes memory _bd = bytes(_d);
         bytes memory _be = bytes(_e);
-        string memory abcde = new string(_ba.length + _bb.length + _bc.length + _bd.length + _be.length);
+        string memory abcde = new string(
+            _ba.length +
+            _bb.length +
+            _bc.length +
+            _bd.length +
+            _be.length
+        );
         bytes memory babcde = bytes(abcde);
-        uint k = 0;
-        for (uint i = 0; i < _ba.length; i++) babcde[k++] = _ba[i];
-        for (i = 0; i < _bb.length; i++) babcde[k++] = _bb[i];
-        for (i = 0; i < _bc.length; i++) babcde[k++] = _bc[i];
-        for (i = 0; i < _bd.length; i++) babcde[k++] = _bd[i];
-        for (i = 0; i < _be.length; i++) babcde[k++] = _be[i];
+        uint256 k = 0;
+        uint256 i = 0;
+        for (i = 0; i < _ba.length; i++) {
+            babcde[k++] = _ba[i];
+        }
+        for (i = 0; i < _bb.length; i++) {
+            babcde[k++] = _bb[i];
+        }
+        for (i = 0; i < _bc.length; i++) {
+            babcde[k++] = _bc[i];
+        }
+        for (i = 0; i < _bd.length; i++) {
+            babcde[k++] = _bd[i];
+        }
+        for (i = 0; i < _be.length; i++) {
+            babcde[k++] = _be[i];
+        }
         return string(babcde);
     }
 
-    function strConcat(
-        string _a,
-        string _b,
-        string _c,
-        string _d
-    )
+    function parseInt(string memory _a)
         internal
         pure
-        returns (string)
-    {
-        return strConcat(_a, _b, _c, _d, "");
-    }
-
-    function strConcat(
-        string _a,
-        string _b,
-        string _c
-    )
-        internal
-        pure
-        returns (string)
-    {
-        return strConcat(_a, _b, _c, "", "");
-    }
-
-    function strConcat(
-        string _a,
-        string _b
-    )
-        internal
-        pure
-        returns (string)
-    {
-        return strConcat(_a, _b, "", "", "");
-    }
-
-    // parseInt
-    function parseInt(string _a)
-        internal
-        pure
-        returns (uint)
+        returns (uint256 _parsedInt)
     {
         return parseInt(_a, 0);
     }
 
-    // parseInt(parseFloat * 10^_b)
     function parseInt(
-        string _a,
-        uint _b
+        string memory _a,
+        uint256 _b
     )
         internal
         pure
-        returns (uint)
+        returns (uint256 _parsedInt)
     {
         bytes memory bresult = bytes(_a);
-        uint mint = 0;
+        uint256 mint = 0;
         bool decimals = false;
-        for (uint i=0; i<bresult.length; i++){
-            if ((bresult[i] >= 48)&&(bresult[i] <= 57)){
-                if (decimals){
-                   if (_b == 0) break;
-                    else _b--;
+        for (uint256 i = 0; i < bresult.length; i++) {
+            if ((uint(uint8(bresult[i])) >= 48) && (uint(uint8(bresult[i])) <= 57)) {
+                if (decimals) {
+                   if (_b == 0) {
+                       break;
+                   } else {
+                       _b--;
+                   }
                 }
                 mint *= 10;
-                mint += uint(bresult[i]) - 48;
-            } else if (bresult[i] == 46) decimals = true;
+                mint += uint(uint8(bresult[i])) - 48;
+            } else if (uint(uint8(bresult[i])) == 46) {
+                decimals = true;
+            }
         }
-        if (_b > 0) mint *= 10**_b;
+        if (_b > 0) {
+            mint *= 10 ** _b;
+        }
         return mint;
     }
 
-    function uint2str(uint i) internal pure returns (string){
-        if (i == 0) return "0";
-        uint j = i;
-        uint len;
-        while (j != 0){
+    function uint2str(uint256 _i)
+        internal
+        pure
+        returns (string memory _uintAsString)
+    {
+        if (_i == 0) {
+            return "0";
+        }
+        uint256 j = _i;
+        uint256 len;
+        while (j != 0) {
             len++;
             j /= 10;
         }
         bytes memory bstr = new bytes(len);
-        uint k = len - 1;
-        while (i != 0){
-            bstr[k--] = byte(48 + i % 10);
-            i /= 10;
+        uint256 k = len - 1;
+        while (_i != 0) {
+            bstr[k--] = byte(uint8(48 + _i % 10));
+            _i /= 10;
         }
         return string(bstr);
     }
@@ -1640,26 +1678,27 @@ contract usingOraclize {
     }
 
     function oraclize_newRandomDSQuery(
-        uint _delay,
-        uint _nbytes,
-        uint _customGasLimit
+        uint256 _delay,
+        uint256 _nbytes,
+        uint256 _customGasLimit
     )
         internal
-        returns (bytes32)
+        returns (bytes32 _queryId)
     {
         require((_nbytes > 0) && (_nbytes <= 32));
-        // Convert from seconds to ledger timer ticks
-        _delay *= 10;
+        _delay *= 10; // Convert from seconds to ledger timer ticks
         bytes memory nbytes = new bytes(1);
-        nbytes[0] = byte(_nbytes);
+        nbytes[0] = byte(uint8(_nbytes));
         bytes memory unonce = new bytes(32);
         bytes memory sessionKeyHash = new bytes(32);
         bytes32 sessionKeyHash_bytes32 = oraclize_randomDS_getSessionPubKeyHash();
         assembly {
             mstore(unonce, 0x20)
-            // the following variables can be relaxed
-            // check relaxed random contract under ethereum-examples repo
-            // for an idea on how to override and replace comit hash vars
+            /*
+             The following variables can be relaxed.
+             Check the relaxed random contract at https://github.com/oraclize/ethereum-examples
+             for an idea on how to override and replace commit hash variables.
+            */
             mstore(add(unonce, 0x20), xor(blockhash(sub(number, 1)), xor(coinbase, timestamp)))
             mstore(sessionKeyHash, 0x20)
             mstore(add(sessionKeyHash, 0x20), sessionKeyHash_bytes32)
@@ -1668,15 +1707,11 @@ contract usingOraclize {
         assembly {
             mstore(add(delay, 0x20), _delay)
         }
-
         bytes memory delay_bytes8 = new bytes(8);
         copyBytes(delay, 24, 8, delay_bytes8, 0);
-
         bytes[4] memory args = [unonce, nbytes, sessionKeyHash, delay];
         bytes32 queryId = oraclize_query("random", args, _customGasLimit);
-
         bytes memory delay_bytes8_left = new bytes(8);
-
         assembly {
             let x := mload(add(delay_bytes8, 0x20))
             mstore8(add(delay_bytes8_left, 0x27), div(x, 0x100000000000000000000000000000000000000000000000000000000000000))
@@ -1687,9 +1722,7 @@ contract usingOraclize {
             mstore8(add(delay_bytes8_left, 0x22), div(x, 0x10000000000000000000000000000000000000000000000000000))
             mstore8(add(delay_bytes8_left, 0x21), div(x, 0x100000000000000000000000000000000000000000000000000))
             mstore8(add(delay_bytes8_left, 0x20), div(x, 0x1000000000000000000000000000000000000000000000000))
-
         }
-
         oraclize_randomDS_setCommitment(queryId, keccak256(abi.encodePacked(delay_bytes8_left, args[1], sha256(args[0]), args[2])));
         return queryId;
     }
@@ -1798,88 +1831,85 @@ contract usingOraclize {
 
     function oraclize_randomDS_proofVerify__returnCode(
         bytes32 _queryId,
-        string _result,
-        bytes _proof
+        string memory _result,
+        bytes memory _proof
     )
         internal
-        returns (uint8)
+        returns (uint8 _returnCode)
     {
-        // Step 1: the prefix has to match 'LP\x01' (Ledger Proof version 1)
-        if ((_proof[0] != "L")||(_proof[1] != "P")||(_proof[2] != 1)) return 1;
-
+        // Random DS Proof Step 1: The prefix has to match 'LP\x01' (Ledger Proof version 1)
+        if ((_proof[0] != "L") || (_proof[1] != "P") || (uint8(_proof[2]) != uint8(1))) {
+            return 1;
+        }
         bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
-        if (proofVerified == false) return 2;
-
+        if (!proofVerified) {
+            return 2;
+        }
         return 0;
     }
 
     function matchBytes32Prefix(
-        bytes32 content,
-        bytes prefix,
-        uint n_random_bytes
+        bytes32 _content,
+        bytes memory _prefix,
+        uint256 _nRandomBytes
     )
         internal
         pure
-        returns (bool)
+        returns (bool _matchesPrefix)
     {
         bool match_ = true;
-
-        require(prefix.length == n_random_bytes);
-
-        for (uint256 i=0; i< n_random_bytes; i++) {
-            if (content[i] != prefix[i]) match_ = false;
+        require(_prefix.length == _nRandomBytes);
+        for (uint256 i = 0; i< _nRandomBytes; i++) {
+            if (_content[i] != _prefix[i]) {
+                match_ = false;
+            }
         }
-
         return match_;
     }
 
     function oraclize_randomDS_proofVerify__main(
-        bytes proof,
-        bytes32 queryId,
-        bytes result,
-        string context_name
+        bytes memory _proof,
+        bytes32 _queryId,
+        bytes memory _result,
+        string memory _contextName
     )
         internal
-        returns (bool)
+        returns (bool _proofVerified)
     {
-
-        // Step 2: the unique keyhash has to match with the sha256 of (context name + queryId)
-        uint ledgerProofLength = 3+65+(uint(proof[3+65+1])+2)+32;
+        // Random DS Proof Step 2: The unique keyhash has to match with the sha256 of (context name + _queryId)
+        uint256 ledgerProofLength = 3 + 65 + (uint(uint8(_proof[3 + 65 + 1])) + 2) + 32;
         bytes memory keyhash = new bytes(32);
-        copyBytes(proof, ledgerProofLength, 32, keyhash, 0);
-        if (!(keccak256(keyhash) == keccak256(abi.encodePacked(sha256(abi.encodePacked(context_name, queryId)))))) return false;
-
-        bytes memory sig1 = new bytes(uint(proof[ledgerProofLength+(32+8+1+32)+1])+2);
-        copyBytes(proof, ledgerProofLength+(32+8+1+32), sig1.length, sig1, 0);
-
-        // Step 3: we assume sig1 is valid (it will be verified during step 5) and we verify if 'result' is the prefix of sha256(sig1)
-        if (!matchBytes32Prefix(sha256(sig1), result, uint(proof[ledgerProofLength+32+8]))) return false;
-
-        // Step 4: commitment match verification, keccak256(delay, nbytes, unonce, sessionKeyHash) == commitment in storage.
-        // This is to verify that the computed args match with the ones specified in the query.
-        bytes memory commitmentSlice1 = new bytes(8+1+32);
-        copyBytes(proof, ledgerProofLength+32, 8+1+32, commitmentSlice1, 0);
-
-        bytes memory sessionPubkey = new bytes(64);
-        uint sig2offset = ledgerProofLength+32+(8+1+32)+sig1.length+65;
-        copyBytes(proof, sig2offset-64, 64, sessionPubkey, 0);
-
-        bytes32 sessionPubkeyHash = sha256(sessionPubkey);
-        if (oraclize_randomDS_args[queryId] == keccak256(abi.encodePacked(commitmentSlice1, sessionPubkeyHash))){ //unonce, nbytes and sessionKeyHash match
-            delete oraclize_randomDS_args[queryId];
-        } else return false;
-
-
-        // Step 5: validity verification for sig1 (keyhash and args signed with the sessionKey)
-        bytes memory tosign1 = new bytes(32+8+1+32);
-        copyBytes(proof, ledgerProofLength, 32+8+1+32, tosign1, 0);
-        if (!verifySig(sha256(tosign1), sig1, sessionPubkey)) return false;
-
-        // verify if sessionPubkeyHash was verified already, if not.. let's do it!
-        if (oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash] == false){
-            oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash] = oraclize_randomDS_proofVerify__sessionKeyValidity(proof, sig2offset);
+        copyBytes(_proof, ledgerProofLength, 32, keyhash, 0);
+        if (!(keccak256(keyhash) == keccak256(abi.encodePacked(sha256(abi.encodePacked(_contextName, _queryId)))))) {
+            return false;
         }
-
+        bytes memory sig1 = new bytes(uint(uint8(_proof[ledgerProofLength + (32 + 8 + 1 + 32) + 1])) + 2);
+        copyBytes(_proof, ledgerProofLength + (32 + 8 + 1 + 32), sig1.length, sig1, 0);
+        // Random DS Proof Step 3: We assume sig1 is valid (it will be verified during step 5) and we verify if '_result' is the _prefix of sha256(sig1)
+        if (!matchBytes32Prefix(sha256(sig1), _result, uint(uint8(_proof[ledgerProofLength + 32 + 8])))) {
+            return false;
+        }
+        // Random DS Proof Step 4: Commitment match verification, keccak256(delay, nbytes, unonce, sessionKeyHash) == commitment in storage.
+        // This is to verify that the computed args match with the ones specified in the query.
+        bytes memory commitmentSlice1 = new bytes(8 + 1 + 32);
+        copyBytes(_proof, ledgerProofLength + 32, 8 + 1 + 32, commitmentSlice1, 0);
+        bytes memory sessionPubkey = new bytes(64);
+        uint256 sig2offset = ledgerProofLength + 32 + (8 + 1 + 32) + sig1.length + 65;
+        copyBytes(_proof, sig2offset - 64, 64, sessionPubkey, 0);
+        bytes32 sessionPubkeyHash = sha256(sessionPubkey);
+        if (oraclize_randomDS_args[_queryId] == keccak256(abi.encodePacked(commitmentSlice1, sessionPubkeyHash))) { //unonce, nbytes and sessionKeyHash match
+            delete oraclize_randomDS_args[_queryId];
+        } else return false;
+        // Random DS Proof Step 5: Validity verification for sig1 (keyhash and args signed with the sessionKey)
+        bytes memory tosign1 = new bytes(32 + 8 + 1 + 32);
+        copyBytes(_proof, ledgerProofLength, 32 + 8 + 1 + 32, tosign1, 0);
+        if (!verifySig(sha256(tosign1), sig1, sessionPubkey)) {
+            return false;
+        }
+        // Verify if sessionPubkeyHash was verified already, if not.. let's do it!
+        if (!oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash]) {
+            oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash] = oraclize_randomDS_proofVerify__sessionKeyValidity(_proof, sig2offset);
+        }
         return oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash];
     }
 
@@ -1966,7 +1996,7 @@ contract usingOraclize {
         uint8 v;
 
         if (sig.length != 65)
-          return (false, 0);
+            return (false, 0);
 
         // The signature format is a compact form of:
         //   {bytes32 r}{bytes32 s}{uint8 v}
@@ -1992,7 +2022,7 @@ contract usingOraclize {
         // geth uses [0, 1] and some clients have followed. This might change, see:
         //  https://github.com/ethereum/go-ethereum/issues/2053
         if (v < 27)
-          v += 27;
+            v += 27;
 
         if (v != 27 && v != 28)
             return (false, 0);
