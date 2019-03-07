@@ -35,17 +35,23 @@ pragma solidity >= 0.4.22 < 0.5;// Incompatible compiler version... please selec
 
 contract OraclizeI {
     address public cbAddress;
-    function query(uint _timestamp, string _datasource, string _arg) external payable returns (bytes32 _id);
-    function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
-    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) public payable returns (bytes32 _id);
-    function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
-    function queryN(uint _timestamp, string _datasource, bytes _argN) public payable returns (bytes32 _id);
-    function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
-    function getPrice(string _datasource) public returns (uint _dsprice);
-    function getPrice(string _datasource, uint gaslimit) public returns (uint _dsprice);
     function setProofType(byte _proofType) external;
     function setCustomGasPrice(uint _gasPrice) external;
+    function getPrice(byte _datasource) view public returns (uint256 _dsprice);
     function randomDS_getSessionPubKeyHash() external constant returns(bytes32);
+    function getPrice(string memory _datasource) view public returns (uint256 _dsprice);
+    function getPrice(byte _datasource, address _address) view public returns (uint256 _dsprice);
+    function getPrice(byte _datasource, uint256 _gasLimit) view public returns (uint256 _dsprice);
+    function getPrice(string memory _datasource, address _address) view public returns (uint256 _dsprice);
+    function getPrice(string memory _datasource, uint256 _gasLimit) view public returns (uint256 _dsprice);
+    function queryN(uint _timestamp, string _datasource, bytes _argN) public payable returns (bytes32 _id);
+    function query(uint _timestamp, string _datasource, string _arg) external payable returns (bytes32 _id);
+    function getPrice(byte _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
+    function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) public payable returns (bytes32 _id);
+    function getPrice(string memory _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
+    function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
+    function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
+    function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
 }
 
 contract OraclizeAddrResolverI {
@@ -387,24 +393,91 @@ contract usingOraclize {
     }
 
     function oraclize_getPrice(
-        string datasource
+        string memory _datasource
     )
         oraclizeAPI
         internal
-        returns (uint)
+        returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(datasource);
+        return oraclize.getPrice(_datasource);
     }
 
     function oraclize_getPrice(
-        string datasource,
-        uint gaslimit
+        byte _datasource
     )
         oraclizeAPI
         internal
-        returns (uint)
+        returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(datasource, gaslimit);
+        return oraclize.getPrice(_datasource);
+    }
+
+    function oraclize_getPrice(
+        string memory _datasource,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.getPrice(_datasource, _gasLimit);
+    }
+
+    function oraclize_getPrice(
+        byte _datasource,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.getPrice(_datasource, _gasLimit);
+    }
+
+    function oraclize_getPrice(
+        string memory _datasource,
+        address _address
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.getPrice(_datasource, _address);
+    }
+
+    function oraclize_getPrice(
+        byte _datasource,
+        address _address
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.getPrice(_datasource, _address);
+    }
+
+    function oraclize_getPrice(
+        string memory _datasource,
+        address _address,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.getPrice(_datasource, _gasLimit, _address);
+    }
+
+    function oraclize_getPrice(
+        byte _datasource,
+        address _address,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.getPrice(_datasource, _gasLimit, _address);
     }
 
     function oraclize_query(
