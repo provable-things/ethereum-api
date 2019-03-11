@@ -49,6 +49,8 @@ contract OraclizeI {
     function getPrice(byte _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) public payable returns (bytes32 _id);
     function getPrice(string memory _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
+    function requestGasPriceBump(bytes32 queryId, uint256 gasLimit, uint256 oldGasPrice, uint256 newGasPrice) payable external;
+    function getBumpCost(uint256 gasLimit, uint256 oldGasPrice, uint256 newGasPrice) pure public returns (uint256 _gasPriceBumpCost);
     function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
     function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
     function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
@@ -1391,6 +1393,43 @@ contract usingOraclize {
         }
     }
 
+    function oraclize_getBumpCost(
+        uint256 _gasLimit,
+        uint256 _oldGasPrice,
+        uint256 _newGasPrice
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _gasPriceBumpCost)
+    {
+        return oraclize.getBumpCost(
+            _gasLimit,
+            _oldGasPrice,
+            _newGasPrice
+        );
+    }
+
+    function oraclize_requestGasPriceBump(
+        bytes32 _queryId,
+        uint256 _gasLimit,
+        uint256 _oldGasPrice,
+        uint256 _newGasPrice
+    )
+        oraclizeAPI
+        internal
+    {
+        return oraclize.requestGasPriceBump(
+            _queryId,
+            _gasLimit,
+            _oldGasPrice,
+            _newGasPrice
+        );
+    }
+    /**
+     *
+     * @notice Oraclize helper functions follow.
+     *
+     */
     function parseAddr(string memory _a)
         internal
         pure
@@ -1982,7 +2021,6 @@ contract usingOraclize {
 
         return (ret, addr);
     }
-
     // the following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
     function ecrecovery(
         bytes32 hash,
