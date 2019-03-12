@@ -1529,6 +1529,25 @@ contract usingOraclize {
     {
         return oraclize.queryCached();
     }
+
+    function oraclize_getDatasourceByte(
+        string memory _datasourceString
+    )
+        internal
+        returns (byte _datasourceByte)
+    {
+        if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('URL'))
+            return 0xFF;
+        if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('Random'))
+            return 0xFE;
+        if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('computation'))
+            return 0xFD;
+        if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('WolframAlpha'))
+            return 0xFC;
+        if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('IPFS'))
+            return 0xFB;
+        return 0x00;
+    }
     /**
      *
      * @notice Oraclize helper functions follow.
