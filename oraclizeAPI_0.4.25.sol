@@ -34,7 +34,10 @@ THE SOFTWARE.
 pragma solidity >= 0.4.22 < 0.5; // Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
 
 contract OraclizeI {
+
     address public cbAddress;
+    mapping (bytes32 => uint256) public price;
+
     function setProofType(byte _proofType) external;
     function setCustomGasPrice(uint _gasPrice) external;
     function requestQueryCaching(bytes32 _queryId) external;
@@ -482,6 +485,88 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.getPrice(_datasource, _gasLimit, _address);
+    }
+
+    function oraclize_getPrice(
+        byte _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    proofType_NONE
+                )
+            )
+        );
+        return _queryPrice += _gasLimit * _gasPrice;
+    }
+
+    function oraclize_getPrice(
+        byte _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice,
+        byte _proofType
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    _proofType
+                )
+            )
+        );
+        return _queryPrice += _gasLimit * _gasPrice;
+    }
+
+    function oraclize_getPrice(
+        string memory _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    proofType_NONE
+                )
+            )
+        );
+        return _queryPrice += _gasLimit * _gasPrice;
+    }
+
+    function oraclize_getPrice(
+        string memory _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice,
+        byte _proofType
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    _proofType
+                )
+            )
+        );
+        return _queryPrice += _gasLimit * _gasPrice;
     }
 
     function oraclize_query(
