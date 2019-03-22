@@ -47,12 +47,12 @@ contract OraclizeI {
     function getPrice(byte _datasource, uint256 _gasLimit) view public returns (uint256 _dsprice);
     function getPrice(string memory _datasource, address _address) view public returns (uint256 _dsprice);
     function getPrice(string memory _datasource, uint256 _gasLimit) view public returns (uint256 _dsprice);
+    function requestCallbackRebroadcast(bytes32 _queryId, uint256 _gasLimit, uint256 _gasPrice) payable external;
+    function getRebroadcastCost(uint256 _gasLimit, uint256 _gasPrice) pure public returns (uint256 _rebroadcastCost);
     function getPrice(byte _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
     function queryN(uint256 _timestamp, string memory _datasource, bytes memory _argN) public payable returns (bytes32 _id);
     function getPrice(string memory _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
-    function requestGasPriceBump(bytes32 queryId, uint256 gasLimit, uint256 oldGasPrice, uint256 newGasPrice) payable external;
     function query(uint256 _timestamp, string calldata _datasource, string calldata _arg) external payable returns (bytes32 _id);
-    function getBumpCost(uint256 gasLimit, uint256 oldGasPrice, uint256 newGasPrice) pure public returns (uint256 _gasPriceBumpCost);
     function query2(uint256 _timestamp, string memory _datasource, string memory _arg1, string memory _arg2) public payable returns (bytes32 _id);
     function query_withGasLimit(uint256 _timestamp, string calldata _datasource, string calldata _arg, uint256 _gasLimit) external payable returns (bytes32 _id);
     function queryN_withGasLimit(uint256 _timestamp, string calldata _datasource, bytes calldata _argN, uint256 _gasLimit) external payable returns (bytes32 _id);
@@ -1544,39 +1544,6 @@ contract usingOraclize {
         return oraclize.randomDS_getSessionPubKeyHash();
     }
 
-    function oraclize_getBumpCost(
-        uint256 _gasLimit,
-        uint256 _oldGasPrice,
-        uint256 _newGasPrice
-    )
-        oraclizeAPI
-        internal
-        returns (uint256 _gasPriceBumpCost)
-    {
-        return oraclize.getBumpCost(
-            _gasLimit,
-            _oldGasPrice,
-            _newGasPrice
-        );
-    }
-
-    function oraclize_requestGasPriceBump(
-        bytes32 _queryId,
-        uint256 _gasLimit,
-        uint256 _oldGasPrice,
-        uint256 _newGasPrice
-    )
-        oraclizeAPI
-        internal
-    {
-        return oraclize.requestGasPriceBump(
-            _queryId,
-            _gasLimit,
-            _oldGasPrice,
-            _newGasPrice
-        );
-    }
-
     function oraclize_requestQueryCaching(
         bytes32 _queryId
     )
@@ -1611,6 +1578,33 @@ contract usingOraclize {
         if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('IPFS'))
             return 0xFB;
         return 0x00;
+    }
+
+    function oraclize_getRebroadcastCost(
+        uint256 _gasLimit,
+        uint256 _gasPrice
+    )
+        oraclizeAPI
+        view
+        internal
+        returns(uint256 _rebroadcastCost)
+    {
+        return oraclize.getRebroadcastCost(_gasLimit, _gasPrice);
+    }
+
+    function oraclize_requestCallbackRebroadcast(
+        bytes32 _queryId,
+        uint256 _gasLimit,
+        uint256 _gasPrice
+    )
+        oraclizeAPI
+        internal
+    {
+        return oraclize.requestCallbackRebroadcast(
+            _queryId,
+            _gasLimit,
+            _gasPrice
+        );
     }
     /**
      *
