@@ -349,6 +349,11 @@ contract usingOraclize {
             oraclize_setNetworkName("eth_rinkeby");
             return true;
         }
+        if (getCodeSize(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41) > 0) { //goerli testnet
+            OAR = OraclizeAddrResolverI(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41);
+            oraclize_setNetworkName("eth_goerli");
+            return true;
+        }
         if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475) > 0) { //ethereum-bridge
             OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
             return true;
