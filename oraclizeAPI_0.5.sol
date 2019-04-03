@@ -61,8 +61,16 @@ contract OraclizeI {
     function query2_withGasLimit(uint256 _timestamp, string calldata _datasource, string calldata _arg1, string calldata _arg2, uint256 _gasLimit) external payable returns (bytes32 _id);
 }
 
+interface ERC20Interface {
+
+    function approve(address _tokenSpender, uint256 _tokenAmount) external returns (bool);
+
+}
+
 contract OraclizeAddrResolverI {
+
     function getAddress() public returns (address _address);
+
 }
 /**
  *
@@ -1613,6 +1621,36 @@ contract usingOraclize {
         internal
     {
         return oraclize.setCustomTokenPayment(_tokenAddress);
+    }
+
+    function oraclize_approveTokenAllowance(
+        address _tokenAddress,
+        uint256 _tokenAmount
+    )
+        oraclizeAPI
+        internal
+    {
+        ERC20Interface(_tokenAddress)
+            .approve(address(oraclize), _tokenAmount);
+    }
+
+    function oraclize_setAndApproveCustomTokenPayment(
+        address _tokenAddress,
+        uint256 _tokenAmount
+    )
+       oraclizeAPI
+       internal
+    {
+        oraclize_setCustomTokenPayment(_tokenAddress);
+        oraclize_approveTokenAllowance(_tokenAddress, _tokenAmount);
+    }
+
+    function oraclize_unsetAndRevokeCustomTokenPayment(address _tokenAddress)
+        oraclizeAPI
+        internal
+    {
+        oraclize_unsetCustomTokenPayment();
+        oraclize_approveTokenAllowance(_tokenAddress, 0);
     }
 
     function oraclize_unsetCustomTokenPayment()
