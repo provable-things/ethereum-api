@@ -1521,6 +1521,12 @@ contract usingOraclize {
             return 0xFC;
         if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('IPFS'))
             return 0xFB;
+        if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('nested'))
+            return 0xFA;
+        if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('Blockchain'))
+            return 0xF9;
+        if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('swarm'))
+            return 0xF8;
         return 0x00;
     }
 
