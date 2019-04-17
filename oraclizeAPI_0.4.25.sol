@@ -33,6 +33,17 @@ THE SOFTWARE.
 
 pragma solidity >= 0.4.22 < 0.5; // Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
 
+contract OraclizeIBytes {
+
+    function queryN(uint _timestamp, bytes1 _datasource, bytes _argN) public payable returns (bytes32 _id);
+    function query(uint _timestamp, bytes1 _datasource, string _arg) external payable returns (bytes32 _id);
+    function query2(uint _timestamp, bytes1 _datasource, string _arg1, string _arg2) public payable returns (bytes32 _id);
+    function query_withGasLimit(uint _timestamp, bytes1 _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
+    function queryN_withGasLimit(uint _timestamp, bytes1 _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
+    function query2_withGasLimit(uint _timestamp, bytes1 _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
+
+}
+
 contract OraclizeI {
 
     address public cbAddress;
@@ -52,21 +63,15 @@ contract OraclizeI {
     function getPrice(string memory _datasource, address _address) view public returns (uint256 _dsprice);
     function getPrice(string memory _datasource, uint256 _gasLimit) view public returns (uint256 _dsprice);
     function queryN(uint _timestamp, string _datasource, bytes _argN) public payable returns (bytes32 _id);
-    function queryN(uint _timestamp, bytes1 _datasource, bytes _argN) public payable returns (bytes32 _id);
     function query(uint _timestamp, string _datasource, string _arg) external payable returns (bytes32 _id);
-    function query(uint _timestamp, bytes1 _datasource, string _arg) external payable returns (bytes32 _id);
     function requestCallbackRebroadcast(bytes32 _queryId, uint256 _gasLimit, uint256 _gasPrice) payable external;
     function getPrice(byte _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
     function getRebroadcastCost(uint256 _gasLimit, uint256 _gasPrice) pure public returns (uint256 _rebroadcastCost);
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) public payable returns (bytes32 _id);
-    function query2(uint _timestamp, bytes1 _datasource, string _arg1, string _arg2) public payable returns (bytes32 _id);
     function getPrice(string memory _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
     function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
-    function query_withGasLimit(uint _timestamp, bytes1 _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
     function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
-    function queryN_withGasLimit(uint _timestamp, bytes1 _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
     function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
-    function query2_withGasLimit(uint _timestamp, bytes1 _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
 }
 
 interface ERC20Interface {
@@ -330,15 +335,18 @@ contract usingOraclize {
     OraclizeAddrResolverI OAR;
 
     OraclizeI oraclize;
+    OraclizeIBytes oraclizeBytes;
+
     modifier oraclizeAPI {
         if((address(OAR)==0)||(getCodeSize(address(OAR))==0))
             oraclize_setNetwork(networkID_auto);
 
         if(address(oraclize) != OAR.getAddress())
             oraclize = OraclizeI(OAR.getAddress());
-
+            oraclizeBytes = OraclizeIBytes(OAR.getAddress());
         _;
     }
+
     modifier coupon(string code){
         oraclize = OraclizeI(OAR.getAddress());
         _;
@@ -582,7 +590,12 @@ contract usingOraclize {
         );
         return _queryPrice += _gasLimit * _gasPrice;
     }
-
+    /**
+     *
+     * @notice Oraclize query overloads follow...
+     *
+     *
+     */
     function oraclize_query(
         string datasource,
         string arg
