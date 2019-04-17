@@ -1301,6 +1301,238 @@ contract usingOraclize {
 
     function oraclize_query(
         string memory _datasource,
+        bytes[] memory _argN
+    )
+        oraclizeAPI
+        internal
+        returns (bytes32 _id)
+    {
+        uint256 price = oraclize.getPrice(_datasource);
+        if (price > 1 ether + tx.gasprice * 200000) {
+            return 0; // Note: Return 0 due to unexpectedly high price
+        }
+        bytes memory args = ba2cbor(_argN);
+        (bool success, bytes memory returnData) = address(oraclize)
+            .call.value(price)(abi.encodeWithSignature(
+                "queryN(uint256,string,bytes)",
+                0,
+                _datasource,
+                args
+            )
+        );
+        require(success);
+        bytes32 returnValue;
+        assembly { returnValue := mload(add(returnData, 0x20)) }
+        return returnValue;
+    }
+
+    function oraclize_query(
+        bytes1 _datasource,
+        bytes[] memory _argN
+    )
+        oraclizeAPI
+        internal
+        returns (bytes32 _id)
+    {
+        uint256 price = oraclize.getPrice(_datasource);
+        if (price > 1 ether + tx.gasprice * 200000) {
+            return 0; // Note: Return 0 due to unexpectedly high price
+        }
+        bytes memory args = ba2cbor(_argN);
+        (bool success, bytes memory returnData) = address(oraclize)
+            .call.value(price)(abi.encodeWithSignature(
+                "queryN(uint256,bytes1,bytes)",
+                0,
+                _datasource,
+                args
+            )
+        );
+        require(success);
+        bytes32 returnValue;
+        assembly { returnValue := mload(add(returnData, 0x20)) }
+        return returnValue;
+    }
+
+    function oraclize_query(
+        uint256 _timestamp,
+        string memory _datasource,
+        bytes[] memory _argN
+    )
+        oraclizeAPI
+        internal
+        returns (bytes32 _id)
+    {
+        uint256 price = oraclize.getPrice(_datasource);
+        if (price > 1 ether + tx.gasprice * 200000) {
+            return 0; // Note: Return 0 due to unexpectedly high price
+        }
+        bytes memory args = ba2cbor(_argN);
+        (bool success, bytes memory returnData) = address(oraclize)
+            .call.value(price)(abi.encodeWithSignature(
+                "queryN(uint256,string,bytes)",
+                _timestamp,
+                _datasource,
+                args
+            )
+        );
+        require(success);
+        bytes32 returnValue;
+        assembly { returnValue := mload(add(returnData, 0x20)) }
+        return returnValue;
+    }
+
+    function oraclize_query(
+        uint256 _timestamp,
+        bytes1 _datasource,
+        bytes[] memory _argN
+    )
+        oraclizeAPI
+        internal
+        returns (bytes32 _id)
+    {
+        uint256 price = oraclize.getPrice(_datasource);
+        if (price > 1 ether + tx.gasprice * 200000) {
+            return 0; // Note: Return 0 due to unexpectedly high price
+        }
+        bytes memory args = ba2cbor(_argN);
+        (bool success, bytes memory returnData) = address(oraclize)
+            .call.value(price)(abi.encodeWithSignature(
+                "queryN(uint256,bytes1,bytes)",
+                _timestamp,
+                _datasource,
+                args
+            )
+        );
+        require(success);
+        bytes32 returnValue;
+        assembly { returnValue := mload(add(returnData, 0x20)) }
+        return returnValue;
+    }
+
+    function oraclize_query(
+        uint256 _timestamp,
+        string memory _datasource,
+        bytes[] memory _argN,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (bytes32 _id)
+    {
+        uint256 price = oraclize.getPrice(_datasource, _gasLimit);
+        if (price > 1 ether + tx.gasprice * _gasLimit) {
+            return 0; // Note: Return 0 due to unexpectedly high price
+        }
+        bytes memory args = ba2cbor(_argN);
+        (bool success, bytes memory returnData) = address(oraclize)
+            .call.value(price)(abi.encodeWithSignature(
+                "queryN_withGasLimit(uint256,string,bytes,uint256)",
+                _timestamp,
+                _datasource,
+                args,
+                _gasLimit
+            )
+        );
+        require(success);
+        bytes32 returnValue;
+        assembly { returnValue := mload(add(returnData, 0x20)) }
+        return returnValue;
+    }
+
+    function oraclize_query(
+        uint256 _timestamp,
+        bytes1 _datasource,
+        bytes[] memory _argN,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (bytes32 _id)
+    {
+        uint256 price = oraclize.getPrice(_datasource, _gasLimit);
+        if (price > 1 ether + tx.gasprice * _gasLimit) {
+            return 0; // Note: Return 0 due to unexpectedly high price
+        }
+        bytes memory args = ba2cbor(_argN);
+        (bool success, bytes memory returnData) = address(oraclize)
+            .call.value(price)(abi.encodeWithSignature(
+                "queryN_withGasLimit(uint256,bytes1,bytes,uint256)",
+                _timestamp,
+                _datasource,
+                args,
+                _gasLimit
+            )
+        );
+        require(success);
+        bytes32 returnValue;
+        assembly { returnValue := mload(add(returnData, 0x20)) }
+        return returnValue;
+    }
+
+    function oraclize_query(
+        string memory _datasource,
+        bytes[] memory _argN,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (bytes32 _id)
+    {
+        uint256 price = oraclize.getPrice(_datasource, _gasLimit);
+        if (price > 1 ether + tx.gasprice * _gasLimit) {
+            return 0; // Note: Return 0 due to unexpectedly high price
+        }
+        bytes memory args = ba2cbor(_argN);
+        (bool success, bytes memory returnData) = address(oraclize)
+            .call.value(price)(abi.encodeWithSignature(
+                "queryN_withGasLimit(uint256,string,bytes,uint256)",
+                0,
+                _datasource,
+                args,
+                _gasLimit
+            )
+        );
+        require(success);
+        bytes32 returnValue;
+        assembly { returnValue := mload(add(returnData, 0x20)) }
+        return returnValue;
+    }
+
+    function oraclize_query(
+        bytes1 _datasource,
+        bytes[] memory _argN,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (bytes32 _id)
+    {
+        uint256 price = oraclize.getPrice(_datasource, _gasLimit);
+        if (price > 1 ether + tx.gasprice * _gasLimit) {
+            return 0; // Note: Return 0 due to unexpectedly high price
+        }
+        bytes memory args = ba2cbor(_argN);
+        (bool success, bytes memory returnData) = address(oraclize)
+            .call.value(price)(abi.encodeWithSignature(
+                "queryN_withGasLimit(uint256,bytes1,bytes,uint256)",
+                0,
+                _datasource,
+                args,
+                _gasLimit
+            )
+        );
+        require(success);
+        bytes32 returnValue;
+        assembly { returnValue := mload(add(returnData, 0x20)) }
+        return returnValue;
+    }
+    /**
+     *
+     * Oraclize query overloads for dynamic arguments follow
+     *
+     */
+    function oraclize_query(
+        string memory _datasource,
         string[1] memory _args
     )
         oraclizeAPI
@@ -1619,233 +1851,7 @@ contract usingOraclize {
         return oraclize_query(_datasource, dynargs, _gasLimit);
     }
 
-    function oraclize_query(
-        string memory _datasource,
-        bytes[] memory _argN
-    )
-        oraclizeAPI
-        internal
-        returns (bytes32 _id)
-    {
-        uint256 price = oraclize.getPrice(_datasource);
-        if (price > 1 ether + tx.gasprice * 200000) {
-            return 0; // Note: Return 0 due to unexpectedly high price
-        }
-        bytes memory args = ba2cbor(_argN);
-        (bool success, bytes memory returnData) = address(oraclize)
-            .call.value(price)(abi.encodeWithSignature(
-                "queryN(uint256,string,bytes)",
-                0,
-                _datasource,
-                args
-            )
-        );
-        require(success);
-        bytes32 returnValue;
-        assembly { returnValue := mload(add(returnData, 0x20)) }
-        return returnValue;
-    }
 
-    function oraclize_query(
-        bytes1 _datasource,
-        bytes[] memory _argN
-    )
-        oraclizeAPI
-        internal
-        returns (bytes32 _id)
-    {
-        uint256 price = oraclize.getPrice(_datasource);
-        if (price > 1 ether + tx.gasprice * 200000) {
-            return 0; // Note: Return 0 due to unexpectedly high price
-        }
-        bytes memory args = ba2cbor(_argN);
-        (bool success, bytes memory returnData) = address(oraclize)
-            .call.value(price)(abi.encodeWithSignature(
-                "queryN(uint256,bytes1,bytes)",
-                0,
-                _datasource,
-                args
-            )
-        );
-        require(success);
-        bytes32 returnValue;
-        assembly { returnValue := mload(add(returnData, 0x20)) }
-        return returnValue;
-    }
-
-    function oraclize_query(
-        uint256 _timestamp,
-        string memory _datasource,
-        bytes[] memory _argN
-    )
-        oraclizeAPI
-        internal
-        returns (bytes32 _id)
-    {
-        uint256 price = oraclize.getPrice(_datasource);
-        if (price > 1 ether + tx.gasprice * 200000) {
-            return 0; // Note: Return 0 due to unexpectedly high price
-        }
-        bytes memory args = ba2cbor(_argN);
-        (bool success, bytes memory returnData) = address(oraclize)
-            .call.value(price)(abi.encodeWithSignature(
-                "queryN(uint256,string,bytes)",
-                _timestamp,
-                _datasource,
-                args
-            )
-        );
-        require(success);
-        bytes32 returnValue;
-        assembly { returnValue := mload(add(returnData, 0x20)) }
-        return returnValue;
-    }
-
-    function oraclize_query(
-        uint256 _timestamp,
-        bytes1 _datasource,
-        bytes[] memory _argN
-    )
-        oraclizeAPI
-        internal
-        returns (bytes32 _id)
-    {
-        uint256 price = oraclize.getPrice(_datasource);
-        if (price > 1 ether + tx.gasprice * 200000) {
-            return 0; // Note: Return 0 due to unexpectedly high price
-        }
-        bytes memory args = ba2cbor(_argN);
-        (bool success, bytes memory returnData) = address(oraclize)
-            .call.value(price)(abi.encodeWithSignature(
-                "queryN(uint256,bytes1,bytes)",
-                _timestamp,
-                _datasource,
-                args
-            )
-        );
-        require(success);
-        bytes32 returnValue;
-        assembly { returnValue := mload(add(returnData, 0x20)) }
-        return returnValue;
-    }
-
-    function oraclize_query(
-        uint256 _timestamp,
-        string memory _datasource,
-        bytes[] memory _argN,
-        uint256 _gasLimit
-    )
-        oraclizeAPI
-        internal
-        returns (bytes32 _id)
-    {
-        uint256 price = oraclize.getPrice(_datasource, _gasLimit);
-        if (price > 1 ether + tx.gasprice * _gasLimit) {
-            return 0; // Note: Return 0 due to unexpectedly high price
-        }
-        bytes memory args = ba2cbor(_argN);
-        (bool success, bytes memory returnData) = address(oraclize)
-            .call.value(price)(abi.encodeWithSignature(
-                "queryN_withGasLimit(uint256,string,bytes,uint256)",
-                _timestamp,
-                _datasource,
-                args,
-                _gasLimit
-            )
-        );
-        require(success);
-        bytes32 returnValue;
-        assembly { returnValue := mload(add(returnData, 0x20)) }
-        return returnValue;
-    }
-
-    function oraclize_query(
-        uint256 _timestamp,
-        bytes1 _datasource,
-        bytes[] memory _argN,
-        uint256 _gasLimit
-    )
-        oraclizeAPI
-        internal
-        returns (bytes32 _id)
-    {
-        uint256 price = oraclize.getPrice(_datasource, _gasLimit);
-        if (price > 1 ether + tx.gasprice * _gasLimit) {
-            return 0; // Note: Return 0 due to unexpectedly high price
-        }
-        bytes memory args = ba2cbor(_argN);
-        (bool success, bytes memory returnData) = address(oraclize)
-            .call.value(price)(abi.encodeWithSignature(
-                "queryN_withGasLimit(uint256,bytes1,bytes,uint256)",
-                _timestamp,
-                _datasource,
-                args,
-                _gasLimit
-            )
-        );
-        require(success);
-        bytes32 returnValue;
-        assembly { returnValue := mload(add(returnData, 0x20)) }
-        return returnValue;
-    }
-
-    function oraclize_query(
-        string memory _datasource,
-        bytes[] memory _argN,
-        uint256 _gasLimit
-    )
-        oraclizeAPI
-        internal
-        returns (bytes32 _id)
-    {
-        uint256 price = oraclize.getPrice(_datasource, _gasLimit);
-        if (price > 1 ether + tx.gasprice * _gasLimit) {
-            return 0; // Note: Return 0 due to unexpectedly high price
-        }
-        bytes memory args = ba2cbor(_argN);
-        (bool success, bytes memory returnData) = address(oraclize)
-            .call.value(price)(abi.encodeWithSignature(
-                "queryN_withGasLimit(uint256,string,bytes,uint256)",
-                0,
-                _datasource,
-                args,
-                _gasLimit
-            )
-        );
-        require(success);
-        bytes32 returnValue;
-        assembly { returnValue := mload(add(returnData, 0x20)) }
-        return returnValue;
-    }
-
-    function oraclize_query(
-        bytes1 _datasource,
-        bytes[] memory _argN,
-        uint256 _gasLimit
-    )
-        oraclizeAPI
-        internal
-        returns (bytes32 _id)
-    {
-        uint256 price = oraclize.getPrice(_datasource, _gasLimit);
-        if (price > 1 ether + tx.gasprice * _gasLimit) {
-            return 0; // Note: Return 0 due to unexpectedly high price
-        }
-        bytes memory args = ba2cbor(_argN);
-        (bool success, bytes memory returnData) = address(oraclize)
-            .call.value(price)(abi.encodeWithSignature(
-                "queryN_withGasLimit(uint256,bytes1,bytes,uint256)",
-                0,
-                _datasource,
-                args,
-                _gasLimit
-            )
-        );
-        require(success);
-        bytes32 returnValue;
-        assembly { returnValue := mload(add(returnData, 0x20)) }
-        return returnValue;
-    }
 
     function oraclize_query(
         string memory _datasource,
@@ -2166,7 +2172,11 @@ contract usingOraclize {
         dynargs[4] = _args[4];
         return oraclize_query(_datasource, dynargs, _gasLimit);
     }
-
+    /**
+     *
+     * Oraclize query overloads end.
+     *
+     */
     function oraclize_setProof(byte _proofP)
         oraclizeAPI
         internal
