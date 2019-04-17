@@ -397,7 +397,7 @@ contract usingOraclize {
             oraclize_setNetworkName("eth_rinkeby");
             return true;
         }
-        if (getCodeSize(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41) > 0) { //goerli testnet
+        if (getCodeSize(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41) > 0) { // Goerli testnet
             OAR = OraclizeAddrResolverI(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41);
             oraclize_setNetworkName("eth_goerli");
             return true;
