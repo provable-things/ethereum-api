@@ -2928,12 +2928,16 @@ contract usingOraclize {
     function oraclize_requestCallbackRebroadcast(
         bytes32 _queryId,
         uint256 _gasLimit,
-        uint256 _gasPrice
+        uint256 _gasPrice,
+        uint256 _queryPrice
     )
         oraclizeAPI
         internal
     {
-        return oraclize.requestCallbackRebroadcast(
+        return oraclize
+        .requestCallbackRebroadcast
+        .value(_queryPrice)
+        (
             _queryId,
             _gasLimit,
             _gasPrice
