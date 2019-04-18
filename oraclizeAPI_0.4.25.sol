@@ -2401,21 +2401,19 @@ contract usingOraclize {
         }
     }
 
-    function oraclize_requestQueryCaching(
-        bytes32 _queryId
-    )
+    function oraclize_requestQueryCaching(bytes32 _queryId)
         oraclizeAPI
         internal
     {
         return oraclize.requestQueryCaching(_queryId);
     }
 
-    function oraclize_queryCached()
+    function oraclize_queryCached(uint256 _queryPrice)
         oraclizeAPI
         internal
         returns (bytes32 _queryId)
     {
-        return oraclize.queryCached();
+        return oraclize.queryCached.value(_queryPrice)();
     }
 
     function oraclize_getDatasourceByte(
