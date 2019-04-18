@@ -2935,13 +2935,13 @@ contract usingOraclize {
         internal
     {
         return oraclize
-        .requestCallbackRebroadcast
-        .value(_queryPrice)
-        (
-            _queryId,
-            _gasLimit,
-            _gasPrice
-        );
+            .requestCallbackRebroadcast
+            .value(_queryPrice)
+            (
+                _queryId,
+                _gasLimit,
+                _gasPrice
+            );
     }
 
     function oraclize_setCustomTokenPayment(address _tokenAddress)
