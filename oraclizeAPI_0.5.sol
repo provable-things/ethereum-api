@@ -25,8 +25,13 @@
  *
  */
 pragma solidity >= 0.5.0 < 0.6.0; // Incompatible compiler version - please select a compiler within the stated pragma range, or use a different version of the oraclizeAPI!
-
-// Dummy contract only used to emit to end-user they are using wrong solc
+/**
+ *
+ * @notice  The following is a dummy contract that is only used to emit a
+ *          notification to the end-user they are using wrong solidity
+ *          compiler version.
+ *
+ */
 contract solcChecker {
 /* INCOMPATIBLE SOLC: import the following instead: "github.com/oraclize/ethereum-api/oraclizeAPI_0.4.sol" */ function f(bytes calldata x) external;
 }
@@ -63,8 +68,8 @@ contract OraclizeI {
     function queryN_withGasLimit(uint256 _timestamp, bytes1 _datasource, bytes calldata _argN, uint256 _gasLimit) external payable returns (bytes32 _id);
     function query_withGasLimit(uint256 _timestamp, string calldata _datasource, string calldata _arg, uint256 _gasLimit) external payable returns (bytes32 _id);
     function queryN_withGasLimit(uint256 _timestamp, string calldata _datasource, bytes calldata _argN, uint256 _gasLimit) external payable returns (bytes32 _id);
-    function query2_withGasLimit(uint256 _timestamp, string calldata _datasource, string calldata _arg1, string calldata _arg2, uint256 _gasLimit) external payable returns (bytes32 _id);
     function query2_withGasLimit(uint256 _timestamp, bytes1 _datasource, string calldata _arg1, string calldata _arg2, uint256 _gasLimit) external payable returns (bytes32 _id);
+    function query2_withGasLimit(uint256 _timestamp, string calldata _datasource, string calldata _arg1, string calldata _arg2, uint256 _gasLimit) external payable returns (bytes32 _id);
 }
 
 interface ERC20Interface {
@@ -612,7 +617,7 @@ contract usingOraclize {
     }
     /**
      *
-     * Oraclize query overloads follow
+     * Oraclize query overloads follow...
      *
      */
     function oraclize_query(
@@ -2504,7 +2509,7 @@ contract usingOraclize {
     /**
      *
      * @notice  Oraclize query overloads using dynamic byte[] arguments and a
-     *          datasource of type string follow...
+     *          datasource of type bytes1 follow...
      *
      */
     function oraclize_query(
@@ -2987,7 +2992,7 @@ contract usingOraclize {
     }
     /**
      *
-     * @notice Oraclize helper functions follow.
+     * @notice Oraclize helper functions follow...
      *
      */
     function parseAddr(string memory _a)
@@ -3402,7 +3407,13 @@ contract usingOraclize {
         returns (bool _proofVerified)
     {
         bool sigok;
-        // Note: Random DS Proof Step 6: Verify the attestation signature, APPKEY1 must sign the sessionKey from the correct ledger app (CODEHASH)
+        /**
+         *
+         * Note - Random DS Proof Step 6:
+         * Verify the attestation signature, APPKEY1 must sign the sessionKey
+         * from the correct ledger app (CODEHASH)
+         *
+         */
         bytes memory sig2 = new bytes(uint(uint8(_proof[_sig2offset + 1])) + 2);
         copyBytes(_proof, _sig2offset, sig2.length, sig2, 0);
         bytes memory appkey1_pubkey = new bytes(64);
@@ -3416,7 +3427,12 @@ contract usingOraclize {
         if (!sigok) {
             return false;
         }
-        // Note: Random DS Proof Step 7: Verify the APPKEY1 provenance (must be signed by Ledger)
+        /**
+         *
+         * Note - Random DS Proof Step 7:
+         * Verify the APPKEY1 provenance (must be signed by Ledger)
+         *
+         */
         bytes memory LEDGERKEY = hex"7fb956469c5c9b89840d55b43537e66a98dd4811ea0a27224272c2e5622911e8537a2f8e86a46baec82864e98dd01e9ccc2f8bc5dfc9cbe5a91a290498dd96e4";
         bytes memory tosign3 = new bytes(1 + 65);
         tosign3[0] = 0xFE;
@@ -3435,7 +3451,12 @@ contract usingOraclize {
         internal
         returns (uint8 _returnCode)
     {
-        // Note: Random DS Proof Step 1: The prefix has to match 'LP\x01' (Ledger Proof version 1)
+        /**
+         *
+         * Note - Random DS Proof Step 1:
+         * The prefix has to match 'LP\x01' (Ledger Proof version 1)
+         *
+         */
         if ((_proof[0] != "L") || (_proof[1] != "P") || (uint8(_proof[2]) != uint8(1))) {
             return 1;
         }
@@ -3474,7 +3495,13 @@ contract usingOraclize {
         internal
         returns (bool _proofVerified)
     {
-        // Note: Random DS Proof Step 2: The unique keyhash has to match with the sha256 of (context name + _queryId)
+        /**
+         *
+         * Note - Random DS Proof Step 2:
+         * The unique keyhash has to match with the sha256 of:
+         * (context name + _queryId)
+         *
+         */
         uint256 ledgerProofLength = 3 + 65 + (uint(uint8(_proof[3 + 65 + 1])) + 2) + 32;
         bytes memory keyhash = new bytes(32);
         copyBytes(_proof, ledgerProofLength, 32, keyhash, 0);
@@ -3483,12 +3510,32 @@ contract usingOraclize {
         }
         bytes memory sig1 = new bytes(uint(uint8(_proof[ledgerProofLength + (32 + 8 + 1 + 32) + 1])) + 2);
         copyBytes(_proof, ledgerProofLength + (32 + 8 + 1 + 32), sig1.length, sig1, 0);
-        // Note: Random DS Proof Step 3: We assume sig1 is valid (it will be verified during step 5) and we verify if '_result' is the _prefix of sha256(sig1)
+        /**
+         *
+         * Note - Random DS Proof Step 3:
+         * We assume sig1 is valid (it will be verified during step 5) and we
+         * verify if '_result' is the _prefix of sha256(sig1)
+         *
+         */
         if (!matchBytes32Prefix(sha256(sig1), _result, uint(uint8(_proof[ledgerProofLength + 32 + 8])))) {
             return false;
         }
-        // Note: Random DS Proof Step 4: Commitment match verification, keccak256(delay, nbytes, unonce, sessionKeyHash) == commitment in storage.
-        // Note: This is to verify that the computed args match with the ones specified in the query.
+        /**
+         *
+         * Note - Random DS Proof Step 4:
+         * Commitment match verifying that
+         *
+         *  keccak256(
+         *      delay,
+         *      nbytes,
+         *      unonce,
+         *      sessionKeyHash
+         *  ) == commitment in storage.
+         *
+         * This is to verify that the computed args match with the ones
+         * specified in the query.
+         *
+         */
         bytes memory commitmentSlice1 = new bytes(8 + 1 + 32);
         copyBytes(_proof, ledgerProofLength + 32, 8 + 1 + 32, commitmentSlice1, 0);
         bytes memory sessionPubkey = new bytes(64);
@@ -3498,13 +3545,24 @@ contract usingOraclize {
         if (oraclize_randomDS_args[_queryId] == keccak256(abi.encodePacked(commitmentSlice1, sessionPubkeyHash))) { //unonce, nbytes and sessionKeyHash match
             delete oraclize_randomDS_args[_queryId];
         } else return false;
-        // Note: Random DS Proof Step 5: Validity verification for sig1 (keyhash and args signed with the sessionKey)
+        /**
+         *
+         * Note - Random DS Proof Step 5:
+         * Validity verification for sig1 (keyhash and args signed with the
+         * sessionKey)
+         *
+         */
         bytes memory tosign1 = new bytes(32 + 8 + 1 + 32);
         copyBytes(_proof, ledgerProofLength, 32 + 8 + 1 + 32, tosign1, 0);
         if (!verifySig(sha256(tosign1), sig1, sessionPubkey)) {
             return false;
         }
-        // Note: Verify if sessionPubkeyHash was verified already, if not.. let's do it!
+        /**
+         *
+         * Note: Verify if sessionPubkeyHash was verified already, if not...
+         * let's do it!
+         *
+         */
         if (!oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash]) {
             oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash] = oraclize_randomDS_proofVerify__sessionKeyValidity(_proof, sig2offset);
         }
@@ -3627,10 +3685,10 @@ contract usingOraclize {
         }
         /**
          *
-         * albeit non-transactional signatures are not specified by the YP, one would expect it
-         * to match the YP range of [27, 28]
-         * geth uses [0, 1] and some clients have followed. This might change, see:
-         * https://github.com/ethereum/go-ethereum/issues/2053
+         * albeit non-transactional signatures are not specified by the YP, one
+         * would expect it to match the YP range of [27, 28]
+         * geth uses [0, 1] and some clients have followed. This might change,
+         * see: https://github.com/ethereum/go-ethereum/issues/2053
          *
          */
         if (v < 27) {
