@@ -153,7 +153,14 @@ library Buffer {
      * @return The original buffer.
      *
      */
-    function append(buffer memory _buf, bytes memory _data) internal pure returns (buffer memory _buffer) {
+    function append(
+        buffer memory _buf,
+        bytes memory _data
+    )
+        internal
+        pure
+        returns (buffer memory _buffer)
+    {
         if (_data.length + _buf.buf.length > _buf.capacity) {
             resize(_buf, max(_buf.capacity, _data.length) * 2);
         }
@@ -212,7 +219,15 @@ library Buffer {
       * @return The original buffer.
       *
       */
-    function appendInt(buffer memory _buf, uint256 _data, uint256 _len) internal pure returns (buffer memory _buffer) {
+    function appendInt(
+        buffer memory _buf,
+        uint256 _data,
+        uint256 _len
+    )
+        internal
+        pure
+        returns (buffer memory _buffer)
+    {
         if (_len + _buf.buf.length > _buf.capacity) {
             resize(_buf, max(_buf.capacity, _len) * 2);
         }
@@ -240,7 +255,14 @@ library CBOR {
     uint8 private constant MAJOR_TYPE_NEGATIVE_INT = 1;
     uint8 private constant MAJOR_TYPE_CONTENT_FREE = 7;
 
-    function encodeType(Buffer.buffer memory _buf, uint8 _major, uint256 _value) private pure {
+    function encodeType(
+        Buffer.buffer memory _buf,
+        uint8 _major,
+        uint256 _value
+    )
+        private
+        pure
+    {
         if (_value <= 23) {
             _buf.append(uint8((_major << 5) | _value));
         } else if (_value <= 0xFF) {
@@ -258,15 +280,33 @@ library CBOR {
         }
     }
 
-    function encodeIndefiniteLengthType(Buffer.buffer memory _buf, uint8 _major) private pure {
+    function encodeIndefiniteLengthType(
+        Buffer.buffer memory _buf,
+        uint8 _major
+    )
+        private
+        pure
+    {
         _buf.append(uint8((_major << 5) | 31));
     }
 
-    function encodeUInt(Buffer.buffer memory _buf, uint256 _value) internal pure {
+    function encodeUInt(
+        Buffer.buffer memory _buf,
+        uint256 _value
+    )
+        internal
+        pure
+    {
         encodeType(_buf, MAJOR_TYPE_INT, _value);
     }
 
-    function encodeInt(Buffer.buffer memory _buf, int _value) internal pure {
+    function encodeInt(
+        Buffer.buffer memory _buf,
+        int _value
+    )
+        internal
+        pure
+    {
         if (_value >= 0) {
             encodeType(_buf, MAJOR_TYPE_INT, uint(_value));
         } else {
@@ -274,25 +314,48 @@ library CBOR {
         }
     }
 
-    function encodeBytes(Buffer.buffer memory _buf, bytes memory _value) internal pure {
+    function encodeBytes(
+        Buffer.buffer memory _buf,
+        bytes memory _value
+    )
+        internal
+        pure
+    {
         encodeType(_buf, MAJOR_TYPE_BYTES, _value.length);
         _buf.append(_value);
     }
 
-    function encodeString(Buffer.buffer memory _buf, string memory _value) internal pure {
+    function encodeString(
+        Buffer.buffer memory _buf,
+        string memory _value
+    )
+        internal
+        pure
+    {
         encodeType(_buf, MAJOR_TYPE_STRING, bytes(_value).length);
         _buf.append(bytes(_value));
     }
 
-    function startArray(Buffer.buffer memory _buf) internal pure {
+    function startArray(
+        Buffer.buffer memory _buf
+    )
+        internal
+        pure
+    {
         encodeIndefiniteLengthType(_buf, MAJOR_TYPE_ARRAY);
     }
 
-    function startMap(Buffer.buffer memory _buf) internal pure {
+    function startMap(Buffer.buffer memory _buf)
+        internal
+        pure
+    {
         encodeIndefiniteLengthType(_buf, MAJOR_TYPE_MAP);
     }
 
-    function endSequence(Buffer.buffer memory _buf) internal pure {
+    function endSequence(Buffer.buffer memory _buf)
+        internal
+        pure
+    {
         encodeIndefiniteLengthType(_buf, MAJOR_TYPE_CONTENT_FREE);
     }
 }
@@ -346,8 +409,17 @@ contract usingOraclize {
     )
     {
         // Note: RandomDS Proof Step 1: The prefix has to match 'LP\x01' (Ledger Proof version 1)
-        require((_proof[0] == "L") && (_proof[1] == "P") && (uint8(_proof[2]) == uint8(1)));
-        bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
+        require(
+            (_proof[0] == "L") &&
+            (_proof[1] == "P") &&
+            (uint8(_proof[2]) == uint8(1))
+        );
+        bool proofVerified = oraclize_randomDS_proofVerify__main(
+            _proof,
+            _queryId,
+            bytes(_result),
+            oraclize_getNetworkName()
+        );
         require(proofVerified);
         _;
     }
@@ -382,40 +454,48 @@ contract usingOraclize {
         internal
         returns (bool _networkSet)
     {
-        if (getCodeSize(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed) > 0) { // Mainnet
+        // Note: Mainnet...
+        if (getCodeSize(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed) > 0) {
             OAR = OraclizeAddrResolverI(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed);
             oraclize_setNetworkName("eth_mainnet");
             return true;
         }
-        if (getCodeSize(0xc03A2615D5efaf5F49F60B7BB6583eaec212fdf1) > 0) { // Ropsten testnet
+        // Note: Ropsten testnet...
+        if (getCodeSize(0xc03A2615D5efaf5F49F60B7BB6583eaec212fdf1) > 0) {
             OAR = OraclizeAddrResolverI(0xc03A2615D5efaf5F49F60B7BB6583eaec212fdf1);
             oraclize_setNetworkName("eth_ropsten3");
             return true;
         }
-        if (getCodeSize(0xB7A07BcF2Ba2f2703b24C0691b5278999C59AC7e) > 0) { // Kovan testnet
+        // Note: Kovan testnet...
+        if (getCodeSize(0xB7A07BcF2Ba2f2703b24C0691b5278999C59AC7e) > 0) {
             OAR = OraclizeAddrResolverI(0xB7A07BcF2Ba2f2703b24C0691b5278999C59AC7e);
             oraclize_setNetworkName("eth_kovan");
             return true;
         }
-        if (getCodeSize(0x146500cfd35B22E4A392Fe0aDc06De1a1368Ed48) > 0) { // Rinkeby testnet
+        // Note: Rinkeby testnet...
+        if (getCodeSize(0x146500cfd35B22E4A392Fe0aDc06De1a1368Ed48) > 0) {
             OAR = OraclizeAddrResolverI(0x146500cfd35B22E4A392Fe0aDc06De1a1368Ed48);
             oraclize_setNetworkName("eth_rinkeby");
             return true;
         }
-        if (getCodeSize(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41) > 0) { // Goerli testnet
+        // Note: Goerli testnet...
+        if (getCodeSize(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41) > 0) {
             OAR = OraclizeAddrResolverI(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41);
             oraclize_setNetworkName("eth_goerli");
             return true;
         }
-        if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475) > 0) { // Ethereum-bridge
+        // Note: Ethereum-bridge testnet...
+        if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475) > 0) {
             OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
             return true;
         }
-        if (getCodeSize(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF) > 0) { // Ether.camp ide
+        // Note: Ether.camp ide...
+        if (getCodeSize(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF) > 0) {
             OAR = OraclizeAddrResolverI(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF);
             return true;
         }
-        if (getCodeSize(0x51efaF4c8B3C9AfBD5aB9F4bbC82784Ab6ef8fAA) > 0) { // Browser-solidity
+        // Note: Browser-solidity...
+        if (getCodeSize(0x51efaF4c8B3C9AfBD5aB9F4bbC82784Ab6ef8fAA) > 0) {
             OAR = OraclizeAddrResolverI(0x51efaF4c8B3C9AfBD5aB9F4bbC82784Ab6ef8fAA);
             return true;
         }
@@ -3076,7 +3156,11 @@ contract usingOraclize {
             for (uint256 i = 0; i < h.length; i++) {
                 if (h[i] == n[0]) {
                     subindex = 1;
-                    while(subindex < n.length && (i + subindex) < h.length && h[i + subindex] == n[subindex]) {
+                    while(
+                        subindex < n.length &&
+                        (i + subindex) < h.length &&
+                        h[i + subindex] == n[subindex]
+                    ) {
                         subindex++;
                     }
                     if (subindex == n.length) {
@@ -3188,7 +3272,10 @@ contract usingOraclize {
         uint256 mint = 0;
         bool decimals = false;
         for (uint256 i = 0; i < bresult.length; i++) {
-            if ((uint(uint8(bresult[i])) >= 48) && (uint(uint8(bresult[i])) <= 57)) {
+            if (
+                (uint(uint8(bresult[i])) >= 48) &&
+                (uint(uint8(bresult[i])) <= 57)
+            ) {
                 if (decimals) {
                    if (_b == 0) break;
                     else _b--;
@@ -3196,7 +3283,10 @@ contract usingOraclize {
                 mint *= 10;
                 mint += uint(uint8(bresult[i])) - 48;
             } else if (uint(uint8(bresult[i])) == 46) {
-                require(!decimals, 'More than one decimal encountered in string!');
+                require(
+                    !decimals,
+                    'More than one decimal encountered in string!'
+                );
                 decimals = true;
             } else {
                 revert("Non-numeral character encountered in string!");
@@ -3228,7 +3318,10 @@ contract usingOraclize {
         uint256 mint = 0;
         bool decimals = false;
         for (uint256 i = 0; i < bresult.length; i++) {
-            if ((uint(uint8(bresult[i])) >= 48) && (uint(uint8(bresult[i])) <= 57)) {
+            if (
+                (uint(uint8(bresult[i])) >= 48) &&
+                (uint(uint8(bresult[i])) <= 57)
+            ) {
                 if (decimals) {
                    if (_b == 0) {
                        break;
@@ -3346,16 +3439,50 @@ contract usingOraclize {
         bytes memory delay_bytes8_left = new bytes(8);
         assembly {
             let x := mload(add(delay_bytes8, 0x20))
-            mstore8(add(delay_bytes8_left, 0x27), div(x, 0x100000000000000000000000000000000000000000000000000000000000000))
-            mstore8(add(delay_bytes8_left, 0x26), div(x, 0x1000000000000000000000000000000000000000000000000000000000000))
-            mstore8(add(delay_bytes8_left, 0x25), div(x, 0x10000000000000000000000000000000000000000000000000000000000))
-            mstore8(add(delay_bytes8_left, 0x24), div(x, 0x100000000000000000000000000000000000000000000000000000000))
-            mstore8(add(delay_bytes8_left, 0x23), div(x, 0x1000000000000000000000000000000000000000000000000000000))
-            mstore8(add(delay_bytes8_left, 0x22), div(x, 0x10000000000000000000000000000000000000000000000000000))
-            mstore8(add(delay_bytes8_left, 0x21), div(x, 0x100000000000000000000000000000000000000000000000000))
-            mstore8(add(delay_bytes8_left, 0x20), div(x, 0x1000000000000000000000000000000000000000000000000))
+            mstore8(
+                add(delay_bytes8_left, 0x27),
+                div(x, 0x100000000000000000000000000000000000000000000000000000000000000)
+            )
+            mstore8(
+                add(delay_bytes8_left, 0x26),
+                div(x, 0x1000000000000000000000000000000000000000000000000000000000000)
+            )
+            mstore8(
+                add(delay_bytes8_left, 0x25),
+                div(x, 0x10000000000000000000000000000000000000000000000000000000000)
+            )
+            mstore8(
+                add(delay_bytes8_left, 0x24),
+                div(x, 0x100000000000000000000000000000000000000000000000000000000)
+            )
+            mstore8(
+                add(delay_bytes8_left, 0x23),
+                div(x, 0x1000000000000000000000000000000000000000000000000000000)
+            )
+            mstore8(
+                add(delay_bytes8_left, 0x22),
+                div(x, 0x10000000000000000000000000000000000000000000000000000)
+            )
+            mstore8(
+                add(delay_bytes8_left, 0x21),
+                div(x, 0x100000000000000000000000000000000000000000000000000)
+            )
+            mstore8(
+                add(delay_bytes8_left, 0x20),
+                div(x, 0x1000000000000000000000000000000000000000000000000)
+            )
         }
-        oraclize_randomDS_setCommitment(queryId, keccak256(abi.encodePacked(delay_bytes8_left, args[1], sha256(args[0]), args[2])));
+        oraclize_randomDS_setCommitment(
+            queryId,
+            keccak256(
+                abi.encodePacked(
+                    delay_bytes8_left,
+                    args[1],
+                    sha256(args[0]),
+                    args[2]
+                )
+            )
+        );
         return queryId;
     }
 
@@ -3385,7 +3512,13 @@ contract usingOraclize {
         sigr_ = copyBytes(_dersig, offset, 32, sigr_, 0);
         bytes memory sigs_ = new bytes(32);
         offset += 32 + 2;
-        sigs_ = copyBytes(_dersig, offset + (uint(uint8(_dersig[offset - 1])) - 0x20), 32, sigs_, 0);
+        sigs_ = copyBytes(
+            _dersig,
+            offset + (uint(uint8(_dersig[offset - 1])) - 0x20),
+            32,
+            sigs_,
+            0
+        );
         assembly {
             sigr := mload(add(sigr_, 32))
             sigs := mload(add(sigs_, 32))
@@ -3457,10 +3590,19 @@ contract usingOraclize {
          * The prefix has to match 'LP\x01' (Ledger Proof version 1)
          *
          */
-        if ((_proof[0] != "L") || (_proof[1] != "P") || (uint8(_proof[2]) != uint8(1))) {
+        if (
+            (_proof[0] != "L") ||
+            (_proof[1] != "P") ||
+            (uint8(_proof[2]) != uint8(1))
+        ) {
             return 1;
         }
-        bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
+        bool proofVerified = oraclize_randomDS_proofVerify__main(
+            _proof,
+            _queryId,
+            bytes(_result),
+            oraclize_getNetworkName()
+        );
         if (!proofVerified) {
             return 2;
         }
