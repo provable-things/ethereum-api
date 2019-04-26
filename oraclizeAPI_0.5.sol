@@ -41,35 +41,237 @@ contract OraclizeI {
     address public cbAddress;
     mapping (bytes32 => uint256) public price;
 
-    function unsetCustomTokenPayment() external;
-    function setProofType(byte _proofType) external;
-    function setCustomGasPrice(uint256 _gasPrice) external;
-    function requestQueryCaching(bytes32 _queryId) external;
-    function setCustomTokenPayment(address _tokenAddress) external;
-    function queryCached() payable external returns (bytes32 _queryId);
-    function getPrice(bytes1 _datasource) view public returns (uint256 _dsprice);
-    function getPrice(string memory _datasource) view public returns (uint256 _dsprice);
-    function randomDS_getSessionPubKeyHash() external view returns (bytes32 _sessionKeyHash);
-    function getPrice(bytes1 _datasource, address _address) view public returns (uint256 _dsprice);
-    function getPrice(bytes1 _datasource, uint256 _gasLimit) view public returns (uint256 _dsprice);
-    function getPrice(string memory _datasource, address _address) view public returns (uint256 _dsprice);
-    function getPrice(string memory _datasource, uint256 _gasLimit) view public returns (uint256 _dsprice);
-    function requestCallbackRebroadcast(bytes32 _queryId, uint256 _gasLimit, uint256 _gasPrice) payable external;
-    function queryN(uint256 _timestamp, bytes1 _datasource, bytes memory _argN) public payable returns (bytes32 _id);
-    function getPrice(bytes1 _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
-    function getRebroadcastCost(uint256 _gasLimit, uint256 _gasPrice) pure public returns (uint256 _rebroadcastCost);
-    function query(uint256 _timestamp, bytes1 _datasource, string calldata _arg) external payable returns (bytes32 _id);
-    function queryN(uint256 _timestamp, string memory _datasource, bytes memory _argN) public payable returns (bytes32 _id);
-    function getPrice(string memory _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
-    function query(uint256 _timestamp, string calldata _datasource, string calldata _arg) external payable returns (bytes32 _id);
-    function query2(uint256 _timestamp, bytes1 _datasource, string memory _arg1, string memory _arg2) public payable returns (bytes32 _id);
-    function query2(uint256 _timestamp, string memory _datasource, string memory _arg1, string memory _arg2) public payable returns (bytes32 _id);
-    function query_withGasLimit(uint256 _timestamp, bytes1 _datasource, string calldata _arg, uint256 _gasLimit) external payable returns (bytes32 _id);
-    function queryN_withGasLimit(uint256 _timestamp, bytes1 _datasource, bytes calldata _argN, uint256 _gasLimit) external payable returns (bytes32 _id);
-    function query_withGasLimit(uint256 _timestamp, string calldata _datasource, string calldata _arg, uint256 _gasLimit) external payable returns (bytes32 _id);
-    function queryN_withGasLimit(uint256 _timestamp, string calldata _datasource, bytes calldata _argN, uint256 _gasLimit) external payable returns (bytes32 _id);
-    function query2_withGasLimit(uint256 _timestamp, bytes1 _datasource, string calldata _arg1, string calldata _arg2, uint256 _gasLimit) external payable returns (bytes32 _id);
-    function query2_withGasLimit(uint256 _timestamp, string calldata _datasource, string calldata _arg1, string calldata _arg2, uint256 _gasLimit) external payable returns (bytes32 _id);
+    function unsetCustomTokenPayment()
+        external;
+
+    function queryCached()
+        payable
+        external
+        returns (bytes32 _queryId);
+
+    function randomDS_getSessionPubKeyHash()
+        external
+        view
+        returns (bytes32 _sessionKeyHash);
+
+    function setProofType(
+        byte _proofType
+    )
+        external;
+
+    function setCustomGasPrice(
+        uint256 _gasPrice
+    )
+        external;
+
+    function requestQueryCaching(
+        bytes32 _queryId
+    )
+        external;
+
+    function setCustomTokenPayment(
+        address _tokenAddress
+    )
+        external;
+
+    function getPrice(
+        bytes1 _datasource
+    )
+        view
+        public
+        returns (uint256 _dsprice);
+
+    function getPrice(
+        string memory _datasource
+    )
+        view
+        public
+        returns (uint256 _dsprice);
+
+
+    function getPrice(
+        bytes1 _datasource,
+        address _address
+    )
+        view
+        public
+        returns (uint256 _dsprice);
+
+    function getPrice(
+        bytes1 _datasource,
+        uint256 _gasLimit
+    )
+        view
+        public
+        returns (uint256 _dsprice);
+
+    function getPrice(
+        string memory _datasource,
+        address _address
+    )
+        view
+        public
+        returns (uint256 _dsprice);
+
+    function getPrice(
+        string memory _datasource,
+        uint256 _gasLimit
+    )
+        view
+        public
+        returns (uint256 _dsprice);
+
+    function requestCallbackRebroadcast(
+        bytes32 _queryId,
+        uint256 _gasLimit,
+        uint256 _gasPrice
+    )
+        payable
+        external;
+
+    function queryN(
+        uint256 _timestamp,
+        bytes1 _datasource,
+        bytes memory _argN
+    )
+        public
+        payable
+        returns (bytes32 _id);
+
+    function getPrice(
+        bytes1 _datasource,
+        uint256 _gasLimit,
+        address _address
+    )
+        view
+        public
+        returns (uint256 _dsprice);
+
+    function getRebroadcastCost(
+        uint256 _gasLimit,
+        uint256 _gasPrice
+    )
+        pure
+        public
+        returns (uint256 _rebroadcastCost);
+
+    function query(
+        uint256 _timestamp,
+        bytes1 _datasource,
+        string calldata _arg
+    )
+        external
+        payable
+        returns (bytes32 _id);
+
+    function queryN(
+        uint256 _timestamp,
+        string memory _datasource,
+        bytes memory _argN
+    )
+        public
+        payable
+        returns (bytes32 _id);
+
+    function getPrice(
+        string memory _datasource,
+        uint256 _gasLimit,
+        address _address
+    )
+        view
+        public
+        returns (uint256 _dsprice);
+
+    function query(
+        uint256 _timestamp,
+        string calldata _datasource,
+        string calldata _arg
+    )
+        external
+        payable
+        returns (bytes32 _id);
+
+    function query2(
+        uint256 _timestamp,
+        bytes1 _datasource,
+        string memory _arg1,
+        string memory _arg2
+    )
+        public
+        payable
+        returns (bytes32 _id);
+
+    function query2(
+        uint256 _timestamp,
+        string memory _datasource,
+        string memory _arg1,
+        string memory _arg2
+    )
+        public
+        payable
+        returns (bytes32 _id);
+
+    function query_withGasLimit(
+        uint256 _timestamp,
+        bytes1 _datasource,
+        string calldata _arg,
+        uint256 _gasLimit
+    )
+        external
+        payable
+        returns (bytes32 _id);
+
+    function queryN_withGasLimit(
+        uint256 _timestamp,
+        bytes1 _datasource,
+        bytes calldata _argN,
+        uint256 _gasLimit
+    )
+        external
+        payable
+        returns (bytes32 _id);
+
+    function query_withGasLimit(
+        uint256 _timestamp,
+        string calldata _datasource,
+        string calldata _arg,
+        uint256 _gasLimit
+    )
+        external
+        payable
+        returns (bytes32 _id);
+
+    function queryN_withGasLimit(
+        uint256 _timestamp,
+        string calldata _datasource,
+        bytes calldata _argN,
+        uint256 _gasLimit
+    )
+        external
+        payable
+        returns (bytes32 _id);
+
+    function query2_withGasLimit(
+        uint256 _timestamp,
+        bytes1 _datasource,
+        string calldata _arg1,
+        string calldata _arg2,
+        uint256 _gasLimit
+    )
+        external
+        payable
+        returns (bytes32 _id);
+
+    function query2_withGasLimit(
+        uint256 _timestamp,
+        string calldata _datasource,
+        string calldata _arg1,
+        string calldata _arg2,
+        uint256 _gasLimit
+    )
+        external
+        payable
+        returns (bytes32 _id);
 }
 
 interface ERC20Interface {
