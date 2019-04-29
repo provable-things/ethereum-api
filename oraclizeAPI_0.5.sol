@@ -44,6 +44,14 @@ contract OraclizeI {
     function unsetCustomTokenPayment()
         external;
 
+    function convertToERC20Price(
+        uint256 _queryPriceInWei,
+        address _tokenAddress
+    )
+        view
+        public
+        returns(uint256 _price);
+
     function queryCached()
         payable
         external
