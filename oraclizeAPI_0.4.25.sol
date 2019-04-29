@@ -48,6 +48,7 @@ contract OraclizeI {
 
     address public cbAddress;
     mapping (bytes32 => uint256) public price;
+    mapping (address => address) public addressCustomPaymentToken;
 
     function unsetCustomTokenPayment() external;
     function setProofType(byte _proofType) external;
