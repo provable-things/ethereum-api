@@ -422,7 +422,11 @@ contract usingOraclize {
       myid; result; proof;
       oraclize_randomDS_args[bytes32(0)] = bytes32(0);
     }
-
+    /**
+     *
+     * @notice oraclize_getPrice(...) overloads follow...
+     *
+     */
     function oraclize_getPrice(
         string memory _datasource
     )
@@ -591,6 +595,434 @@ contract usingOraclize {
             )
         );
         return _queryPrice += _gasLimit * _gasPrice;
+    }
+    /**
+     *
+     * @notice oraclize_getPriceERC20(...) overloads follow...
+     *
+     */
+    function oraclize_getPriceERC20(
+        string memory _datasource
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource),
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource),
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        address _tokenAddress,
+        string memory _datasource
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource),
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        address _tokenAddress,
+        byte _datasource
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource),
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _gasLimit),
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _gasLimit),
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        uint256 _gasLimit,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _gasLimit),
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource,
+        uint256 _gasLimit,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _gasLimit),
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        address _address
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _address),
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource,
+        address _address
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _address),
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        address _address,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _address),
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource,
+        address _address,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _address),
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        address _address,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource,
+        address _address,
+        uint256 _gasLimit
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        address _address,
+        uint256 _gasLimit,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _gasLimit, _address),
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource,
+        address _address,
+        uint256 _gasLimit,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        return oraclize.convertToERC20Price(
+            oraclize.getPrice(_datasource, _gasLimit, _address),
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    proofType_NONE
+                )
+            )
+        );
+        return oraclize.convertToERC20Price(
+            _queryPrice + _gasLimit * _gasPrice,
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    proofType_NONE
+                )
+            )
+        );
+        return oraclize.convertToERC20Price(
+            _queryPrice + _gasLimit * _gasPrice,
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    proofType_NONE
+                )
+            )
+        );
+        return oraclize.convertToERC20Price(
+            _queryPrice + _gasLimit * _gasPrice,
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        byte _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice,
+        byte _proofType
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    _proofType
+                )
+            )
+        );
+        return oraclize.convertToERC20Price(
+            _queryPrice + _gasLimit * _gasPrice,
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    proofType_NONE
+                )
+            )
+        );
+        return oraclize.convertToERC20Price(
+            _queryPrice + _gasLimit * _gasPrice,
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice,
+        byte _proofType
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    _proofType
+                )
+            )
+        );
+        return oraclize.convertToERC20Price(
+            _queryPrice + _gasLimit * _gasPrice,
+            oraclize.addressCustomPaymentToken(address(this))
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        string memory _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice,
+        byte _proofType,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    _proofType
+                )
+            )
+        );
+        return oraclize.convertToERC20Price(
+            _queryPrice + _gasLimit * _gasPrice,
+            _tokenAddress
+        );
+    }
+
+    function oraclize_getPriceERC20(
+        bytes1 _datasource,
+        uint256 _gasLimit,
+        uint256 _gasPrice,
+        byte _proofType,
+        address _tokenAddress
+    )
+        oraclizeAPI
+        internal
+        returns (uint256 _queryPrice)
+    {
+        _queryPrice = oraclize.price(
+            keccak256(
+                abi.encodePacked(
+                    _datasource,
+                    _proofType
+                )
+            )
+        );
+        return oraclize.convertToERC20Price(
+            _queryPrice + _gasLimit * _gasPrice,
+            _tokenAddress
+        );
     }
     /**
      *
