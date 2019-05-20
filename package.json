@@ -1,7 +1,7 @@
 {
   "name": "oraclize-eth-api",
   "version": "0.5.0",
-  "description": "Thanks to this [Ethereum API helpers](https://github.com/oraclize/ethereum-api) using Oraclize in your Solidity/Serpent code is very easy.",
+  "description": "The Oraclize API - Importable in your smart-contract in order to start leveraging the Oraclize service quickly and easily!.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/oraclize/ethereum-api.git"
