@@ -33,6 +33,13 @@ THE SOFTWARE.
 
 pragma solidity >= 0.4.22 < 0.5; // Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
 
+/**
+ * @notice  A separate interface is used here for any queries that use type
+ *          `bytes` to define the datasource due to the compiler not being able
+ *          to differentiate the two function signatures if called via
+ *          OraclizeI.query(...)
+ *
+ */
 contract OraclizeIBytes {
 
     function queryN(uint _timestamp, bytes1 _datasource, bytes _argN) public payable returns (bytes32 _id);
