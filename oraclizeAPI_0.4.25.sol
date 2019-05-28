@@ -352,7 +352,7 @@ contract usingOraclize {
 
         if(address(oraclize) != OAR.getAddress())
             oraclize = OraclizeI(OAR.getAddress());
-            oraclizeBytes = OraclizeIBytes(OAR.getAddress());
+            oraclizeBytes = OraclizeIBytes(address(oraclize));
         _;
     }
 
