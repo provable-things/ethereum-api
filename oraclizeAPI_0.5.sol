@@ -379,7 +379,7 @@ contract usingOraclize {
 
     function __callback(bytes32 _myid, string memory _result, bytes memory _proof) public {
       _myid; _result; _proof;
-      oraclize = OraclizeI(0);
+      oraclize_randomDS_args[bytes32(0)] = bytes32(0);
     }
 
     function oraclize_getPrice(string memory _datasource) oraclizeAPI internal returns (uint _queryPrice) {
