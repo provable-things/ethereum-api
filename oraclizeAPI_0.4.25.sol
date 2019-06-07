@@ -81,11 +81,20 @@ contract OraclizeI {
     function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
     function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
     function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
+
 }
 
 interface ERC20Interface {
 
+    event Transfer(address indexed _from, address indexed _to, uint _tokens);
+    event Approval(address indexed _tokenOwner, address indexed _spender, uint _tokens);
+
+    function totalSupply() external view returns (uint);
+    function transfer(address _to, uint _tokens) external returns (bool _success);
+    function balanceOf(address _tokenOwner) external view returns (uint _balance);
     function approve(address _tokenSpender, uint256 _tokenAmount) external returns (bool);
+    function transferFrom(address _from, address _to, uint _tokens) external returns (bool _success);
+    function allowance(address _tokenOwner, address _spender) external view returns (uint _remaining);
 
 }
 
