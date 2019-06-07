@@ -316,8 +316,8 @@ contract usingOraclize {
     }
 
     function oraclize_setNetwork(uint8 _networkID) internal returns (bool _networkSet) {
+      _networkID; // NOTE: Silence the warning and remain backwards compatible
       return oraclize_setNetwork();
-      _networkID; // silence the warning and remain backwards compatible
     }
 
     function oraclize_setNetworkName(string memory _network_name) internal {
@@ -368,14 +368,18 @@ contract usingOraclize {
         }
         return false;
     }
-
+    /**
+     * @dev The following `__callback` functions are just placeholders ideally
+     *      meant to be defined in child contract when proofs are used.
+     *      The function bodies simply silence compiler warnings.
+     */
     function __callback(bytes32 _myid, string memory _result) public {
         __callback(_myid, _result, new bytes(0));
     }
 
     function __callback(bytes32 _myid, string memory _result, bytes memory _proof) public {
-      return;
-      _myid; _result; _proof; // Silence compiler warnings
+      _myid; _result; _proof;
+      oraclize_randomDS_args[bytes32(0)] = bytes32(0);
     }
 
     function oraclize_getPrice(string memory _datasource) oraclizeAPI internal returns (uint _queryPrice) {
