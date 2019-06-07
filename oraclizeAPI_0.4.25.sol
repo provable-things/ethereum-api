@@ -359,9 +359,10 @@ contract usingOraclize {
         if((address(OAR)==0)||(getCodeSize(address(OAR))==0))
             oraclize_setNetwork(networkID_auto);
 
-        if(address(oraclize) != OAR.getAddress())
-            oraclize = OraclizeI(OAR.getAddress());
-            oraclizeBytes = OraclizeIBytes(address(oraclize));
+        address oraclizeConnector = OAR.getAddress();
+        if(address(oraclize) != oraclizeConnector)
+            oraclize = OraclizeI(oraclizeConnector);
+            oraclizeBytes = OraclizeIBytes(address(oraclizeConnector));
         _;
     }
 
