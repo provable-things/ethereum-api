@@ -361,17 +361,19 @@ contract usingOraclize {
         }
         return false;
     }
-
+    /**
+     * @dev The following `__callback` functions are just placeholders ideally
+     *      meant to be defined in child contract when proofs are used.
+     *      The function bodies simply silence compiler warnings.
+     */
     function __callback(bytes32 myid, string result) public {
         __callback(myid, result, new bytes(0));
     }
+
     function __callback(bytes32 myid, string result, bytes proof) public {
       return;
-      // Following should never be reached with a preceding return, however
-      // this is just a placeholder function, ideally meant to be defined in
-      // child contract when proofs are used
-      myid; result; proof; // Silence compiler warnings
-      oraclize = OraclizeI(0); // Additional compiler silence about making function pure/view. 
+      myid; result; proof;
+      oraclize = OraclizeI(0);
     }
 
     function oraclize_getPrice(string datasource) oraclizeAPI internal returns (uint){
