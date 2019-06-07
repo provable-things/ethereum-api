@@ -659,9 +659,11 @@ contract usingOraclize {
         if ((address(OAR) == address(0)) || (getCodeSize(address(OAR)) == 0)) {
             oraclize_setNetwork(networkID_auto);
         }
-        if (address(oraclize) != OAR.getAddress()) {
-            oraclize = OraclizeI(OAR.getAddress());
+        address oraclizeConnector = OAR.getAddress();
+        if (address(oraclize) != oraclizeConnector) {
+            oraclize = OraclizeI(oraclizeConnector);
         }
+
         _;
     }
 
