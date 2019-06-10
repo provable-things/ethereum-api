@@ -449,7 +449,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.getPrice(_datasource);
@@ -460,7 +459,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.getPrice(_datasource);
@@ -472,7 +470,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.getPrice(_datasource, _gasLimit);
@@ -484,7 +481,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.getPrice(_datasource, _gasLimit);
@@ -496,7 +492,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.getPrice(_datasource, _address);
@@ -508,7 +503,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.getPrice(_datasource, _address);
@@ -521,7 +515,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.getPrice(_datasource, _gasLimit, _address);
@@ -534,7 +527,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.getPrice(_datasource, _gasLimit, _address);
@@ -547,7 +539,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -569,7 +560,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -590,7 +580,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -612,7 +601,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -635,7 +623,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -649,7 +636,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -664,7 +650,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -679,7 +664,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -694,7 +678,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -709,7 +692,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -725,7 +707,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -741,7 +722,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -756,7 +736,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -771,7 +750,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -787,7 +765,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -803,7 +780,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -819,7 +795,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -835,7 +810,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -852,7 +826,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -869,7 +842,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
@@ -885,7 +857,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -910,7 +881,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -935,7 +905,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -960,7 +929,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -984,7 +952,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -1009,7 +976,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -1035,7 +1001,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
@@ -1061,7 +1026,6 @@ contract usingOraclize {
     )
         oraclizeAPI
         internal
-        view
         returns (uint256 _queryPrice)
     {
         _queryPrice = oraclize.price(
