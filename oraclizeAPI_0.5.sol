@@ -5891,6 +5891,7 @@ contract usingOraclize {
         string memory _datasourceString
     )
         internal
+        pure
         returns (byte _datasourceByte)
     {
         if (keccak256(abi.encodePacked(_datasourceString)) == keccak256('URL'))
