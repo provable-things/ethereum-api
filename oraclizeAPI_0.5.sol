@@ -49,8 +49,8 @@ contract OraclizeI {
         uint256 _queryPriceInWei,
         address _tokenAddress
     )
-        view
         public
+        view
         returns(uint256 _price);
 
     function queryCached()
@@ -86,15 +86,15 @@ contract OraclizeI {
     function getPrice(
         bytes1 _datasource
     )
-        view
         public
+        view
         returns (uint256 _dsprice);
 
     function getPrice(
         string memory _datasource
     )
-        view
         public
+        view
         returns (uint256 _dsprice);
 
 
@@ -102,32 +102,32 @@ contract OraclizeI {
         bytes1 _datasource,
         address _address
     )
-        view
         public
+        view
         returns (uint256 _dsprice);
 
     function getPrice(
         bytes1 _datasource,
         uint256 _gasLimit
     )
-        view
         public
+        view
         returns (uint256 _dsprice);
 
     function getPrice(
         string memory _datasource,
         address _address
     )
-        view
         public
+        view
         returns (uint256 _dsprice);
 
     function getPrice(
         string memory _datasource,
         uint256 _gasLimit
     )
-        view
         public
+        view
         returns (uint256 _dsprice);
 
     function requestCallbackRebroadcast(
@@ -152,16 +152,16 @@ contract OraclizeI {
         uint256 _gasLimit,
         address _address
     )
-        view
         public
+        view
         returns (uint256 _dsprice);
 
     function getRebroadcastCost(
         uint256 _gasLimit,
         uint256 _gasPrice
     )
-        pure
         public
+        pure
         returns (uint256 _rebroadcastCost);
 
     function query(
@@ -187,8 +187,8 @@ contract OraclizeI {
         uint256 _gasLimit,
         address _address
     )
-        view
         public
+        view
         returns (uint256 _dsprice);
 
     function query(
@@ -5848,8 +5848,8 @@ contract usingOraclize {
     }
 
     function getCodeSize(address _addr)
-        view
         internal
+        view
         returns (uint256 _size)
     {
         assembly {

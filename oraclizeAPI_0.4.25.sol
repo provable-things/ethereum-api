@@ -63,21 +63,21 @@ contract OraclizeI {
     function requestQueryCaching(bytes32 _queryId) external;
     function setCustomTokenPayment(address _tokenAddress) external;
     function queryCached() payable external returns (bytes32 _queryId);
-    function getPrice(byte _datasource) view public returns (uint256 _dsprice);
+    function getPrice(byte _datasource) public view returns (uint256 _dsprice);
     function randomDS_getSessionPubKeyHash() external constant returns(bytes32);
-    function getPrice(string memory _datasource) view public returns (uint256 _dsprice);
-    function getPrice(byte _datasource, address _address) view public returns (uint256 _dsprice);
-    function getPrice(byte _datasource, uint256 _gasLimit) view public returns (uint256 _dsprice);
-    function getPrice(string memory _datasource, address _address) view public returns (uint256 _dsprice);
-    function getPrice(string memory _datasource, uint256 _gasLimit) view public returns (uint256 _dsprice);
+    function getPrice(string memory _datasource) public view returns (uint256 _dsprice);
+    function getPrice(byte _datasource, address _address) public view returns (uint256 _dsprice);
+    function getPrice(byte _datasource, uint256 _gasLimit) public view returns (uint256 _dsprice);
+    function getPrice(string memory _datasource, address _address) public view returns (uint256 _dsprice);
+    function getPrice(string memory _datasource, uint256 _gasLimit) public view returns (uint256 _dsprice);
     function queryN(uint _timestamp, string _datasource, bytes _argN) public payable returns (bytes32 _id);
     function query(uint _timestamp, string _datasource, string _arg) external payable returns (bytes32 _id);
     function requestCallbackRebroadcast(bytes32 _queryId, uint256 _gasLimit, uint256 _gasPrice) payable external;
-    function getPrice(byte _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
-    function getRebroadcastCost(uint256 _gasLimit, uint256 _gasPrice) pure public returns (uint256 _rebroadcastCost);
-    function convertToERC20Price(uint256 _queryPriceInWei, address _tokenAddress) view public returns (uint256 _price);
+    function getPrice(byte _datasource, uint256 _gasLimit, address _address) public view returns (uint256 _dsprice);
+    function getRebroadcastCost(uint256 _gasLimit, uint256 _gasPrice) public pure returns (uint256 _rebroadcastCost);
+    function convertToERC20Price(uint256 _queryPriceInWei, address _tokenAddress) public view returns (uint256 _price);
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) public payable returns (bytes32 _id);
-    function getPrice(string memory _datasource, uint256 _gasLimit, address _address) view public returns (uint256 _dsprice);
+    function getPrice(string memory _datasource, uint256 _gasLimit, address _address) public view returns (uint256 _dsprice);
     function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
     function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
     function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
@@ -4607,8 +4607,8 @@ contract usingOraclize {
     }
 
     function getCodeSize(address _addr)
-        view
         internal
+        view
         returns(uint _size)
     {
         assembly {
