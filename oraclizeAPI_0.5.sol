@@ -100,7 +100,7 @@ contract OraclizeI {
 
     function getPrice(
         bytes1 _datasource,
-        address _address
+        address _contractToQuery
     )
         public
         view
@@ -116,7 +116,7 @@ contract OraclizeI {
 
     function getPrice(
         string memory _datasource,
-        address _address
+        address _contractToQuery
     )
         public
         view
@@ -150,7 +150,7 @@ contract OraclizeI {
     function getPrice(
         bytes1 _datasource,
         uint256 _gasLimit,
-        address _address
+        address _contractToQuery
     )
         public
         view
@@ -185,7 +185,7 @@ contract OraclizeI {
     function getPrice(
         string memory _datasource,
         uint256 _gasLimit,
-        address _address
+        address _contractToQuery
     )
         public
         view
@@ -839,48 +839,48 @@ contract usingOraclize {
 
     function oraclize_getPrice(
         string memory _datasource,
-        address _address
+        address _contractToQuery
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(_datasource, _address);
+        return oraclize.getPrice(_datasource, _contractToQuery);
     }
 
     function oraclize_getPrice(
         byte _datasource,
-        address _address
+        address _contractToQuery
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(_datasource, _address);
+        return oraclize.getPrice(_datasource, _contractToQuery);
     }
 
     function oraclize_getPrice(
         string memory _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(_datasource, _gasLimit, _address);
+        return oraclize.getPrice(_datasource, _gasLimit, _contractToQuery);
     }
 
     function oraclize_getPrice(
         byte _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(_datasource, _gasLimit, _address);
+        return oraclize.getPrice(_datasource, _gasLimit, _contractToQuery);
     }
 
     function oraclize_getPrice(
@@ -1083,35 +1083,35 @@ contract usingOraclize {
 
     function oraclize_getPriceERC20(
         string memory _datasource,
-        address _address
+        address _contractToQuery
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _address),
+            oraclize.getPrice(_datasource, _contractToQuery),
             oraclize.addressCustomPaymentToken(address(this))
         );
     }
 
     function oraclize_getPriceERC20(
         byte _datasource,
-        address _address
+        address _contractToQuery
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _address),
+            oraclize.getPrice(_datasource, _contractToQuery),
             oraclize.addressCustomPaymentToken(address(this))
         );
     }
 
     function oraclize_getPriceERC20(
         string memory _datasource,
-        address _address,
+        address _contractToQuery,
         address _tokenAddress
     )
         oraclizeAPI
@@ -1119,14 +1119,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _address),
+            oraclize.getPrice(_datasource, _contractToQuery),
             _tokenAddress
         );
     }
 
     function oraclize_getPriceERC20(
         byte _datasource,
-        address _address,
+        address _contractToQuery,
         address _tokenAddress
     )
         oraclizeAPI
@@ -1134,14 +1134,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _address),
+            oraclize.getPrice(_datasource, _contractToQuery),
             _tokenAddress
         );
     }
 
     function oraclize_getPriceERC20(
         string memory _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit
     )
         oraclizeAPI
@@ -1149,14 +1149,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.getPrice(_datasource, _gasLimit, _contractToQuery),
             oraclize.addressCustomPaymentToken(address(this))
         );
     }
 
     function oraclize_getPriceERC20(
         byte _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit
     )
         oraclizeAPI
@@ -1164,14 +1164,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.getPrice(_datasource, _gasLimit, _contractToQuery),
             oraclize.addressCustomPaymentToken(address(this))
         );
     }
 
     function oraclize_getPriceERC20(
         string memory _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit,
         address _tokenAddress
     )
@@ -1180,14 +1180,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.getPrice(_datasource, _gasLimit, _contractToQuery),
             _tokenAddress
         );
     }
 
     function oraclize_getPriceERC20(
         byte _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit,
         address _tokenAddress
     )
@@ -1196,7 +1196,7 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.getPrice(_datasource, _gasLimit, _contractToQuery),
             _tokenAddress
         );
     }
