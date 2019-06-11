@@ -66,18 +66,18 @@ contract OraclizeI {
     function getPrice(byte _datasource) public view returns (uint256 _dsprice);
     function randomDS_getSessionPubKeyHash() external constant returns(bytes32);
     function getPrice(string memory _datasource) public view returns (uint256 _dsprice);
-    function getPrice(byte _datasource, address _address) public view returns (uint256 _dsprice);
+    function getPrice(byte _datasource, address _contractToQuery) public view returns (uint256 _dsprice);
     function getPrice(byte _datasource, uint256 _gasLimit) public view returns (uint256 _dsprice);
-    function getPrice(string memory _datasource, address _address) public view returns (uint256 _dsprice);
+    function getPrice(string memory _datasource, address _contractToQuery) public view returns (uint256 _dsprice);
     function getPrice(string memory _datasource, uint256 _gasLimit) public view returns (uint256 _dsprice);
     function queryN(uint _timestamp, string _datasource, bytes _argN) public payable returns (bytes32 _id);
     function query(uint _timestamp, string _datasource, string _arg) external payable returns (bytes32 _id);
     function requestCallbackRebroadcast(bytes32 _queryId, uint256 _gasLimit, uint256 _gasPrice) payable external;
-    function getPrice(byte _datasource, uint256 _gasLimit, address _address) public view returns (uint256 _dsprice);
+    function getPrice(byte _datasource, uint256 _gasLimit, address _contractToQuery) public view returns (uint256 _dsprice);
     function getRebroadcastCost(uint256 _gasLimit, uint256 _gasPrice) public pure returns (uint256 _rebroadcastCost);
     function convertToERC20Price(uint256 _queryPriceInWei, address _tokenAddress) public view returns (uint256 _price);
     function query2(uint _timestamp, string _datasource, string _arg1, string _arg2) public payable returns (bytes32 _id);
-    function getPrice(string memory _datasource, uint256 _gasLimit, address _address) public view returns (uint256 _dsprice);
+    function getPrice(string memory _datasource, uint256 _gasLimit, address _contractToQuery) public view returns (uint256 _dsprice);
     function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
     function queryN_withGasLimit(uint _timestamp, string _datasource, bytes _argN, uint _gaslimit) external payable returns (bytes32 _id);
     function query2_withGasLimit(uint _timestamp, string _datasource, string _arg1, string _arg2, uint _gaslimit) external payable returns (bytes32 _id);
@@ -488,48 +488,48 @@ contract usingOraclize {
 
     function oraclize_getPrice(
         string memory _datasource,
-        address _address
+        address _contractToQuery
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(_datasource, _address);
+        return oraclize.getPrice(_datasource, _contractToQuery);
     }
 
     function oraclize_getPrice(
         byte _datasource,
-        address _address
+        address _contractToQuery
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(_datasource, _address);
+        return oraclize.getPrice(_datasource, _contractToQuery);
     }
 
     function oraclize_getPrice(
         string memory _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(_datasource, _gasLimit, _address);
+        return oraclize.getPrice(_datasource, _gasLimit, _contractToQuery);
     }
 
     function oraclize_getPrice(
         byte _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
-        return oraclize.getPrice(_datasource, _gasLimit, _address);
+        return oraclize.getPrice(_datasource, _gasLimit, _contractToQuery);
     }
 
     function oraclize_getPrice(
@@ -732,35 +732,35 @@ contract usingOraclize {
 
     function oraclize_getPriceERC20(
         string memory _datasource,
-        address _address
+        address _contractToQuery
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _address),
+            oraclize.getPrice(_datasource, _contractToQuery),
             oraclize.addressCustomPaymentToken(address(this))
         );
     }
 
     function oraclize_getPriceERC20(
         byte _datasource,
-        address _address
+        address _contractToQuery
     )
         oraclizeAPI
         internal
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _address),
+            oraclize.getPrice(_datasource, _contractToQuery),
             oraclize.addressCustomPaymentToken(address(this))
         );
     }
 
     function oraclize_getPriceERC20(
         string memory _datasource,
-        address _address,
+        address _contractToQuery,
         address _tokenAddress
     )
         oraclizeAPI
@@ -768,14 +768,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _address),
+            oraclize.getPrice(_datasource, _contractToQuery),
             _tokenAddress
         );
     }
 
     function oraclize_getPriceERC20(
         byte _datasource,
-        address _address,
+        address _contractToQuery,
         address _tokenAddress
     )
         oraclizeAPI
@@ -783,14 +783,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _address),
+            oraclize.getPrice(_datasource, _contractToQuery),
             _tokenAddress
         );
     }
 
     function oraclize_getPriceERC20(
         string memory _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit
     )
         oraclizeAPI
@@ -798,14 +798,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.getPrice(_datasource, _gasLimit, _contractToQuery),
             oraclize.addressCustomPaymentToken(address(this))
         );
     }
 
     function oraclize_getPriceERC20(
         byte _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit
     )
         oraclizeAPI
@@ -813,14 +813,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.getPrice(_datasource, _gasLimit, _contractToQuery),
             oraclize.addressCustomPaymentToken(address(this))
         );
     }
 
     function oraclize_getPriceERC20(
         string memory _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit,
         address _tokenAddress
     )
@@ -829,14 +829,14 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.getPrice(_datasource, _gasLimit, _contractToQuery),
             _tokenAddress
         );
     }
 
     function oraclize_getPriceERC20(
         byte _datasource,
-        address _address,
+        address _contractToQuery,
         uint256 _gasLimit,
         address _tokenAddress
     )
@@ -845,7 +845,7 @@ contract usingOraclize {
         returns (uint256 _queryPrice)
     {
         return oraclize.convertToERC20Price(
-            oraclize.getPrice(_datasource, _gasLimit, _address),
+            oraclize.getPrice(_datasource, _gasLimit, _contractToQuery),
             _tokenAddress
         );
     }
