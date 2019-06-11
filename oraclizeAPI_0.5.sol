@@ -288,23 +288,23 @@ interface ERC20Interface {
     event Transfer(
         address indexed _from,
         address indexed _to,
-        uint tokens
+        uint256 tokens
     );
 
     event Approval(
         address indexed _tokenOwner,
         address indexed _spender,
-        uint tokens
+        uint256 tokens
     );
 
     function totalSupply()
         external
         view
-        returns (uint);
+        returns (uint256);
 
     function transfer(
         address _to,
-        uint _tokens
+        uint256 _tokens
     )
         external
         returns (bool _success);
@@ -314,7 +314,7 @@ interface ERC20Interface {
     )
         external
         view
-        returns (uint _balance);
+        returns (uint256 _balance);
 
     function approve(
         address _tokenSpender,
@@ -326,7 +326,7 @@ interface ERC20Interface {
     function transferFrom(
         address _from,
         address _to,
-        uint _tokens
+        uint256 _tokens
     )
         external
         returns (bool _success);
@@ -337,7 +337,7 @@ interface ERC20Interface {
     )
         external
         view
-        returns (uint _remaining);
+        returns (uint256 _remaining);
 
 }
 
@@ -571,9 +571,9 @@ library CBOR {
         pure
     {
         if (_value >= 0) {
-            encodeType(_buf, MAJOR_TYPE_INT, uint(_value));
+            encodeType(_buf, MAJOR_TYPE_INT, uint256(_value));
         } else {
-            encodeType(_buf, MAJOR_TYPE_NEGATIVE_INT, uint(-1 - _value));
+            encodeType(_buf, MAJOR_TYPE_NEGATIVE_INT, uint256(-1 - _value));
         }
     }
 
@@ -6189,16 +6189,16 @@ contract usingOraclize {
         bool decimals = false;
         for (uint256 i = 0; i < bresult.length; i++) {
             if (
-                (uint(uint8(bresult[i])) >= 48) &&
-                (uint(uint8(bresult[i])) <= 57)
+                (uint256(uint8(bresult[i])) >= 48) &&
+                (uint256(uint8(bresult[i])) <= 57)
             ) {
                 if (decimals) {
                    if (_b == 0) break;
                     else _b--;
                 }
                 mint *= 10;
-                mint += uint(uint8(bresult[i])) - 48;
-            } else if (uint(uint8(bresult[i])) == 46) {
+                mint += uint256(uint8(bresult[i])) - 48;
+            } else if (uint256(uint8(bresult[i])) == 46) {
                 require(
                     !decimals,
                     'More than one decimal encountered in string!'
@@ -6235,8 +6235,8 @@ contract usingOraclize {
         bool decimals = false;
         for (uint256 i = 0; i < bresult.length; i++) {
             if (
-                (uint(uint8(bresult[i])) >= 48) &&
-                (uint(uint8(bresult[i])) <= 57)
+                (uint256(uint8(bresult[i])) >= 48) &&
+                (uint256(uint8(bresult[i])) <= 57)
             ) {
                 if (decimals) {
                    if (_b == 0) {
@@ -6246,8 +6246,8 @@ contract usingOraclize {
                    }
                 }
                 mint *= 10;
-                mint += uint(uint8(bresult[i])) - 48;
-            } else if (uint(uint8(bresult[i])) == 46) {
+                mint += uint256(uint8(bresult[i])) - 48;
+            } else if (uint256(uint8(bresult[i])) == 46) {
                 decimals = true;
             }
         }
@@ -6424,13 +6424,13 @@ contract usingOraclize {
         bytes32 sigr;
         bytes32 sigs;
         bytes memory sigr_ = new bytes(32);
-        uint256 offset = 4 + (uint(uint8(_dersig[3])) - 0x20);
+        uint256 offset = 4 + (uint256(uint8(_dersig[3])) - 0x20);
         sigr_ = copyBytes(_dersig, offset, 32, sigr_, 0);
         bytes memory sigs_ = new bytes(32);
         offset += 32 + 2;
         sigs_ = copyBytes(
             _dersig,
-            offset + (uint(uint8(_dersig[offset - 1])) - 0x20),
+            offset + (uint256(uint8(_dersig[offset - 1])) - 0x20),
             32,
             sigs_,
             0
@@ -6463,7 +6463,7 @@ contract usingOraclize {
          * from the correct ledger app (CODEHASH)
          *
          */
-        bytes memory sig2 = new bytes(uint(uint8(_proof[_sig2offset + 1])) + 2);
+        bytes memory sig2 = new bytes(uint256(uint8(_proof[_sig2offset + 1])) + 2);
         copyBytes(_proof, _sig2offset, sig2.length, sig2, 0);
         bytes memory appkey1_pubkey = new bytes(64);
         copyBytes(_proof, 3 + 1, 64, appkey1_pubkey, 0);
@@ -6486,7 +6486,7 @@ contract usingOraclize {
         bytes memory tosign3 = new bytes(1 + 65);
         tosign3[0] = 0xFE;
         copyBytes(_proof, 3, 65, tosign3, 1);
-        bytes memory sig3 = new bytes(uint(uint8(_proof[3 + 65 + 1])) + 2);
+        bytes memory sig3 = new bytes(uint256(uint8(_proof[3 + 65 + 1])) + 2);
         copyBytes(_proof, 3 + 65, sig3.length, sig3, 0);
         sigok = verifySig(sha256(tosign3), sig3, LEDGERKEY);
         return sigok;
@@ -6560,13 +6560,13 @@ contract usingOraclize {
          * (context name + _queryId)
          *
          */
-        uint256 ledgerProofLength = 3 + 65 + (uint(uint8(_proof[3 + 65 + 1])) + 2) + 32;
+        uint256 ledgerProofLength = 3 + 65 + (uint256(uint8(_proof[3 + 65 + 1])) + 2) + 32;
         bytes memory keyhash = new bytes(32);
         copyBytes(_proof, ledgerProofLength, 32, keyhash, 0);
         if (!(keccak256(keyhash) == keccak256(abi.encodePacked(sha256(abi.encodePacked(_contextName, _queryId)))))) {
             return false;
         }
-        bytes memory sig1 = new bytes(uint(uint8(_proof[ledgerProofLength + (32 + 8 + 1 + 32) + 1])) + 2);
+        bytes memory sig1 = new bytes(uint256(uint8(_proof[ledgerProofLength + (32 + 8 + 1 + 32) + 1])) + 2);
         copyBytes(_proof, ledgerProofLength + (32 + 8 + 1 + 32), sig1.length, sig1, 0);
         /**
          *
@@ -6575,7 +6575,7 @@ contract usingOraclize {
          * verify if '_result' is the _prefix of sha256(sig1)
          *
          */
-        if (!matchBytes32Prefix(sha256(sig1), _result, uint(uint8(_proof[ledgerProofLength + 32 + 8])))) {
+        if (!matchBytes32Prefix(sha256(sig1), _result, uint256(uint8(_proof[ledgerProofLength + 32 + 8])))) {
             return false;
         }
         /**
