@@ -1,8 +1,10 @@
-// <ORACLIZE_API>
+// <provableAPI>
 // Release targetted at solc 0.4.25 to silence compiler warning/error messages, compatible down to 0.4.22
+
 /*
 Copyright (c) 2015-2016 Oraclize SRL
-Copyright (c) 2016 Oraclize LTD
+Copyright (c) 2016-2019 Oraclize LTD
+Copyright (c) 2019 Provable Things Limited
 
 
 
@@ -29,11 +31,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// This api is currently targeted at 0.4.22 to 0.4.25 (stable builds), please import oraclizeAPI_pre0.4.sol or oraclizeAPI_0.4 where necessary
+pragma solidity >= 0.4.22 < 0.5;// Incompatible compiler version... please select one stated within pragma solidity or use different provableAPI version
 
-pragma solidity >= 0.4.22 < 0.5;// Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
-
-contract OraclizeI {
+contract ProvableI {
     address public cbAddress;
     function query(uint _timestamp, string _datasource, string _arg) external payable returns (bytes32 _id);
     function query_withGasLimit(uint _timestamp, string _datasource, string _arg, uint _gaslimit) external payable returns (bytes32 _id);
@@ -48,7 +48,7 @@ contract OraclizeI {
     function randomDS_getSessionPubKeyHash() external constant returns(bytes32);
 }
 
-contract OraclizeAddrResolverI {
+contract OracleAddrResolverI {
     function getAddress() public returns (address _addr);
 }
 
@@ -284,7 +284,7 @@ library CBOR {
 End solidity-cborutils
  */
 
-contract usingOraclize {
+contract usingProvable {
     uint constant day = 60*60*24;
     uint constant week = 60*60*24*7;
     uint constant month = 60*60*24*30;
@@ -300,63 +300,63 @@ contract usingOraclize {
     uint8 constant networkID_morden = 2;
     uint8 constant networkID_consensys = 161;
 
-    OraclizeAddrResolverI OAR;
+    OracleAddrResolverI OAR;
 
-    OraclizeI oraclize;
-    modifier oraclizeAPI {
+    ProvableI provable;
+    modifier provableAPI {
         if((address(OAR)==0)||(getCodeSize(address(OAR))==0))
-            oraclize_setNetwork(networkID_auto);
+            provable_setNetwork(networkID_auto);
 
-        if(address(oraclize) != OAR.getAddress())
-            oraclize = OraclizeI(OAR.getAddress());
+        if(address(provable) != OAR.getAddress())
+            provable = ProvableI(OAR.getAddress());
 
         _;
     }
     modifier coupon(string code){
-        oraclize = OraclizeI(OAR.getAddress());
+        provable = ProvableI(OAR.getAddress());
         _;
     }
 
-    function oraclize_setNetwork(uint8 networkID) internal returns(bool){
-      return oraclize_setNetwork();
+    function provable_setNetwork(uint8 networkID) internal returns(bool){
+      return provable_setNetwork();
       networkID; // silence the warning and remain backwards compatible
     }
-    function oraclize_setNetwork() internal returns(bool){
+    function provable_setNetwork() internal returns(bool){
         if (getCodeSize(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed)>0){ //mainnet
-            OAR = OraclizeAddrResolverI(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed);
-            oraclize_setNetworkName("eth_mainnet");
+            OAR = OracleAddrResolverI(0x1d3B2638a7cC9f2CB3D298A3DA7a90B67E5506ed);
+            provable_setNetworkName("eth_mainnet");
             return true;
         }
         if (getCodeSize(0xc03A2615D5efaf5F49F60B7BB6583eaec212fdf1)>0){ //ropsten testnet
-            OAR = OraclizeAddrResolverI(0xc03A2615D5efaf5F49F60B7BB6583eaec212fdf1);
-            oraclize_setNetworkName("eth_ropsten3");
+            OAR = OracleAddrResolverI(0xc03A2615D5efaf5F49F60B7BB6583eaec212fdf1);
+            provable_setNetworkName("eth_ropsten3");
             return true;
         }
         if (getCodeSize(0xB7A07BcF2Ba2f2703b24C0691b5278999C59AC7e)>0){ //kovan testnet
-            OAR = OraclizeAddrResolverI(0xB7A07BcF2Ba2f2703b24C0691b5278999C59AC7e);
-            oraclize_setNetworkName("eth_kovan");
+            OAR = OracleAddrResolverI(0xB7A07BcF2Ba2f2703b24C0691b5278999C59AC7e);
+            provable_setNetworkName("eth_kovan");
             return true;
         }
         if (getCodeSize(0x146500cfd35B22E4A392Fe0aDc06De1a1368Ed48)>0){ //rinkeby testnet
-            OAR = OraclizeAddrResolverI(0x146500cfd35B22E4A392Fe0aDc06De1a1368Ed48);
-            oraclize_setNetworkName("eth_rinkeby");
+            OAR = OracleAddrResolverI(0x146500cfd35B22E4A392Fe0aDc06De1a1368Ed48);
+            provable_setNetworkName("eth_rinkeby");
             return true;
         }
         if (getCodeSize(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41)>0){ //goerli testnet
-            OAR = OraclizeAddrResolverI(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41);
-            oraclize_setNetworkName("eth_goerli");
+            OAR = OracleAddrResolverI(0xa2998EFD205FB9D4B4963aFb70778D6354ad3A41);
+            provable_setNetworkName("eth_goerli");
             return true;
         }
         if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475)>0){ //ethereum-bridge
-            OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
+            OAR = OracleAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
             return true;
         }
         if (getCodeSize(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF)>0){ //ether.camp ide
-            OAR = OraclizeAddrResolverI(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF);
+            OAR = OracleAddrResolverI(0x20e12A1F859B3FeaE5Fb2A0A32C18F5a65555bBF);
             return true;
         }
         if (getCodeSize(0x51efaF4c8B3C9AfBD5aB9F4bbC82784Ab6ef8fAA)>0){ //browser-solidity
-            OAR = OraclizeAddrResolverI(0x51efaF4c8B3C9AfBD5aB9F4bbC82784Ab6ef8fAA);
+            OAR = OracleAddrResolverI(0x51efaF4c8B3C9AfBD5aB9F4bbC82784Ab6ef8fAA);
             return true;
         }
         return false;
@@ -373,402 +373,402 @@ contract usingOraclize {
     function __callback(bytes32 myid, string result, bytes proof) public {
       return;
       myid; result; proof;
-      oraclize_randomDS_args[bytes32(0)] = bytes32(0);
+      provable_randomDS_args[bytes32(0)] = bytes32(0);
     }
 
-    function oraclize_getPrice(string datasource) oraclizeAPI internal returns (uint){
-        return oraclize.getPrice(datasource);
+    function provable_getPrice(string datasource) provableAPI internal returns (uint){
+        return provable.getPrice(datasource);
     }
 
-    function oraclize_getPrice(string datasource, uint gaslimit) oraclizeAPI internal returns (uint){
-        return oraclize.getPrice(datasource, gaslimit);
+    function provable_getPrice(string datasource, uint gaslimit) provableAPI internal returns (uint){
+        return provable.getPrice(datasource, gaslimit);
     }
 
-    function oraclize_query(string datasource, string arg) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+    function provable_query(string datasource, string arg) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
-        return oraclize.query.value(price)(0, datasource, arg);
+        return provable.query.value(price)(0, datasource, arg);
     }
-    function oraclize_query(uint timestamp, string datasource, string arg) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+    function provable_query(uint timestamp, string datasource, string arg) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
-        return oraclize.query.value(price)(timestamp, datasource, arg);
+        return provable.query.value(price)(timestamp, datasource, arg);
     }
-    function oraclize_query(uint timestamp, string datasource, string arg, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+    function provable_query(uint timestamp, string datasource, string arg, uint gaslimit) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
-        return oraclize.query_withGasLimit.value(price)(timestamp, datasource, arg, gaslimit);
+        return provable.query_withGasLimit.value(price)(timestamp, datasource, arg, gaslimit);
     }
-    function oraclize_query(string datasource, string arg, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+    function provable_query(string datasource, string arg, uint gaslimit) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
-        return oraclize.query_withGasLimit.value(price)(0, datasource, arg, gaslimit);
+        return provable.query_withGasLimit.value(price)(0, datasource, arg, gaslimit);
     }
-    function oraclize_query(string datasource, string arg1, string arg2) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+    function provable_query(string datasource, string arg1, string arg2) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
-        return oraclize.query2.value(price)(0, datasource, arg1, arg2);
+        return provable.query2.value(price)(0, datasource, arg1, arg2);
     }
-    function oraclize_query(uint timestamp, string datasource, string arg1, string arg2) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+    function provable_query(uint timestamp, string datasource, string arg1, string arg2) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
-        return oraclize.query2.value(price)(timestamp, datasource, arg1, arg2);
+        return provable.query2.value(price)(timestamp, datasource, arg1, arg2);
     }
-    function oraclize_query(uint timestamp, string datasource, string arg1, string arg2, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+    function provable_query(uint timestamp, string datasource, string arg1, string arg2, uint gaslimit) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
-        return oraclize.query2_withGasLimit.value(price)(timestamp, datasource, arg1, arg2, gaslimit);
+        return provable.query2_withGasLimit.value(price)(timestamp, datasource, arg1, arg2, gaslimit);
     }
-    function oraclize_query(string datasource, string arg1, string arg2, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+    function provable_query(string datasource, string arg1, string arg2, uint gaslimit) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
-        return oraclize.query2_withGasLimit.value(price)(0, datasource, arg1, arg2, gaslimit);
+        return provable.query2_withGasLimit.value(price)(0, datasource, arg1, arg2, gaslimit);
     }
-    function oraclize_query(string datasource, string[] argN) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
-        if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
-        bytes memory args = stra2cbor(argN);
-        return oraclize.queryN.value(price)(0, datasource, args);
-    }
-    function oraclize_query(uint timestamp, string datasource, string[] argN) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+    function provable_query(string datasource, string[] argN) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
         bytes memory args = stra2cbor(argN);
-        return oraclize.queryN.value(price)(timestamp, datasource, args);
+        return provable.queryN.value(price)(0, datasource, args);
     }
-    function oraclize_query(uint timestamp, string datasource, string[] argN, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+    function provable_query(uint timestamp, string datasource, string[] argN) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource);
+        if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
+        bytes memory args = stra2cbor(argN);
+        return provable.queryN.value(price)(timestamp, datasource, args);
+    }
+    function provable_query(uint timestamp, string datasource, string[] argN, uint gaslimit) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
         bytes memory args = stra2cbor(argN);
-        return oraclize.queryN_withGasLimit.value(price)(timestamp, datasource, args, gaslimit);
+        return provable.queryN_withGasLimit.value(price)(timestamp, datasource, args, gaslimit);
     }
-    function oraclize_query(string datasource, string[] argN, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+    function provable_query(string datasource, string[] argN, uint gaslimit) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
         bytes memory args = stra2cbor(argN);
-        return oraclize.queryN_withGasLimit.value(price)(0, datasource, args, gaslimit);
+        return provable.queryN_withGasLimit.value(price)(0, datasource, args, gaslimit);
     }
-    function oraclize_query(string datasource, string[1] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[1] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](1);
         dynargs[0] = args[0];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[1] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[1] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](1);
         dynargs[0] = args[0];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[1] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[1] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](1);
         dynargs[0] = args[0];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, string[1] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[1] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](1);
         dynargs[0] = args[0];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
 
-    function oraclize_query(string datasource, string[2] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[2] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](2);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[2] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[2] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](2);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[2] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[2] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](2);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, string[2] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[2] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](2);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, string[3] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[3] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](3);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[3] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[3] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](3);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[3] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[3] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](3);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, string[3] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[3] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](3);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
 
-    function oraclize_query(string datasource, string[4] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[4] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](4);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[4] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[4] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](4);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[4] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[4] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](4);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, string[4] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[4] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](4);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, string[5] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[5] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](5);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
         dynargs[4] = args[4];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[5] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[5] args) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](5);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
         dynargs[4] = args[4];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, string[5] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, string[5] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](5);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
         dynargs[4] = args[4];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, string[5] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, string[5] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         string[] memory dynargs = new string[](5);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
         dynargs[4] = args[4];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[] argN) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+    function provable_query(string datasource, bytes[] argN) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
         bytes memory args = ba2cbor(argN);
-        return oraclize.queryN.value(price)(0, datasource, args);
+        return provable.queryN.value(price)(0, datasource, args);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[] argN) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource);
+    function provable_query(uint timestamp, string datasource, bytes[] argN) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource);
         if (price > 1 ether + tx.gasprice*200000) return 0; // unexpectedly high price
         bytes memory args = ba2cbor(argN);
-        return oraclize.queryN.value(price)(timestamp, datasource, args);
+        return provable.queryN.value(price)(timestamp, datasource, args);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[] argN, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+    function provable_query(uint timestamp, string datasource, bytes[] argN, uint gaslimit) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
         bytes memory args = ba2cbor(argN);
-        return oraclize.queryN_withGasLimit.value(price)(timestamp, datasource, args, gaslimit);
+        return provable.queryN_withGasLimit.value(price)(timestamp, datasource, args, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[] argN, uint gaslimit) oraclizeAPI internal returns (bytes32 id){
-        uint price = oraclize.getPrice(datasource, gaslimit);
+    function provable_query(string datasource, bytes[] argN, uint gaslimit) provableAPI internal returns (bytes32 id){
+        uint price = provable.getPrice(datasource, gaslimit);
         if (price > 1 ether + tx.gasprice*gaslimit) return 0; // unexpectedly high price
         bytes memory args = ba2cbor(argN);
-        return oraclize.queryN_withGasLimit.value(price)(0, datasource, args, gaslimit);
+        return provable.queryN_withGasLimit.value(price)(0, datasource, args, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[1] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[1] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](1);
         dynargs[0] = args[0];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[1] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[1] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](1);
         dynargs[0] = args[0];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[1] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[1] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](1);
         dynargs[0] = args[0];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[1] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[1] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](1);
         dynargs[0] = args[0];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
 
-    function oraclize_query(string datasource, bytes[2] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[2] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](2);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[2] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[2] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](2);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[2] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[2] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](2);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[2] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[2] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](2);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[3] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[3] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](3);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[3] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[3] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](3);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[3] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[3] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](3);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[3] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[3] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](3);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
 
-    function oraclize_query(string datasource, bytes[4] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[4] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](4);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[4] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[4] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](4);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[4] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[4] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](4);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[4] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[4] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](4);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[5] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[5] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](5);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
         dynargs[4] = args[4];
-        return oraclize_query(datasource, dynargs);
+        return provable_query(datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[5] args) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[5] args) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](5);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
         dynargs[4] = args[4];
-        return oraclize_query(timestamp, datasource, dynargs);
+        return provable_query(timestamp, datasource, dynargs);
     }
-    function oraclize_query(uint timestamp, string datasource, bytes[5] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(uint timestamp, string datasource, bytes[5] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](5);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
         dynargs[4] = args[4];
-        return oraclize_query(timestamp, datasource, dynargs, gaslimit);
+        return provable_query(timestamp, datasource, dynargs, gaslimit);
     }
-    function oraclize_query(string datasource, bytes[5] args, uint gaslimit) oraclizeAPI internal returns (bytes32 id) {
+    function provable_query(string datasource, bytes[5] args, uint gaslimit) provableAPI internal returns (bytes32 id) {
         bytes[] memory dynargs = new bytes[](5);
         dynargs[0] = args[0];
         dynargs[1] = args[1];
         dynargs[2] = args[2];
         dynargs[3] = args[3];
         dynargs[4] = args[4];
-        return oraclize_query(datasource, dynargs, gaslimit);
+        return provable_query(datasource, dynargs, gaslimit);
     }
 
-    function oraclize_cbAddress() oraclizeAPI internal returns (address){
-        return oraclize.cbAddress();
+    function provable_cbAddress() provableAPI internal returns (address){
+        return provable.cbAddress();
     }
-    function oraclize_setProof(byte proofP) oraclizeAPI internal {
-        return oraclize.setProofType(proofP);
+    function provable_setProof(byte proofP) provableAPI internal {
+        return provable.setProofType(proofP);
     }
-    function oraclize_setCustomGasPrice(uint gasPrice) oraclizeAPI internal {
-        return oraclize.setCustomGasPrice(gasPrice);
+    function provable_setCustomGasPrice(uint gasPrice) provableAPI internal {
+        return provable.setCustomGasPrice(gasPrice);
     }
 
-    function oraclize_randomDS_getSessionPubKeyHash() oraclizeAPI internal returns (bytes32){
-        return oraclize.randomDS_getSessionPubKeyHash();
+    function provable_randomDS_getSessionPubKeyHash() provableAPI internal returns (bytes32){
+        return provable.randomDS_getSessionPubKeyHash();
     }
 
     function getCodeSize(address _addr) view internal returns(uint _size) {
@@ -937,16 +937,16 @@ contract usingOraclize {
         return buf.buf;
     }
 
-    string oraclize_network_name;
-    function oraclize_setNetworkName(string _network_name) internal {
-        oraclize_network_name = _network_name;
+    string provable_network_name;
+    function provable_setNetworkName(string _network_name) internal {
+        provable_network_name = _network_name;
     }
 
-    function oraclize_getNetworkName() internal view returns (string) {
-        return oraclize_network_name;
+    function provable_getNetworkName() internal view returns (string) {
+        return provable_network_name;
     }
 
-    function oraclize_newRandomDSQuery(uint _delay, uint _nbytes, uint _customGasLimit) internal returns (bytes32){
+    function provable_newRandomDSQuery(uint _delay, uint _nbytes, uint _customGasLimit) internal returns (bytes32){
         require((_nbytes > 0) && (_nbytes <= 32));
         // Convert from seconds to ledger timer ticks
         _delay *= 10;
@@ -954,7 +954,7 @@ contract usingOraclize {
         nbytes[0] = byte(_nbytes);
         bytes memory unonce = new bytes(32);
         bytes memory sessionKeyHash = new bytes(32);
-        bytes32 sessionKeyHash_bytes32 = oraclize_randomDS_getSessionPubKeyHash();
+        bytes32 sessionKeyHash_bytes32 = provable_randomDS_getSessionPubKeyHash();
         assembly {
             mstore(unonce, 0x20)
             // the following variables can be relaxed
@@ -973,7 +973,7 @@ contract usingOraclize {
         copyBytes(delay, 24, 8, delay_bytes8, 0);
 
         bytes[4] memory args = [unonce, nbytes, sessionKeyHash, delay];
-        bytes32 queryId = oraclize_query("random", args, _customGasLimit);
+        bytes32 queryId = provable_query("random", args, _customGasLimit);
 
         bytes memory delay_bytes8_left = new bytes(8);
 
@@ -990,16 +990,16 @@ contract usingOraclize {
 
         }
 
-        oraclize_randomDS_setCommitment(queryId, keccak256(abi.encodePacked(delay_bytes8_left, args[1], sha256(args[0]), args[2])));
+        provable_randomDS_setCommitment(queryId, keccak256(abi.encodePacked(delay_bytes8_left, args[1], sha256(args[0]), args[2])));
         return queryId;
     }
 
-    function oraclize_randomDS_setCommitment(bytes32 queryId, bytes32 commitment) internal {
-        oraclize_randomDS_args[queryId] = commitment;
+    function provable_randomDS_setCommitment(bytes32 queryId, bytes32 commitment) internal {
+        provable_randomDS_args[queryId] = commitment;
     }
 
-    mapping(bytes32=>bytes32) oraclize_randomDS_args;
-    mapping(bytes32=>bool) oraclize_randomDS_sessionKeysHashVerified;
+    mapping(bytes32=>bytes32) provable_randomDS_args;
+    mapping(bytes32=>bool) provable_randomDS_sessionKeysHashVerified;
 
     function verifySig(bytes32 tosignh, bytes dersig, bytes pubkey) internal returns (bool){
         bool sigok;
@@ -1029,7 +1029,7 @@ contract usingOraclize {
         }
     }
 
-    function oraclize_randomDS_proofVerify__sessionKeyValidity(bytes proof, uint sig2offset) internal returns (bool) {
+    function provable_randomDS_proofVerify__sessionKeyValidity(bytes proof, uint sig2offset) internal returns (bool) {
         bool sigok;
 
         // Step 6: verify the attestation signature, APPKEY1 must sign the sessionKey from the correct ledger app (CODEHASH)
@@ -1064,21 +1064,21 @@ contract usingOraclize {
         return sigok;
     }
 
-    modifier oraclize_randomDS_proofVerify(bytes32 _queryId, string _result, bytes _proof) {
+    modifier provable_randomDS_proofVerify(bytes32 _queryId, string _result, bytes _proof) {
         // Step 1: the prefix has to match 'LP\x01' (Ledger Proof version 1)
         require((_proof[0] == "L") && (_proof[1] == "P") && (_proof[2] == 1));
 
-        bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
+        bool proofVerified = provable_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), provable_getNetworkName());
         require(proofVerified);
 
         _;
     }
 
-    function oraclize_randomDS_proofVerify__returnCode(bytes32 _queryId, string _result, bytes _proof) internal returns (uint8){
+    function provable_randomDS_proofVerify__returnCode(bytes32 _queryId, string _result, bytes _proof) internal returns (uint8){
         // Step 1: the prefix has to match 'LP\x01' (Ledger Proof version 1)
         if ((_proof[0] != "L")||(_proof[1] != "P")||(_proof[2] != 1)) return 1;
 
-        bool proofVerified = oraclize_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), oraclize_getNetworkName());
+        bool proofVerified = provable_randomDS_proofVerify__main(_proof, _queryId, bytes(_result), provable_getNetworkName());
         if (proofVerified == false) return 2;
 
         return 0;
@@ -1096,7 +1096,7 @@ contract usingOraclize {
         return match_;
     }
 
-    function oraclize_randomDS_proofVerify__main(bytes proof, bytes32 queryId, bytes result, string context_name) internal returns (bool){
+    function provable_randomDS_proofVerify__main(bytes proof, bytes32 queryId, bytes result, string context_name) internal returns (bool){
 
         // Step 2: the unique keyhash has to match with the sha256 of (context name + queryId)
         uint ledgerProofLength = 3+65+(uint(proof[3+65+1])+2)+32;
@@ -1120,8 +1120,8 @@ contract usingOraclize {
         copyBytes(proof, sig2offset-64, 64, sessionPubkey, 0);
 
         bytes32 sessionPubkeyHash = sha256(sessionPubkey);
-        if (oraclize_randomDS_args[queryId] == keccak256(abi.encodePacked(commitmentSlice1, sessionPubkeyHash))){ //unonce, nbytes and sessionKeyHash match
-            delete oraclize_randomDS_args[queryId];
+        if (provable_randomDS_args[queryId] == keccak256(abi.encodePacked(commitmentSlice1, sessionPubkeyHash))){ //unonce, nbytes and sessionKeyHash match
+            delete provable_randomDS_args[queryId];
         } else return false;
 
 
@@ -1131,11 +1131,11 @@ contract usingOraclize {
         if (!verifySig(sha256(tosign1), sig1, sessionPubkey)) return false;
 
         // verify if sessionPubkeyHash was verified already, if not.. let's do it!
-        if (oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash] == false){
-            oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash] = oraclize_randomDS_proofVerify__sessionKeyValidity(proof, sig2offset);
+        if (provable_randomDS_sessionKeysHashVerified[sessionPubkeyHash] == false){
+            provable_randomDS_sessionKeysHashVerified[sessionPubkeyHash] = provable_randomDS_proofVerify__sessionKeyValidity(proof, sig2offset);
         }
 
-        return oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash];
+        return provable_randomDS_sessionKeysHashVerified[sessionPubkeyHash];
     }
 
     // the following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
@@ -1239,4 +1239,4 @@ contract usingOraclize {
     }
 
 }
-// </ORACLIZE_API>
+// </provableAPI>
