@@ -115,30 +115,30 @@ steps:
   - truffle test
 
 ---
-kind: pipeline
-name: provable-urlRequests-0.5
-
-steps:
-- name: test-computation-requests
-  image: node:lts-alpine
-  commands:
-  - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
-  - rm -rf ./ethereum-examples/
-  - git clone https://github.com/oraclize/ethereum-examples.git
-  - cp -f ./provableAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/url-requests/contracts/provableAPI.sol
-  - cd ./ethereum-examples/solidity/truffle-examples/url-requests/
-  - sed -i.bu 's/oraclize/provable/g' ./contracts/UrlRequests.sol
-  - sed -i.bu 's/usingOraclize/usingProvable/g' ./contracts/UrlRequests.sol
-  - npm i > /dev/null 2>&1
-  - npm i truffle -g --unsafe-perm > /dev/null
-  - npm i ganache-cli -g --unsafe-perm > /dev/null
-  - ganache-cli -p 9545 > /dev/null &
-  - sleep 10
-  - npx ethereum-bridge -a 9 --url 127.0.0.1:9545 --dev > /dev/null &
-  - sleep 50
-  - truffle test
-
----
+#kind: pipeline
+#name: provable-urlRequests-0.5
+#
+#steps:
+#- name: test-computation-requests
+#  image: node:lts-alpine
+#  commands:
+#  - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
+#  - rm -rf ./ethereum-examples/
+#  - git clone https://github.com/oraclize/ethereum-examples.git
+#  - cp -f ./provableAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/url-requests/contracts/provableAPI.sol
+#  - cd ./ethereum-examples/solidity/truffle-examples/url-requests/
+#  - sed -i.bu 's/oraclize/provable/g' ./contracts/UrlRequests.sol
+#  - sed -i.bu 's/usingOraclize/usingProvable/g' ./contracts/UrlRequests.sol
+#  - npm i > /dev/null 2>&1
+#  - npm i truffle -g --unsafe-perm > /dev/null
+#  - npm i ganache-cli -g --unsafe-perm > /dev/null
+#  - ganache-cli -p 9545 > /dev/null &
+#  - sleep 10
+#  - npx ethereum-bridge -a 9 --url 127.0.0.1:9545 --dev > /dev/null &
+#  - sleep 50
+#  - truffle test
+#
+#---
 kind: pipeline
 name: provable-wolframAlpha-0.5
 
