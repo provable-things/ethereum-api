@@ -16,7 +16,7 @@ steps:
   - npm i ganache-cli -g --unsafe-perm > /dev/null
   - ganache-cli -p 9545 > /dev/null &
   - sleep 10
-  - npx ethereum-bridge -a 9 --url 127.0.0.1:9545 --dev > /dev/null
+  - npx ethereum-bridge -a 9 --url 127.0.0.1:9545 --dev > /dev/null &
   - sleep 50
   - truffle test
 
