@@ -8,7 +8,6 @@ steps:
   - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
   - rm -rf ./ethereum-examples/
   - git clone https://github.com/oraclize/ethereum-examples.git
-  - cd ethereum-examples && git checkout fix/truffle-config && cd ..
   - cp -f ./oraclizeAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/kraken-price-ticker/contracts/oraclizeAPI.sol
   - cd ./ethereum-examples/solidity/truffle-examples/kraken-price-ticker/
   - npm i > /dev/null 2>&1
@@ -31,7 +30,6 @@ steps:
   - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
   - rm -rf ./ethereum-examples/
   - git clone https://github.com/oraclize/ethereum-examples.git
-  - cd ethereum-examples && git checkout fix/truffle-config && cd ..
   - cp -f ./provableAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/delegated-math/contracts/provableAPI.sol
   - cd ./ethereum-examples/solidity/truffle-examples/delegated-math/
   - sed -i.bu 's/oraclize/provable/g' ./contracts/DelegatedMath.sol
@@ -56,7 +54,6 @@ steps:
   - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
   - rm -rf ./ethereum-examples/
   - git clone https://github.com/oraclize/ethereum-examples.git
-  - cd ethereum-examples && git checkout fix/truffle-config && cd ..
   - cp -f ./provableAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/diesel-price/contracts/provableAPI.sol
   - cd ./ethereum-examples/solidity/truffle-examples/diesel-price/
   - sed -i.bu 's/oraclize/provable/g' ./contracts/DieselPrice.sol
@@ -80,7 +77,6 @@ steps:
   - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
   - rm -rf ./ethereum-examples/
   - git clone https://github.com/oraclize/ethereum-examples.git
-  - cd ethereum-examples && git checkout fix/truffle-config && cd ..
   - cp -f ./provableAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/kraken-price-ticker/contracts/provableAPI.sol
   - cd ./ethereum-examples/solidity/truffle-examples/kraken-price-ticker/
   - sed -i.bu 's/oraclize/provable/g' ./contracts/KrakenPriceTicker.sol
@@ -105,7 +101,6 @@ steps:
   - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
   - rm -rf ./ethereum-examples/
   - git clone https://github.com/oraclize/ethereum-examples.git
-  - cd ethereum-examples && git checkout fix/truffle-config && cd ..
   - cp -f ./provableAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/streamr/contracts/provableAPI.sol
   - cd ./ethereum-examples/solidity/truffle-examples/streamr/
   - sed -i.bu 's/oraclize/provable/g' ./contracts/StreamrTweetsCounter.sol
@@ -130,7 +125,6 @@ steps:
   - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
   - rm -rf ./ethereum-examples/
   - git clone https://github.com/oraclize/ethereum-examples.git
-  - cd ethereum-examples && git checkout fix/truffle-config && cd ..
   - cp -f ./provableAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/url-requests/contracts/provableAPI.sol
   - cd ./ethereum-examples/solidity/truffle-examples/url-requests/
   - sed -i.bu 's/oraclize/provable/g' ./contracts/UrlRequests.sol
@@ -155,7 +149,6 @@ steps:
   - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
   - rm -rf ./ethereum-examples/
   - git clone https://github.com/oraclize/ethereum-examples.git
-  - cd ethereum-examples && git checkout fix/truffle-config && cd ..
   - cp -f ./provableAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/wolfram-alpha/contracts/provableAPI.sol
   - cd ./ethereum-examples/solidity/truffle-examples/wolfram-alpha/
   - sed -i.bu 's/oraclize/provable/g' ./contracts/WolframAlpha.sol
@@ -180,7 +173,6 @@ steps:
   - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
   - rm -rf ./ethereum-examples/
   - git clone https://github.com/oraclize/ethereum-examples.git
-  - cd ethereum-examples && git checkout fix/truffle-config && cd ..
   - cp -f ./provableAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/youtube-views/contracts/provableAPI.sol
   - cd ./ethereum-examples/solidity/truffle-examples/youtube-views/
   - sed -i.bu 's/oraclize/provable/g' ./contracts/YoutubeViews.sol
