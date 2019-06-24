@@ -1,22 +1,22 @@
-## Oraclize Ethereum API [![Join the chat at https://gitter.im/oraclize/ethereum-api](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/oraclize/ethereum-api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs@Oraclize.it](https://camo.githubusercontent.com/5e89710c6ae9ce0da822eec138ee1a2f08b34453/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d536c6174652d627269676874677265656e2e737667)](http://docs.oraclize.it) [![HitCount](http://hits.dwyl.io/oraclize/ethereum-api.svg)](http://hits.dwyl.io/oraclize/ethereum-api) [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+## Provable Ethereum API [![Join the chat at https://gitter.im/oraclize/ethereum-api](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/oraclize/ethereum-api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs@Provable.it](https://camo.githubusercontent.com/5e89710c6ae9ce0da822eec138ee1a2f08b34453/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d536c6174652d627269676874677265656e2e737667)](http://docs.oraclize.it) [![HitCount](http://hits.dwyl.io/oraclize/ethereum-api.svg)](http://hits.dwyl.io/oraclize/ethereum-api) [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 &nbsp;
 
-Thanks to this __Ethereum API__, enriching your smart-contracts with external data using __Oraclize__ is very easy!
+Thanks to this __Ethereum API__, enriching your smart-contracts with external data using __Provable__ is very easy!
 
-In Solidity it is as simple as inheriting the __`usingOraclize`__ contract that you'll find in this repository.
+In Solidity it is as simple as inheriting the __`usingProvable`__ contract that you'll find in this repository.
 
-This will provide your contract with functions like __`oraclize_query(...)`__, which make it trivial for you to leverage our oracle technology straight away.
+This will provide your contract with functions like __`provable_query(...)`__, which make it trivial for you to leverage our oracle technology straight away.
 
-If you're using the __[Remix IDE](http://remix.ethereum.org)__ it's even easier still - simply import __Oraclize__ into your contract like so:
+If you're using the __[Remix IDE](http://remix.ethereum.org)__ it's even easier still - simply import __Provable__ into your contract like so:
 
 ```solidity
 
-import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
+import "github.com/oraclize/ethereum-api/provableAPI.sol";
 
 ```
 
-To learn more about the Oraclize technology, please refer to our __[documentation here](https://docs.oraclize.it)__.
+To learn more about the Provable technology, please refer to our __[documentation here](https://docs.oraclize.it)__.
 
 &nbsp;
 
@@ -26,9 +26,9 @@ To learn more about the Oraclize technology, please refer to our __[documentatio
 
 ### :computer: See It In Action!
 
-For working examples of how to integrate the __Oraclize__ API into your own smart-contracts, head on over to the __[Oraclize Examples](https://github.com/oraclize/ethereum-examples)__ repository. Here you'll find various examples that use __Oraclize__ to feed smart-contracts with data from a variety of external sources.
+For working examples of how to integrate the __Provable__ API into your own smart-contracts, head on over to the __[Provable Ethereum Examples](https://github.com/oraclize/ethereum-examples)__ repository. Here you'll find various examples that use __Provable__ to feed smart-contracts with data from a variety of external sources.
 
-There are even __[some examples here](https://github.com/oraclize/ethereum-examples/tree/master/solidity/truffle-examples)__ showing you how you can use __Oraclize__ in a local Truffle development environment!
+There are even __[some examples here](https://github.com/oraclize/ethereum-examples/tree/master/solidity/truffle-examples)__ showing you how you can use __Provable__ in a local Truffle development environment!
 
 &nbsp;
 
@@ -56,6 +56,10 @@ __❍__ Plus a __[Github](https://github.com/oraclize)__
 
 &nbsp;
 
+### :hourglass_flowing_sand: __Notice about Oraclize rebranding to Provable:__
+
+Please use the __`provableAPI_0.X.sol`__ contracts going forward. We will continue supporting the oraclize-named versions for a limited time, but they should be considered deprecated and to be removed in the coming months.
+
 ### :radioactive: __A Note Regarding Serpent:__
 
-:skull: __CAUTION__: It is highly recommended to avoid using Serpent, especially in production. The serpent version of the __Oraclize__ API herein remains for historical reasons but support for it is no longer maintained. Serpent is considered outdated and audits have shown it to be flawed. Use it at your own risk!
+:skull: __CAUTION__: It is highly recommended to avoid using Serpent, especially in production. The serpent version of the __Provable__ API herein remains for historical reasons but support for it is no longer maintained. Serpent is considered outdated and audits have shown it to be flawed. Use it at your own risk!
