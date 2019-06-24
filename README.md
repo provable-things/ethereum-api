@@ -58,7 +58,7 @@ __❍__ Plus a __[Github](https://github.com/oraclize)__
 
 ### :hourglass_flowing_sand: __Notice about Oraclize rebranding to Provable:__
 
-Please use the provable contracts going forward. We will continue supporting the oraclize-named versions for a limited time longer, but they should be considered deprecated, and will be removed in the comings months.
+Please use the __`provableAPI_0.X.sol`__ contracts going forward. We will continue supporting the oraclize-named versions for a limited time, but they should be considered deprecated and to be removed in the coming months.
 
 ### :radioactive: __A Note Regarding Serpent:__
 
