@@ -1138,7 +1138,7 @@ contract usingOraclize {
     }
 
 
-    // the following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
+    // the following function has been written by Alex Beregszaszi, use it under the terms of the MIT license
     function copyBytes(bytes from, uint fromOffset, uint length, bytes to, uint toOffset) internal returns (bytes) {
         uint minLength = length + toOffset;
 
@@ -1163,7 +1163,7 @@ contract usingOraclize {
         return to;
     }
 
-    // the following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
+    // the following function has been written by Alex Beregszaszi, use it under the terms of the MIT license
     // Duplicate Solidity's ecrecover, but catching the CALL return value
     function safer_ecrecover(bytes32 hash, uint8 v, bytes32 r, bytes32 s) internal returns (bool, address) {
         // We do our own memory management here. Solidity uses memory offset
@@ -1192,7 +1192,7 @@ contract usingOraclize {
         return (ret, addr);
     }
 
-    // the following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
+    // the following function has been written by Alex Beregszaszi, use it under the terms of the MIT license
     function ecrecovery(bytes32 hash, bytes sig) internal returns (bool, address) {
         bytes32 r;
         bytes32 s;
