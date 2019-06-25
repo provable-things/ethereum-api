@@ -1244,7 +1244,7 @@ contract usingOraclize {
         return oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash];
     }
     /*
-     The following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
+     The following function has been written by Alex Beregszaszi, use it under the terms of the MIT license
     */
     function copyBytes(bytes memory _from, uint _fromOffset, uint _length, bytes memory _to, uint _toOffset) internal pure returns (bytes memory _copiedBytes) {
         uint minLength = _length + _toOffset;
@@ -1262,7 +1262,7 @@ contract usingOraclize {
         return _to;
     }
     /*
-     The following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
+     The following function has been written by Alex Beregszaszi, use it under the terms of the MIT license
      Duplicate Solidity's ecrecover, but catching the CALL return value
     */
     function safer_ecrecover(bytes32 _hash, uint8 _v, bytes32 _r, bytes32 _s) internal returns (bool _success, address _recoveredAddress) {
@@ -1288,7 +1288,7 @@ contract usingOraclize {
         return (ret, addr);
     }
     /*
-     The following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
+     The following function has been written by Alex Beregszaszi, use it under the terms of the MIT license
     */
     function ecrecovery(bytes32 _hash, bytes memory _sig) internal returns (bool _success, address _recoveredAddress) {
         bytes32 r;
