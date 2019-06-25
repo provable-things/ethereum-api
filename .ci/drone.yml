@@ -20,6 +20,29 @@ steps:
   - truffle test
 
 ---
+
+kind: pipeline
+name: provable-callerPaysForQuery-0.5
+
+steps:
+- name: test-caller-pays-for-query
+  image: node:lts-alpine
+  commands:
+  - echo "installing deps... " && apk update > /dev/null && apk add git gcc g++ make python > /dev/null
+  - rm -rf ./ethereum-examples/
+  - git clone https://github.com/oraclize/ethereum-examples.git
+  - cp -f ./oraclizeAPI_0.5.sol ./ethereum-examples/solidity/truffle-examples/caller-pays-for-query/contracts/oraclizeAPI.sol
+  - cd ./ethereum-examples/solidity/truffle-examples/caller-pays-for-query/
+  - npm i > /dev/null 2>&1
+  - npm i truffle -g --unsafe-perm > /dev/null
+  - npm i ganache-cli -g --unsafe-perm > /dev/null
+  - ganache-cli -p 9545 > /dev/null &
+  - sleep 10
+  - npx ethereum-bridge -a 9 --url 127.0.0.1:9545 --dev > /dev/null &
+  - sleep 50
+  - truffle test
+
+---
 kind: pipeline
 name: provable-delegatedMath-0.5
 
