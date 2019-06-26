@@ -1,4 +1,4 @@
-## Provable Ethereum API [![Join the chat at https://gitter.im/oraclize/ethereum-api](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/oraclize/ethereum-api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs@Provable.it](https://camo.githubusercontent.com/5e89710c6ae9ce0da822eec138ee1a2f08b34453/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d536c6174652d627269676874677265656e2e737667)](http://docs.oraclize.it) [![HitCount](http://hits.dwyl.io/oraclize/ethereum-api.svg)](http://hits.dwyl.io/oraclize/ethereum-api) [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+## Provable Ethereum API [![Join the chat at https://gitter.im/oraclize/ethereum-api](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/oraclize/ethereum-api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Info@Provable.xyz](https://camo.githubusercontent.com/5e89710c6ae9ce0da822eec138ee1a2f08b34453/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d536c6174652d627269676874677265656e2e737667)](http://docs.provable.xyz) [![HitCount](http://hits.dwyl.io/oraclize/ethereum-api.svg)](http://hits.dwyl.io/oraclize/ethereum-api) [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 &nbsp;
 
@@ -40,15 +40,15 @@ There are even __[some examples here](https://github.com/oraclize/ethereum-examp
 
 If you want to ask us something, or tell us something, there's loads of ways to get in touch:
 
-__❍__ We have a __[Twitter](https://twitter.com/oraclizeit)__
+__❍__ We have a __[Twitter](https://twitter.com/provablethings)__
 
 __❍__ And a __[Gitter](https://gitter.im/oraclize/ethereum-api)__
 
-__❍__ Or a __[Website](https://oraclize.it)__
+__❍__ Or a __[Website](https://provable.xyz)__
 
 __❍__ Alongside a __[Youtube](https://www.youtube.com/channel/UCjVjCheDbMel-x-JYeGazcQ)__
 
-__❍__ Plus a __[Github](https://github.com/oraclize)__
+__❍__ Plus a __[Github](https://github.com/provable-things)__
 
 &nbsp;
 
