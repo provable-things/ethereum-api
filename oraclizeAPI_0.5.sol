@@ -6537,7 +6537,7 @@ contract usingOraclize {
     {
         bool match_ = true;
         require(_prefix.length == _nRandomBytes);
-        for (uint256 i = 0; i< _nRandomBytes; i++) {
+        for (uint256 i = 0; i < _nRandomBytes; i++) {
             if (_content[i] != _prefix[i]) {
                 match_ = false;
             }
@@ -6629,7 +6629,7 @@ contract usingOraclize {
     }
     /**
      *
-     * The following function has been written by Alex Beregszaszi (@ axic)
+     * The following function has been written by Alex Beregszaszi (axic)
      * Use it under the terms of the MIT license
      *
      */
@@ -6660,7 +6660,7 @@ contract usingOraclize {
     }
     /**
      *
-     * The following function has been written by Alex Beregszaszi (@ axic)
+     * The following function has been written by Alex Beregszaszi (axic)
      * Use it under the terms of the MIT license
      * It duplicates Solidity's ecrecover, but catching the CALL return value
      *
@@ -6699,7 +6699,8 @@ contract usingOraclize {
     }
     /**
      *
-     * The following function has been written by Alex Beregszaszi (@ axic), use it under the terms of the MIT license
+     * The following function has been written by Alex Beregszaszi (axic)
+     * Use it under the terms of the MIT license
      *
      */
     function ecrecovery(

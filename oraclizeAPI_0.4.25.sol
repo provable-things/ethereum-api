@@ -5200,7 +5200,7 @@ contract usingOraclize {
     {
         bool match_ = true;
         require(_prefix.length == _nRandomBytes);
-        for (uint256 i = 0; i< _nRandomBytes; i++) {
+        for (uint256 i = 0; i < _nRandomBytes; i++) {
             if (_content[i] != _prefix[i]) {
                 match_ = false;
             }
@@ -5254,7 +5254,7 @@ contract usingOraclize {
         return oraclize_randomDS_sessionKeysHashVerified[sessionPubkeyHash];
     }
 
-    // the following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
+    // the following function has been written by Alex Beregszaszi (axic), use it under the terms of the MIT license
     function copyBytes(
         bytes from,
         uint fromOffset,
@@ -5287,7 +5287,7 @@ contract usingOraclize {
         return to;
     }
 
-    // the following function has been written by Alex Beregszaszi, use it under the terms of the MIT license
+    // the following function has been written by Alex Beregszaszi (axic), use it under the terms of the MIT license
     // Duplicate Solidity's ecrecover, but catching the CALL return value
     function safer_ecrecover(
         bytes32 hash,
@@ -5323,7 +5323,7 @@ contract usingOraclize {
 
         return (ret, addr);
     }
-    // the following function has been written by Alex Beregszaszi (@axic), use it under the terms of the MIT license
+    // the following function has been written by Alex Beregszaszi (axic), use it under the terms of the MIT license
     function ecrecovery(
         bytes32 hash,
         bytes sig
