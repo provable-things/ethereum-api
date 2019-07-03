@@ -1,12 +1,10 @@
 // <provableAPI>
-// Release targetted at solc 0.4.25 to silence compiler warning/error messages, compatible down to 0.4.22
+// Release targeted at solc 0.4.25 to silence compiler warning/error messages, compatible down to 0.4.22
 
 /*
 Copyright (c) 2015-2016 Oraclize SRL
 Copyright (c) 2016-2019 Oraclize LTD
 Copyright (c) 2019 Provable Things Limited
-
-
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -15,12 +13,8 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-
-
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
-
-
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

@@ -1,7 +1,6 @@
 // <provableAPI>
 /*
 
-
 Copyright (c) 2015-2016 Oraclize SRL
 Copyright (c) 2016-2019 Oraclize LTD
 Copyright (c) 2019 Provable Things Limited
