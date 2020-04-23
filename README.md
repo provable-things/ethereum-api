@@ -18,6 +18,9 @@ import "github.com/oraclize/ethereum-api/provableAPI.sol";
 
 To learn more about the Provable technology, please refer to our __[documentation here](https://docs.oraclize.it)__.
 
+
+:black_nib: __Important Note:__ Currently only API versions `0.4.25` & `0.5` are actively maintained - please use the latest version wherever possible!
+
 &nbsp;
 
 ***
