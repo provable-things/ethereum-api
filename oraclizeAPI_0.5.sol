@@ -354,6 +354,11 @@ contract usingOraclize {
             oraclize_setNetworkName("eth_goerli");
             return true;
         }
+        if (getCodeSize(0x90A0F94702c9630036FB9846B52bf31A1C991a84) > 0){ //bsc mainnet
+            OAR = OraclizeAddrResolverI(0x90A0F94702c9630036FB9846B52bf31A1C991a84);
+            oraclize_setNetworkName("bsc_mainnet");
+            return true;
+        }
         if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475) > 0) { //ethereum-bridge
             OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
             return true;

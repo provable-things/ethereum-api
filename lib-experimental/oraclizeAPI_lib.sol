@@ -357,6 +357,9 @@ library oraclizeLib {
         if (getCodeSize(0x146500cfd35B22E4A392Fe0aDc06De1a1368Ed48)>0){ //rinkeby testnet
             return OraclizeAddrResolverI(0x146500cfd35B22E4A392Fe0aDc06De1a1368Ed48);
         }
+        if (getCodeSize(0x90A0F94702c9630036FB9846B52bf31A1C991a84)>0){ //bsc mainnet
+            return OraclizeAddrResolverI(0x90A0F94702c9630036FB9846B52bf31A1C991a84);
+        }
         if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475)>0){ //ethereum-bridge
             return OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
         }
