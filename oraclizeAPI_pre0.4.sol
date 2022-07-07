@@ -91,6 +91,10 @@ contract usingOraclize {
             OAR = OraclizeAddrResolverI(0x90A0F94702c9630036FB9846B52bf31A1C991a84);
             return true;
         }
+        if (getCodeSize(0x816ec2AF1b56183F82f8C05759E99FEc3c3De609)>0){ //polygon mainnet
+            OAR = OraclizeAddrResolverI(0x816ec2AF1b56183F82f8C05759E99FEc3c3De609);
+            return true;
+        }
         if (getCodeSize(0x51efaf4c8b3c9afbd5ab9f4bbc82784ab6ef8faa)>0){ //browser-solidity
             OAR = OraclizeAddrResolverI(0x51efaf4c8b3c9afbd5ab9f4bbc82784ab6ef8faa);
             return true;

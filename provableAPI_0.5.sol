@@ -360,6 +360,11 @@ contract usingProvable {
             provable_setNetworkName("bsc_mainnet");
             return true;
         }
+        if (getCodeSize(0x816ec2AF1b56183F82f8C05759E99FEc3c3De609) > 0){ //polygon mainnet
+            OAR = OracleAddrResolverI(0x816ec2AF1b56183F82f8C05759E99FEc3c3De609);
+            provable_setNetworkName("polygon_mainnet");
+            return true;
+        }
         if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475) > 0) { //ethereum-bridge
             OAR = OracleAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
             return true;
