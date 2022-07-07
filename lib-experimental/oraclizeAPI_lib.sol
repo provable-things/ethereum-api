@@ -360,6 +360,9 @@ library oraclizeLib {
         if (getCodeSize(0x90A0F94702c9630036FB9846B52bf31A1C991a84)>0){ //bsc mainnet
             return OraclizeAddrResolverI(0x90A0F94702c9630036FB9846B52bf31A1C991a84);
         }
+        if (getCodeSize(0x816ec2AF1b56183F82f8C05759E99FEc3c3De609)>0){ //polygon mainnet
+            return OraclizeAddrResolverI(0x816ec2AF1b56183F82f8C05759E99FEc3c3De609);
+        }
         if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475)>0){ //ethereum-bridge
             return OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
         }
