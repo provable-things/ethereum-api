@@ -1,1 +1,1 @@
-oraclizeAPI_0.5.sol
+./contracts/solidity-v0.5.x/oraclizeAPI_0.5.sol
