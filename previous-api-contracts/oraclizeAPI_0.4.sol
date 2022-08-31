@@ -28,7 +28,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-pragma solidity >= 0.4.1 < 0.5;// Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
+pragma solidity >= 0.4.1 < 0.4.25;// Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
 
 contract OraclizeI {
     address public cbAddress;
