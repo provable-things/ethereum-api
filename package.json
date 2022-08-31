@@ -13,5 +13,9 @@
   "homepage": "http://provable.xyz",
   "devDependencies": {
     "hardhat": "^2.10.2"
+  },
+  "scripts": {
+    "tests": "npm run test",
+    "test": "./test/run-tests.sh"
   }
 }
