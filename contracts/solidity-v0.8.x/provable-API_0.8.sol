@@ -20,10 +20,9 @@
 */
 
 // SPDX-License-Identifier: MIT
-pragma solidity > 0.8.0;
+pragma solidity >= 0.8.0 < 0.9.0;
 
 import "./libraries/CBOR.sol";
-import "./libraries/BUFFER.sol";
 import "./interfaces/provable-interface.sol";
 import "./interfaces/provable-address-resolver-interface.sol";
 
