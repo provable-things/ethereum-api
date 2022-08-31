@@ -10,5 +10,8 @@
   "bugs": {
     "url": "https://github.com/provable-things/ethereum-api/issues"
   },
-  "homepage": "http://provable.xyz"
+  "homepage": "http://provable.xyz",
+  "devDependencies": {
+    "hardhat": "^2.10.2"
+  }
 }
