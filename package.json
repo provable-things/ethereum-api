@@ -4,11 +4,11 @@
   "description": "The Provable (formerly Oraclize) API - Importable in your smart-contract in order to start leveraging the Provable oracle service quickly and easily!.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oraclize/ethereum-api.git"
+    "url": "git+https://github.com/provable-things/ethereum-api.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/oraclize/ethereum-api/issues"
+    "url": "https://github.com/provable-things/ethereum-api/issues"
   },
   "homepage": "http://provable.xyz"
 }
