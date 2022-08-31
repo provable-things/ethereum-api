@@ -1,0 +1,1 @@
+__NOTE:__ Here are previous versions of the `ethereum-api` using solidity compilers prior to `0.4.11`, which is the earliest that `hardhat` can work with. As such, they're moved here since they're unlikely to be useful in future projects, but have been used successfully in previous and still-existing projects. Notice also the serpent version!
