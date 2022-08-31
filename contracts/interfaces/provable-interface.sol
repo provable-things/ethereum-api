@@ -2,7 +2,7 @@
 pragma solidity > 0.8.0;
 
 interface ProvableI {
-    function setProofType(byte _proofType) external;
+    function setProofType(bytes1 _proofType) external;
     function setCustomGasPrice(uint _gasPrice) external;
     function cbAddress() external returns (address _cbAddress);
     function randomDS_getSessionPubKeyHash() external view returns (bytes32 _sessionKeyHash);
