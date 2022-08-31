@@ -1,6 +1,8 @@
 #!/bin/bash
+set -e
+cd "$(dirname -- $0)"
 
-artifactsPath="./artifacts"
+artifactsPath="../artifacts"
 
 if [ -d $artifactsPath ]; then
   echo '✔ Removing compiled artifacts dir...'
