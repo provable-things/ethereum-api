@@ -8,15 +8,25 @@ In Solidity it is as simple as inheriting the __`usingProvable`__ contract that 
 
 This will provide your contract with functions like __`provable_query(...)`__, which make it trivial for you to leverage our oracle technology straight away.
 
-If you're using the __[Remix IDE](http://remix.ethereum.org)__ it's even easier still - simply import __Provable__ into your contract like so:
+If you're using the __[Remix IDE](http://remix.ethereum.org)__ it's even easier still - simply import the correct version of __Provable__ into your contract like so:
 
 ```solidity
 
-import "github.com/oraclize/ethereum-api/provableAPI.sol";
+import "github.com/provable-things/ethereum-api/contracts/solc-v0.8.x/provableAPI.sol";
 
 ```
 
-To learn more about the Provable technology, please refer to our __[documentation here](https://docs.oraclize.it)__.
+There are versions of the API targetting the following `solc` compilers:
+
+```
+solc-v0.4.25
+solc-v0.5.x
+solc-v0.6.x
+solc-v0.8.x
+
+```
+
+To learn more about the Provable technology, please refer to our __[documentation here](https://docs.provable.xyz)__.
 
 &nbsp;
 
@@ -26,9 +36,9 @@ To learn more about the Provable technology, please refer to our __[documentatio
 
 ### :computer: See It In Action!
 
-For working examples of how to integrate the __Provable__ API into your own smart-contracts, head on over to the __[Provable Ethereum Examples](https://github.com/oraclize/ethereum-examples)__ repository. Here you'll find various examples that use __Provable__ to feed smart-contracts with data from a variety of external sources.
+For working examples of how to integrate the __Provable__ API into your own smart-contracts, head on over to the __[Provable Ethereum Examples](https://github.com/provable-things/ethereum-examples)__ repository. Here you'll find various examples that use __Provable__ to feed smart-contracts with data from a variety of external sources.
 
-There are even __[some examples here](https://github.com/oraclize/ethereum-examples/tree/master/solidity/truffle-examples)__ showing you how you can use __Provable__ in a local Truffle development environment!
+There are even __[some examples here](https://github.com/provable-things/ethereum-examples/tree/master/solidity/truffle-examples)__ showing you how you can use __Provable__ in a local Truffle development environment!
 
 &nbsp;
 
@@ -55,10 +65,6 @@ __❍__ Plus a __[Github](https://github.com/provable-things)__
 ***
 
 &nbsp;
-
-### :hourglass_flowing_sand: __Notice about Oraclize rebranding to Provable:__
-
-Please use the __`provableAPI_0.X.sol`__ contracts going forward. We will continue supporting the oraclize-named versions for a limited time, but they should be considered deprecated and to be removed in the coming months.
 
 ### :radioactive: __A Note Regarding Serpent:__
 
