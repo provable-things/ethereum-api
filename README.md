@@ -8,13 +8,22 @@ In Solidity it is as simple as inheriting the __`usingProvable`__ contract that 
 
 This will provide your contract with functions like __`provable_query(...)`__, which make it trivial for you to leverage our oracle technology straight away.
 
-If you're using the __[Remix IDE](http://remix.ethereum.org)__ it's even easier still - simply import the correct version of __Provable__ into your contract like so:
+If you're using the __[Remix IDE](http://remix.ethereum.org)__ it's even easier still - simply import the latest version of __Provable__ into your contract like so:
+
+```solidity
+
+import "github.com/provable-things/ethereum-api/provableAPI.sol";
+
+```
+
+Or if you need a specific version of the API, import that directly via:
 
 ```solidity
 
 import "github.com/provable-things/ethereum-api/contracts/solc-v0.8.x/provableAPI.sol";
 
 ```
+
 
 There are versions of the API targetting the following `solc` compilers:
 
