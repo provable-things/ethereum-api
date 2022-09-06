@@ -1,1 +1,4 @@
 *.sw*
+**/node_modules
+**/cache
+**/artifacts
