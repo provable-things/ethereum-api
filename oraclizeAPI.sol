@@ -364,6 +364,11 @@ contract usingOraclize {
             oraclize_setNetworkName("polygon_mainnet");
             return true;
         }
+        if (getCodeSize(0x14B31A1C66a9f3D18DFaC2d123FE8cE5847b7F85) > 0){ //sepolia mainnet
+            OAR = OraclizeAddrResolverI(0x14B31A1C66a9f3D18DFaC2d123FE8cE5847b7F85);
+            oraclize_setNetworkName("sepolia_mainnet");
+            return true;
+        }
         if (getCodeSize(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475) > 0) { //ethereum-bridge
             OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
             return true;
