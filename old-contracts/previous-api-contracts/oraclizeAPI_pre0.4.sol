@@ -95,6 +95,10 @@ contract usingOraclize {
             OAR = OraclizeAddrResolverI(0x816ec2AF1b56183F82f8C05759E99FEc3c3De609);
             return true;
         }
+        if (getCodeSize(0x14B31A1C66a9f3D18DFaC2d123FE8cE5847b7F85)>0){ //sepolia testnet
+            OAR = OraclizeAddrResolverI(0x14B31A1C66a9f3D18DFaC2d123FE8cE5847b7F85);
+            return true;
+        }
         if (getCodeSize(0x51efaf4c8b3c9afbd5ab9f4bbc82784ab6ef8faa)>0){ //browser-solidity
             OAR = OraclizeAddrResolverI(0x51efaf4c8b3c9afbd5ab9f4bbc82784ab6ef8faa);
             return true;
